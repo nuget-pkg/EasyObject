@@ -7,14 +7,26 @@ using System.Linq;
 using System.Runtime.InteropServices;
 //using System.Text;
 
+// ReSharper disable once CheckNamespace
 namespace Global;
 
 public enum EasyObjectType
 {
-    @string, @number, @boolean, @object, @array, @null
+    // ReSharper disable once InconsistentNaming
+    @string,
+    // ReSharper disable once InconsistentNaming
+    @number,
+    // ReSharper disable once InconsistentNaming
+    @boolean,
+    // ReSharper disable once InconsistentNaming
+    @object,
+    // ReSharper disable once InconsistentNaming
+    @array,
+    // ReSharper disable once InconsistentNaming
+    @null
 }
 
-internal class _EasyObjectConverter : IObjectConverter
+internal class EasyObjectConverter : IObjectConverter
 {
     public object ConvertResult(object x, string origTypeName)
     {
@@ -48,24 +60,27 @@ internal class _EasyObjectConverter : IObjectConverter
 
 public class EasyObject : DynamicObject, IObjectWrapper
 {
+    // ReSharper disable once InconsistentNaming
     public object m_data = null;
 
 #if false
     public static IJsonHandler DefaultJsonHandler = new CSharpJsonHandler(true, false);
 #else
+    // ReSharper disable once MemberCanBePrivate.Global
     public static IJsonHandler DefaultJsonHandler = new CSharpEasyLanguageHandler(true, false);
 #endif
     public static IJsonHandler JsonHandler = null;
+    // ReSharper disable once MemberCanBePrivate.Global
     public static bool DebugOutput = false;
     public static bool ShowDetail = false;
-    public static bool ForceASCII = false;
+    public static bool ForceAscii = false;
 
     public static void ClearSettings()
     {
         EasyObject.JsonHandler = DefaultJsonHandler;
         EasyObject.DebugOutput = false;
         EasyObject.ShowDetail = false;
-        EasyObject.ForceASCII = false;
+        EasyObject.ForceAscii = false;
     }
 
     static EasyObject()
@@ -80,7 +95,7 @@ public class EasyObject : DynamicObject, IObjectWrapper
 
     public EasyObject(object x)
     {
-        this.m_data = new ObjectParser(false, new _EasyObjectConverter()).Parse(x, true);
+        this.m_data = new ObjectParser(false, new EasyObjectConverter()).Parse(x, true);
     }
 
     public dynamic Dynamic {  get { return this; } }
@@ -119,10 +134,15 @@ public class EasyObject : DynamicObject, IObjectWrapper
         return result;
     }
 
+    // ReSharper disable once InconsistentNaming
     public static EasyObjectType @string { get { return EasyObjectType.@string; } }
+    // ReSharper disable once InconsistentNaming
     public static EasyObjectType @boolean { get { return EasyObjectType.@boolean; } }
+    // ReSharper disable once InconsistentNaming
     public static EasyObjectType @object { get { return EasyObjectType.@object; } }
+    // ReSharper disable once InconsistentNaming
     public static EasyObjectType @array { get { return EasyObjectType.@array; } }
+    // ReSharper disable once InconsistentNaming
     public static EasyObjectType @null { get { return EasyObjectType.@null; } }
 
     public bool IsString { get { return this.TypeValue == EasyObjectType.@string; } }
@@ -197,11 +217,13 @@ public class EasyObject : DynamicObject, IObjectWrapper
         }
     }
 
+    // ReSharper disable once InconsistentNaming
     private List<EasyObject> list
     {
         get { return m_data as List<EasyObject>; }
     }
 
+    // ReSharper disable once InconsistentNaming
     private Dictionary<string, EasyObject> dictionary
     {
         get { return m_data as Dictionary<string, EasyObject>; }
@@ -246,7 +268,7 @@ public class EasyObject : DynamicObject, IObjectWrapper
     {
         if (dictionary == null) m_data = new Dictionary<string, EasyObject>();
         EasyObject eo = x is EasyObject ? x as EasyObject : new EasyObject(x);
-        dictionary.Add(key, eo);
+        dictionary!.Add(key, eo);
         return this;
     }
 
@@ -278,7 +300,7 @@ public class EasyObject : DynamicObject, IObjectWrapper
             m_data = new Dictionary<string, EasyObject>();
         }
         string name = binder.Name;
-        dictionary[name] = WrapInternal(value);
+        dictionary![name] = WrapInternal(value);
         return true;
     }
     public override bool TryGetIndex(GetIndexBinder binder, object[] indexes, out object result)
@@ -343,7 +365,7 @@ public class EasyObject : DynamicObject, IObjectWrapper
             m_data = new Dictionary<string, EasyObject>();
         }
         string name = (string)indexes[0];
-        dictionary[name] = WrapInternal(value);
+        dictionary![name] = WrapInternal(value);
         return true;
     }
 
@@ -373,7 +395,7 @@ public class EasyObject : DynamicObject, IObjectWrapper
         }
     }
 
-    protected static string[] TextToLines(string text)
+    private static string[] TextToLines(string text)
     {
         List<string> lines = new List<string>();
         using (StringReader sr = new StringReader(text))
@@ -408,9 +430,9 @@ public class EasyObject : DynamicObject, IObjectWrapper
         return new ObjectParser(false).Parse(m_data);
     }
 
-    public string ToJson(bool indent = false, bool sort_keys = false)
+    public string ToJson(bool indent = false, bool sortKeys = false)
     {
-        return JsonHandler.Stringify(m_data, indent, sort_keys);
+        return JsonHandler.Stringify(m_data, indent, sortKeys);
     }
 
 #if false

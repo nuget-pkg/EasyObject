@@ -15,7 +15,7 @@ public class JSON読み出しテスト
 
     protected string RenderJson(EasyObject eo)
     {
-        return eo.ToJson(indent: false, sort_keys: true);
+        return eo.ToJson(indent: false, sortKeys: true);
     }
 
     [Test]
