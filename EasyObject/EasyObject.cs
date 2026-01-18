@@ -5,7 +5,6 @@ using System.Dynamic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-//using System.Text;
 
 // ReSharper disable once CheckNamespace
 namespace Global;
@@ -38,7 +37,7 @@ internal class EasyObjectConverter : IObjectConverter
             foreach (var key in keys)
             {
                 var eo = new EasyObject();
-                eo.m_data = dict[key];
+                eo.RealData = dict[key];
                 result[key] = eo;
             }
             return result;
@@ -49,7 +48,7 @@ internal class EasyObjectConverter : IObjectConverter
             foreach (var e in list)
             {
                 var eo = new EasyObject();
-                eo.m_data = e;
+                eo.RealData = e;
                 result.Add(eo);
             }
             return result;
@@ -60,14 +59,13 @@ internal class EasyObjectConverter : IObjectConverter
 
 public class EasyObject : DynamicObject, IObjectWrapper
 {
-    // ReSharper disable once InconsistentNaming
-    public object m_data = null;
+    public object RealData = null;
 
 #if false
     public static IJsonHandler DefaultJsonHandler = new CSharpJsonHandler(true, false);
 #else
     // ReSharper disable once MemberCanBePrivate.Global
-    public static IJsonHandler DefaultJsonHandler = new CSharpEasyLanguageHandler(true, false);
+    public static IJsonHandler DefaultJsonHandler = new CSharpEasyLanguageHandler(numberAsDecimal: true, forceAscii: false);
 #endif
     public static IJsonHandler JsonHandler = null;
     // ReSharper disable once MemberCanBePrivate.Global
@@ -90,12 +88,13 @@ public class EasyObject : DynamicObject, IObjectWrapper
 
     public EasyObject()
     {
-        this.m_data = null;
+        this.RealData = null;
     }
 
+    // ReSharper disable once MemberCanBePrivate.Global
     public EasyObject(object x)
     {
-        this.m_data = new ObjectParser(false, new EasyObjectConverter()).Parse(x, true);
+        this.RealData = new ObjectParser(false, new EasyObjectConverter()).Parse(x, true);
     }
 
     public dynamic Dynamic {  get { return this; } }
@@ -156,7 +155,7 @@ public class EasyObject : DynamicObject, IObjectWrapper
     {
         while (x is EasyObject)
         {
-            x = ((EasyObject)x).m_data;
+            x = ((EasyObject)x).RealData;
         }
         return x;
     }
@@ -220,13 +219,13 @@ public class EasyObject : DynamicObject, IObjectWrapper
     // ReSharper disable once InconsistentNaming
     private List<EasyObject> list
     {
-        get { return m_data as List<EasyObject>; }
+        get { return RealData as List<EasyObject>; }
     }
 
     // ReSharper disable once InconsistentNaming
     private Dictionary<string, EasyObject> dictionary
     {
-        get { return m_data as Dictionary<string, EasyObject>; }
+        get { return RealData as Dictionary<string, EasyObject>; }
     }
 
     public int Count
@@ -258,15 +257,15 @@ public class EasyObject : DynamicObject, IObjectWrapper
 
     public EasyObject Add(object x)
     {
-        if (list == null) m_data = new List<EasyObject>();
+        if (list == null) RealData = new List<EasyObject>();
         EasyObject eo = x is EasyObject ? x as EasyObject : new EasyObject(x);
-        list.Add(eo);
+        list!.Add(eo);
         return this;
     }
 
     public EasyObject Add(string key, object x)
     {
-        if (dictionary == null) m_data = new Dictionary<string, EasyObject>();
+        if (dictionary == null) RealData = new Dictionary<string, EasyObject>();
         EasyObject eo = x is EasyObject ? x as EasyObject : new EasyObject(x);
         dictionary!.Add(key, eo);
         return this;
@@ -277,13 +276,11 @@ public class EasyObject : DynamicObject, IObjectWrapper
     {
         result = Null;
         string name = binder.Name;
-#if true
         if (list != null)
         {
             var assoc = TryAssoc(name);
             result = assoc;
         }
-#endif
         if (dictionary == null) return true;
         EasyObject eo = Null;
         dictionary.TryGetValue(name, out eo);
@@ -297,7 +294,7 @@ public class EasyObject : DynamicObject, IObjectWrapper
         value = UnWrapInternal(value);
         if (dictionary == null)
         {
-            m_data = new Dictionary<string, EasyObject>();
+            RealData = new Dictionary<string, EasyObject>();
         }
         string name = binder.Name;
         dictionary![name] = WrapInternal(value);
@@ -323,13 +320,11 @@ public class EasyObject : DynamicObject, IObjectWrapper
             result = WrapInternal(list[pos]);
             return true;
         }
-#if true
         if (list != null)
         {
             var assoc = TryAssoc((string)idx);
             result = assoc;
         }
-#endif
         if (dictionary == null)
         {
             result = Null;
@@ -343,7 +338,7 @@ public class EasyObject : DynamicObject, IObjectWrapper
 
     public override bool TrySetIndex(SetIndexBinder binder, object[] indexes, object value)
     {
-        if (value is EasyObject) value = ((EasyObject)value).m_data;
+        if (value is EasyObject) value = ((EasyObject)value).RealData;
         var idx = indexes[0];
         if (idx is int)
         {
@@ -351,7 +346,7 @@ public class EasyObject : DynamicObject, IObjectWrapper
             if (pos < 0) throw new ArgumentException("index is below 0");
             if (list == null)
             {
-                m_data = new List<EasyObject>();
+                RealData = new List<EasyObject>();
             }
             while (list.Count < (pos + 1))
             {
@@ -362,7 +357,7 @@ public class EasyObject : DynamicObject, IObjectWrapper
         }
         if (dictionary == null)
         {
-            m_data = new Dictionary<string, EasyObject>();
+            RealData = new Dictionary<string, EasyObject>();
         }
         string name = (string)indexes[0];
         dictionary![name] = WrapInternal(value);
@@ -390,7 +385,7 @@ public class EasyObject : DynamicObject, IObjectWrapper
         }
         else
         {
-            result = Convert.ChangeType(m_data, binder.Type);
+            result = Convert.ChangeType(RealData, binder.Type);
             return true;
         }
     }
@@ -427,12 +422,12 @@ public class EasyObject : DynamicObject, IObjectWrapper
 
     public dynamic ToObject()
     {
-        return new ObjectParser(false).Parse(m_data);
+        return new ObjectParser(false).Parse(RealData);
     }
 
     public string ToJson(bool indent = false, bool sortKeys = false)
     {
-        return JsonHandler.Stringify(m_data, indent, sortKeys);
+        return JsonHandler.Stringify(RealData, indent, sortKeys);
     }
 
 #if false
@@ -458,30 +453,31 @@ public class EasyObject : DynamicObject, IObjectWrapper
 
     public static void Echo(object x, string title = null)
     {
-        String s = ToPrintable(x, title);
+        string s = ToPrintable(x, title);
         Console.WriteLine(s);
         System.Diagnostics.Debug.WriteLine(s);
     }
     public static void Log(object x, string title = null)
     {
-        String s = ToPrintable(x, title);
+        string s = ToPrintable(x, title);
         Console.Error.WriteLine("[Log] " + s);
         System.Diagnostics.Debug.WriteLine("[Log] " + s);
     }
     public static void Debug(object x, string title = null)
     {
         if (!DebugOutput) return;
-        String s = ToPrintable(x, title);
+        string s = ToPrintable(x, title);
         Console.Error.WriteLine("[Debug] " + s);
         System.Diagnostics.Debug.WriteLine("[Debug] " + s);
     }
     public static void Message(object x, string title = null)
     {
         if (title == null) title = "Message";
-        String s = ToPrintable(x, null);
+        string s = ToPrintable(x, null);
         NativeMethods.MessageBoxW(IntPtr.Zero, s, title, 0);
     }
-    internal static class NativeMethods
+
+    private static class NativeMethods
     {
         [DllImport("user32.dll", CharSet = CharSet.Unicode)]
         internal static extern int MessageBoxW(
@@ -523,9 +519,9 @@ public class EasyObject : DynamicObject, IObjectWrapper
         {
             if (dictionary == null)
             {
-                m_data = new Dictionary<string, EasyObject>();
+                RealData = new Dictionary<string, EasyObject>();
             }
-            dictionary[name] = value;
+            dictionary![name] = value;
         }
     }
     public EasyObject this[int pos]
@@ -547,9 +543,9 @@ public class EasyObject : DynamicObject, IObjectWrapper
             if (pos < 0) throw new ArgumentException("index below 0");
             if (list == null)
             {
-                m_data = new List<EasyObject>();
+                RealData = new List<EasyObject>();
             }
-            while (list.Count < (pos + 1))
+            while (list!.Count < (pos + 1))
             {
                 list.Add(null);
             }
@@ -558,7 +554,7 @@ public class EasyObject : DynamicObject, IObjectWrapper
     }
     public T Cast<T>()
     {
-        if (this.m_data is DateTime dt)
+        if (this.RealData is DateTime dt)
         {
             string s = null;
             switch (dt.Kind)
@@ -575,49 +571,30 @@ public class EasyObject : DynamicObject, IObjectWrapper
             }
             return (T)Convert.ChangeType(s, typeof(T));
         }
-        return (T)Convert.ChangeType(this.m_data, typeof(T));
+        return (T)Convert.ChangeType(this.RealData, typeof(T));
     }
     public List<EasyObject> AsList
     {
         get
         {
-#if false
-            var result = new List<EasyObject>();
-            if (list == null) return result;
-            foreach(var item in list)
-            {
-                result.Add(WrapInternal(item));
-            }
-            return result;
-#else
+            // ReSharper disable once ArrangeAccessorOwnerBody
             return list;
-#endif
         }
     }
     public Dictionary<string, EasyObject> AsDictionary
     {
         get
         {
-#if false
-            var result = new Dictionary<string, EasyObject>();
-            if (dictionary == null) return result;
-            foreach (var item in dictionary)
-            {
-                result[item.Key] = WrapInternal(item.Value);
-            }
-            return result;
-#else
+            // ReSharper disable once ArrangeAccessorOwnerBody
             return dictionary;
-#endif
         }
-
     }
 
     public static string FullName(dynamic x)
     {
         if (x is null) return "null";
         string fullName = ((object)x).GetType().FullName;
-        return fullName.Split('`')[0];
+        return fullName!.Split('`')[0];
     }
 
     public static implicit operator EasyObject(bool x) { return new EasyObject(x); }
@@ -640,6 +617,6 @@ public class EasyObject : DynamicObject, IObjectWrapper
 
     public void Nullify()
     {
-        this.m_data = null;
+        this.RealData = null;
     }
 }
