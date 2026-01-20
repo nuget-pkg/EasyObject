@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Global;
 using static Global.EasyObject;
+using NUnit.Framework;
 
 public class ObjectTest
 {
