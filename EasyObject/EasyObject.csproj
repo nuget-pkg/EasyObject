@@ -2,7 +2,7 @@
 	<PropertyGroup>
 		<LangVersion>latest</LangVersion>
 		<TargetFrameworks>netstandard2.0;net462;net8.0</TargetFrameworks>
-		<Version>2026.0120.1428.53</Version>
+		<Version>2026.0120.2008.17</Version>
 		<Nullable>disable</Nullable>
 		<ImplicitUsings>disable</ImplicitUsings>
 		<RootNamespace>EasyObject</RootNamespace>
@@ -48,13 +48,11 @@
 	<ItemGroup>
 		<None Include="README.md" Pack="true" PackagePath="" />
 	</ItemGroup>
-	<ItemGroup>
-		<PackageReference Include="IExchangeableToObject" Version="2026.120.1340.29" />
-		<PackageReference Include="JsoncParser" Version="2026.118.1929.17" />
-		<!--<PackageReference Include="WinConsole" Version="2024.603.1317.52" />-->
-	</ItemGroup>
 	<ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
 		<PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
 		<PackageReference Include="System.Dynamic.Runtime" Version="4.3.0" />
+	</ItemGroup>
+	<ItemGroup>
+	  <PackageReference Include="JsoncParser" Version="2026.120.1940.37" />
 	</ItemGroup>
 </Project>

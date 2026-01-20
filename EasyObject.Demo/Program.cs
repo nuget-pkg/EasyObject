@@ -11,9 +11,9 @@ using Razorvine.Pickle;
 // ReSharper disable once CheckNamespace
 namespace Demo;
 
-class Exchangeable1: IExchangeableToObject
+class Exchangeable1: IExportToPlainObject
 {
-    public object ToPlainObject()
+    public object ExportToPlainObject()
     {
         return 123;
     }
@@ -21,7 +21,7 @@ class Exchangeable1: IExchangeableToObject
 
 class Exchangeable2
 {
-    public object ToPlainObject()
+    public object ExportToPlainObject()
     {
         return 456;
     }
@@ -134,7 +134,7 @@ class Program
         var unpickler = new Unpickler();
         object result = unpickler.loads(list01_bytes);
         Echo(result, "result");
-        var o = new ObjectParser(false).Parse(result);
+        var o = new PlainObjectConverter(false).Parse(result);
         Echo(o, "o");
         var pickler = new Pickler();
         var bytes = pickler.dumps(o);

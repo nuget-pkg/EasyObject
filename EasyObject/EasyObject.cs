@@ -26,9 +26,9 @@ public enum EasyObjectType
     @null
 }
 
-internal class EasyObjectConverter : IObjectConverter
+internal class EasyObjectConverter : IConvertParsedResult
 {
-    public object ConvertResult(object x, string origTypeName)
+    public object ConvertParsedResult(object x, string origTypeName)
     {
         if (x is Dictionary<string, object>)
         {
@@ -58,7 +58,7 @@ internal class EasyObjectConverter : IObjectConverter
     }
 }
 
-public class EasyObject : DynamicObject, IObjectWrapper, IExchangeableToObject
+public class EasyObject : DynamicObject, IPlainObjectWrapper, IExportToPlainObject
 {
     public object RealData = null;
 
@@ -95,30 +95,7 @@ public class EasyObject : DynamicObject, IObjectWrapper, IExchangeableToObject
     // ReSharper disable once MemberCanBePrivate.Global
     public EasyObject(object x)
     {
-        if (x != null)
-        {
-            if (x is IExchangeableToObject)
-            {
-                x = ((IExchangeableToObject)x).ToPlainObject();
-            }
-            else
-            {
-                try
-                {
-                    Type type = x.GetType();
-                    MethodInfo method = type.GetMethod("ToPlainObject");
-                    if (method != null)
-                    {
-                        x = method.Invoke(x, []);
-                    }
-                }
-                catch (Exception _)
-                {
-                    ;
-                }
-            }
-        }
-        this.RealData = new ObjectParser(false, new EasyObjectConverter()).Parse(x, true);
+        this.RealData = new PlainObjectConverter(false, new EasyObjectConverter()).Parse(x, true);
     }
 
     public dynamic Dynamic {  get { return this; } }
@@ -451,7 +428,7 @@ public class EasyObject : DynamicObject, IObjectWrapper, IExchangeableToObject
 
     public dynamic ToObject()
     {
-        return new ObjectParser(false).Parse(RealData);
+        return new PlainObjectConverter(false).Parse(RealData);
     }
 
     public string ToJson(bool indent = false, bool sortKeys = false)
@@ -478,7 +455,7 @@ public class EasyObject : DynamicObject, IObjectWrapper, IExchangeableToObject
     public static string ToPrintable(object x, string title = null)
     {
         x = FromObject(x).ToObject();
-        return ObjectParser.ToPrintable(ShowDetail, x, title);
+        return PlainObjectConverter.ToPrintable(ShowDetail, x, title);
     }
 
     public static void Echo(object x, string title = null)
@@ -648,5 +625,10 @@ public class EasyObject : DynamicObject, IObjectWrapper, IExchangeableToObject
     public void Nullify()
     {
         this.RealData = null;
+    }
+
+    public object ExportToPlainObject()
+    {
+        return this.ToObject();
     }
 }
