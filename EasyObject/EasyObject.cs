@@ -63,7 +63,7 @@ public class EasyObject : DynamicObject, IPlainObjectWrapper, IExportToPlainObje
     public object RealData = null;
 
 #if false
-    public static IJsonHandler DefaultJsonHandler = new CSharpJsonHandler(true, false);
+    public static IJsonHandler DefaultJsonHandler = new CSharpJsonHandler(numberAsDecimal: true, forceAscii: false);
 #else
     // ReSharper disable once MemberCanBePrivate.Global
     public static IJsonHandler DefaultJsonHandler = new CSharpEasyLanguageHandler(numberAsDecimal: true, forceAscii: false);
