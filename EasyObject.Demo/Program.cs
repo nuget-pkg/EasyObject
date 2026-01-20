@@ -8,6 +8,25 @@ using System.IO;
 using Newtonsoft.Json.Linq;
 using Razorvine.Pickle;
 
+// ReSharper disable once CheckNamespace
+namespace Demo;
+
+class Exchangeable1: IExchangeableToObject
+{
+    public object ToPlainObject()
+    {
+        return 123;
+    }
+}
+
+class Exchangeable2
+{
+    public object ToPlainObject()
+    {
+        return 456;
+    }
+}
+
 class Program
 {
     static void Main()
@@ -148,6 +167,10 @@ class Program
         Echo(member2, "member2");
         var member3 = assocDyn.a;
         Echo(member3, "member3");
+        var exc1 = new Exchangeable1();
+        Echo(exc1, "exc1");
+        var exc2 = new Exchangeable2();
+        Echo(exc2, "exc2");
         Log("[END]");
     }
 }
