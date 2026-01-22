@@ -58,7 +58,7 @@ internal class EasyObjectConverter : IConvertParsedResult
     }
 }
 
-public class EasyObject : DynamicObject, IPlainObjectWrapper, IExportToPlainObject
+public class EasyObject : DynamicObject, IExposeInternalObject, IExportToPlainObject
 {
     public object RealData /*= null*/;
 
@@ -154,7 +154,7 @@ public class EasyObject : DynamicObject, IPlainObjectWrapper, IExportToPlainObje
     public bool IsArray { get { return this.TypeValue == EasyObjectType.@array; } }
     public bool IsNull { get { return this.TypeValue == EasyObjectType.@null; } }
 
-    private static object UnWrapInternal(object x)
+    private static object ExposeInternalObjectHelper(object x)
     {
         while (x is EasyObject)
         {
@@ -169,16 +169,16 @@ public class EasyObject : DynamicObject, IPlainObjectWrapper, IExportToPlainObje
         return new EasyObject(x);
     }
 
-    public object UnWrap()
+    public object ExposeInternalObject()
     {
-        return EasyObject.UnWrapInternal(this);
+        return EasyObject.ExposeInternalObjectHelper(this);
     }
 
     public EasyObjectType TypeValue
     {
         get
         {
-            object obj = UnWrapInternal(this);
+            object obj = ExposeInternalObjectHelper(this);
             if (obj == null) return EasyObjectType.@null;
             switch (Type.GetTypeCode(obj.GetType()))
             {
@@ -294,7 +294,7 @@ public class EasyObject : DynamicObject, IPlainObjectWrapper, IExportToPlainObje
     public override bool TrySetMember(
         SetMemberBinder binder, object value)
     {
-        value = UnWrapInternal(value);
+        value = ExposeInternalObjectHelper(value);
         if (dictionary == null)
         {
             RealData = new Dictionary<string, EasyObject>();
