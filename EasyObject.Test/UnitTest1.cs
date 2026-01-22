@@ -33,7 +33,8 @@ public class Tests
         Assert.That(eo.ToJson(), Is.EqualTo("""
             "helloハロー©"
             """));
-        EasyObject.JsonHandler = new CSharpJsonHandler(true, true); // ForceASCII
+        //EasyObject.JsonParser = new CSharpJsonHandler(numberAsDecimal: true); // ForceASCII
+        EasyObject.ForceAscii = true;
         Assert.That(eo.ToJson(), Is.EqualTo("""
             "hello\u30CF\u30ED\u30FC\u00A9"
             """));

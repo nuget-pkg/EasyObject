@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Runtime.InteropServices;
 
 // ReSharper disable once CheckNamespace
@@ -42,7 +41,8 @@ internal class EasyObjectConverter : IConvertParsedResult
                 result[key] = eo;
             }
             return result;
-        } else if (x is List<object>)
+        }
+        else if (x is List<object>)
         {
             var list = x as List<object>;
             var result = new List<EasyObject>();
@@ -60,23 +60,20 @@ internal class EasyObjectConverter : IConvertParsedResult
 
 public class EasyObject : DynamicObject, IPlainObjectWrapper, IExportToPlainObject
 {
-    public object RealData = null;
+    public object RealData /*= null*/;
 
-#if false
-    public static IJsonHandler DefaultJsonHandler = new CSharpJsonHandler(numberAsDecimal: true, forceAscii: false);
-#else
     // ReSharper disable once MemberCanBePrivate.Global
-    public static IJsonHandler DefaultJsonHandler = new CSharpEasyLanguageHandler(numberAsDecimal: true, forceAscii: false);
-#endif
-    public static IJsonHandler JsonHandler = null;
+    public static readonly IParseJson DefaultJsonParser = new CSharpEasyLanguageHandler(numberAsDecimal: true);
+    public static IParseJson JsonParser /*= null*/;
     // ReSharper disable once MemberCanBePrivate.Global
-    public static bool DebugOutput = false;
-    public static bool ShowDetail = false;
-    public static bool ForceAscii = false;
+    public static bool DebugOutput /*= false*/;
+    public static bool ShowDetail /*= false*/;
+    // ReSharper disable once MemberCanBePrivate.Global
+    public static bool ForceAscii /*= false*/;
 
     public static void ClearSettings()
     {
-        EasyObject.JsonHandler = DefaultJsonHandler;
+        EasyObject.JsonParser = DefaultJsonParser;
         EasyObject.DebugOutput = false;
         EasyObject.ShowDetail = false;
         EasyObject.ForceAscii = false;
@@ -95,10 +92,10 @@ public class EasyObject : DynamicObject, IPlainObjectWrapper, IExportToPlainObje
     // ReSharper disable once MemberCanBePrivate.Global
     public EasyObject(object x)
     {
-        this.RealData = new PlainObjectConverter(false, new EasyObjectConverter()).Parse(x, true);
+        this.RealData = new PlainObjectConverter(jsonParser: JsonParser, forceAscii: false, iConvertParsedResult: new EasyObjectConverter()).Parse(x, numberAsDecimal: true);
     }
 
-    public dynamic Dynamic {  get { return this; } }
+    public dynamic Dynamic { get { return this; } }
 
     public override string ToString()
     {
@@ -132,9 +129,9 @@ public class EasyObject : DynamicObject, IPlainObjectWrapper, IExportToPlainObje
     {
         if ((args.Length % 2) != 0) throw new ArgumentException("EasyObject.NewObject() requires even number arguments");
         EasyObject result = EmptyObject;
-        for (int i = 0; i < args.Length; i+= 2)
+        for (int i = 0; i < args.Length; i += 2)
         {
-            result.Add(args[i].ToString(), FromObject(args[i+1]));
+            result.Add(args[i].ToString(), FromObject(args[i + 1]));
         }
         return result;
     }
@@ -288,7 +285,7 @@ public class EasyObject : DynamicObject, IPlainObjectWrapper, IExportToPlainObje
             result = assoc;
         }
         if (dictionary == null) return true;
-        EasyObject eo = Null;
+        EasyObject eo /*= Null*/;
         dictionary.TryGetValue(name, out eo);
         result = eo;
         return true;
@@ -336,7 +333,7 @@ public class EasyObject : DynamicObject, IPlainObjectWrapper, IExportToPlainObje
             result = Null;
             return true;
         }
-        EasyObject eo = Null;
+        EasyObject eo /*= Null*/;
         dictionary.TryGetValue((string)idx, out eo);
         result = eo;
         return true;
@@ -354,7 +351,7 @@ public class EasyObject : DynamicObject, IPlainObjectWrapper, IExportToPlainObje
             {
                 RealData = new List<EasyObject>();
             }
-            while (list.Count < (pos + 1))
+            while (list!.Count < (pos + 1))
             {
                 list.Add(null);
             }
@@ -420,20 +417,21 @@ public class EasyObject : DynamicObject, IPlainObjectWrapper, IExportToPlainObje
         if (json.StartsWith("#!"))
         {
             string[] lines = TextToLines(json);
-            lines = lines.Skip(1).ToArray(); ;
+            lines = lines.Skip(1).ToArray();
             json = String.Join("\n", lines);
         }
-        return new EasyObject(JsonHandler.Parse(json));
+        return new EasyObject(JsonParser.ParseJson(json));
     }
 
     public dynamic ToObject()
     {
-        return new PlainObjectConverter(false).Parse(RealData);
+        return new PlainObjectConverter(jsonParser: null, forceAscii: ForceAscii).Parse(RealData);
     }
 
     public string ToJson(bool indent = false, bool sortKeys = false)
     {
-        return JsonHandler.Stringify(RealData, indent, sortKeys);
+        PlainObjectConverter poc = new PlainObjectConverter(jsonParser: JsonParser, forceAscii: ForceAscii);
+        return poc.Stringify(RealData, indent, sortKeys);
     }
 
 #if false
@@ -455,7 +453,8 @@ public class EasyObject : DynamicObject, IPlainObjectWrapper, IExportToPlainObje
     public static string ToPrintable(object x, string title = null)
     {
         x = FromObject(x).ToObject();
-        return PlainObjectConverter.ToPrintable(ShowDetail, x, title);
+        PlainObjectConverter poc = new PlainObjectConverter(jsonParser: JsonParser, forceAscii: ForceAscii);
+        return poc.ToPrintable(ShowDetail, x, title);
     }
 
     public static void Echo(object x, string title = null)
@@ -480,7 +479,7 @@ public class EasyObject : DynamicObject, IPlainObjectWrapper, IExportToPlainObje
     public static void Message(object x, string title = null)
     {
         if (title == null) title = "Message";
-        string s = ToPrintable(x, null);
+        string s = ToPrintable(x, title: title);
         NativeMethods.MessageBoxW(IntPtr.Zero, s, title, 0);
     }
 
@@ -518,7 +517,7 @@ public class EasyObject : DynamicObject, IPlainObjectWrapper, IExportToPlainObje
                 return TryAssoc(name);
             }
             if (dictionary == null) return Null;
-            EasyObject eo = null;
+            EasyObject eo /*= null*/;
             dictionary.TryGetValue(name, out eo);
             return eo;
         }

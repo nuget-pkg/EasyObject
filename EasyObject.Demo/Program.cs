@@ -134,7 +134,7 @@ class Program
         var unpickler = new Unpickler();
         object result = unpickler.loads(list01_bytes);
         Echo(result, "result");
-        var o = new PlainObjectConverter(false).Parse(result);
+        var o = new PlainObjectConverter(forceAscii: false).Parse(result);
         Echo(o, "o");
         var pickler = new Pickler();
         var bytes = pickler.dumps(o);
