@@ -48,12 +48,37 @@ class Program
     static void Main()
     {
         ShowDetail = true;
+        Console.WriteLine("(1)");
+        EasyObject eoNull = Null;
+        Echo(eoNull.ToJson());
+        var poc = new PlainObjectConverter();
+        Echo(poc.Stringify(eoNull, indent: true));
+        Echo(eoNull.ToPrintable());
+        Echo(eoNull);
         Echo(Null);
+        Console.WriteLine("(2)");
         var eo = EasyObject.FromObject(new { a = 123 });
+        Echo(eo);
+        Console.WriteLine("(3)");
         Echo(eo.TypeValue, "eo.TypeValue");
+        Console.WriteLine("(4)");
         Assert.That(eo.TypeValue, Is.EqualTo(@object));
+        Console.WriteLine("(5)");
+        EasyObject a = eo["a"];
+        Console.WriteLine("(5.1)");
+        Echo(FullName(a));
+        Echo(a.GetType() == typeof(double));
+        Console.WriteLine("(5.1.1)");
+        //Echo(a.ToObject());
+        Console.WriteLine("(5.1.1.1)");
+        Echo(poc.Stringify(a, true));
+        Console.WriteLine("(5.1.2)");
+        Echo(a, "a");
+        Console.WriteLine("(5.2)");
         Console.WriteLine(eo["a"]);
+        Console.WriteLine("(6)");
         Assert.That(eo["a"].Cast<int>(), Is.EqualTo(123));
+        Console.WriteLine("(7)");
         Assert.That(eo.Keys, Is.EqualTo(new List<string> { "a" }));
         Echo(eo[0], "eo[0]");
         Assert.That(eo[0].TypeValue, Is.EqualTo(@null));

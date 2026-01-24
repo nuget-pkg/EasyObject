@@ -135,7 +135,7 @@ public class Tests
         Assert.That(eo.TypeValue, Is.EqualTo(EasyObject.@string));
         string print = ToPrintable(eo);
         Assert.That(print, Is.EqualTo("""
-            `0001-01-01T00:00:00.0000000`
+            <Global.EasyObject(System.String)> "0001-01-01T00:00:00.0000000"
             """));
         string s = eo.Cast<string>();
         Assert.That(s, Is.EqualTo("""
