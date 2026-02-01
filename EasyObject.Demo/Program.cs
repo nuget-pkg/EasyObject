@@ -48,6 +48,7 @@ class Program
     static void Main()
     {
         ShowDetail = true;
+        //AllocConsole();
         Console.WriteLine("(1)");
         EasyObject eoNull = Null;
         Echo(eoNull.ToJson());

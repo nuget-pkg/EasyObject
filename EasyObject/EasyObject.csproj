@@ -2,7 +2,7 @@
 	<PropertyGroup>
 		<LangVersion>latest</LangVersion>
 		<TargetFrameworks>netstandard2.0;net462;net8.0</TargetFrameworks>
-		<Version>2026.0124.1028.10</Version>
+		<Version>2026.0202.0442.19</Version>
 		<Nullable>disable</Nullable>
 		<ImplicitUsings>disable</ImplicitUsings>
 		<RootNamespace>EasyObject</RootNamespace>
@@ -56,10 +56,6 @@
 		<PackageReference Include="PlainObjectInterface" Version="2026.122.1836.32" />
 		<PackageReference Include="JsoncParser" Version="2026.122.1022.34" />
 		<PackageReference Include="PlainObjectConverter" Version="2026.124.1019.42" />
+		<PackageReference Include="WinConsole" Version="2024.603.1317.52" />
 	</ItemGroup>
-	<!--
-	<ItemGroup>
-	  <ProjectReference Include="..\..\PlainObjectConverter\PlainObjectConverter\PlainObjectConverter.csproj" />
-	</ItemGroup>
-	-->
 </Project>
