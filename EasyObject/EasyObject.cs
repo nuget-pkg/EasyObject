@@ -434,7 +434,7 @@ public class EasyObject : DynamicObject, IExposeInternalObject, IExportToPlainOb
         return poc.Stringify(RealData, indent, sortKeys);
     }
 
-#if true
+#if false
     // ReSharper disable once MemberCanBePrivate.Global
     public static void AllocConsole()
     {
