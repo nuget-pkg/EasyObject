@@ -61,6 +61,7 @@ internal class EasyObjectConverter : IConvertParsedResult
 public class EasyObject : DynamicObject, IExposeInternalObject, IExportToPlainObject
 {
     public object RealData /*= null*/;
+    public static readonly bool IsConsoleApplication = HasConsole();
 
     // ReSharper disable once MemberCanBePrivate.Global
     public static readonly IParseJson DefaultJsonParser = new CSharpEasyLanguageHandler(numberAsDecimal: true);
@@ -438,15 +439,18 @@ public class EasyObject : DynamicObject, IExposeInternalObject, IExportToPlainOb
     // ReSharper disable once MemberCanBePrivate.Global
     public static void AllocConsole()
     {
+        if (IsConsoleApplication) return;
         WinConsole.Alloc();
     }
     // ReSharper disable once MemberCanBePrivate.Global
     public static void FreeConsole()
     {
+        if (IsConsoleApplication) return;
         WinConsole.Free();
     }
     public static void ReallocConsole()
     {
+        if (IsConsoleApplication) return;
         FreeConsole();
         AllocConsole();
     }
@@ -631,5 +635,19 @@ public class EasyObject : DynamicObject, IExposeInternalObject, IExportToPlainOb
     public object ExportToPlainObject()
     {
         return this.ToObject();
+    }
+    public static bool HasConsole()
+    {
+        try
+        {
+            // Attempt to get a console property
+            int left = Console.CursorLeft;
+            return true;
+        }
+        catch (IOException)
+        {
+            // If an exception is caught, no console is available
+            return false;
+        }
     }
 }
