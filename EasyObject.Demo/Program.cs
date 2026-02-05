@@ -43,6 +43,32 @@ class Exchangeable4
     }
 }
 
+class MyData: EasyObject
+{
+    public MyData(int n, string s)
+    {
+        this.ImportFromPlainObject(new { n, s });
+    }
+    public MyData(string json)
+    {
+        this.ImportFromCommonJson(json);
+    }
+    public int N
+    {
+        get
+        {
+            return this.Dynamic.n;
+        }
+    }
+    public string S
+    {
+        get
+        {
+            return this.Dynamic.s;
+        }
+    }
+}
+
 class Program
 {
     static void Main()
@@ -217,6 +243,14 @@ class Program
         Echo(exc3, "exc3");
         var exc4 = new Exchangeable4();
         Echo(exc4, "exc4");
+        var myData = new MyData(123, "xyz");
+        Echo(myData.N, "myData.N");
+        Echo(myData.S, "myData.S");
+        var myData2 = new MyData("""{n: 456, s: "ABC"}""");
+        Echo(myData2.N, "myData2.N");
+        Echo(myData2.S, "myData2.S");
+        Echo(myData.ExportToCommonJson(), "myData.ExportToCommonJson()");
+        Echo(myData2.ExportToCommonJson(), "myData2.ExportToCommonJson()");
         Log("[END]");
     }
 }

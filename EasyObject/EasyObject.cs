@@ -58,7 +58,13 @@ internal class EasyObjectConverter : IConvertParsedResult
     }
 }
 
-public class EasyObject : DynamicObject, IExposeInternalObject, IExportToPlainObject
+public class EasyObject :
+    DynamicObject,
+    IExposeInternalObject,
+    IExportToPlainObject,
+    IImportFromPlainObject,
+    IExportToCommonJson,
+    IImportFromCommonJson
 {
     public object RealData /*= null*/;
     public static readonly bool IsConsoleApplication = HasConsole();
@@ -649,5 +655,25 @@ public class EasyObject : DynamicObject, IExposeInternalObject, IExportToPlainOb
             // If an exception is caught, no console is available
             return false;
         }
+    }
+
+    public void ImportFromPlainObject(object x)
+    {
+        var eo = FromObject(x);
+        this.RealData = eo.RealData;
+    }
+
+    public void ImportFromCommonJson(string x)
+    {
+        var eo = FromJson(x);
+        this.RealData = eo.RealData;
+    }
+
+    public string ExportToCommonJson()
+    {
+        return this.ToJson(
+            indent: true,
+            sortKeys: false
+            );
     }
 }
