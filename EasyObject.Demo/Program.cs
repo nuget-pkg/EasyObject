@@ -302,10 +302,8 @@ class Program
         ast.Trim(hideKeys: ["loc", "start", "end"], maxDepth: 3);
         Echo(ast, "ast(2)");
 
-        if (false)
-        {
-            EasyObject.AllocConsole();
-        }
+        var noError = FromJson("\n", ignoreErrors: true);
+        Echo(noError, "noError");
 
         Log("[END]");
     }

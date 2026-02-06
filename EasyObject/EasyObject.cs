@@ -414,12 +414,23 @@ public class EasyObject :
         }
         return lines.ToArray();
     }
-    public static EasyObject FromObject(object obj)
+    public static EasyObject FromObject(object obj, bool ignoreErrors = false)
     {
-        return new EasyObject(obj);
+        if (!ignoreErrors)
+        {
+            return new EasyObject(obj);
+        }
+        try
+        {
+            return new EasyObject(obj);
+        }
+        catch (Exception)
+        {
+            return new EasyObject(null);
+        }
     }
 
-    public static EasyObject FromJson(string json)
+    public static EasyObject FromJson(string json, bool ignoreErrors = false)
     {
         if (json == null) return null;
         if (json.StartsWith("#!"))
@@ -428,7 +439,18 @@ public class EasyObject :
             lines = lines.Skip(1).ToArray();
             json = String.Join("\n", lines);
         }
-        return new EasyObject(JsonParser.ParseJson(json));
+        if (!ignoreErrors)
+        {
+            return new EasyObject(JsonParser.ParseJson(json));
+        }
+        try
+        {
+            return new EasyObject(JsonParser.ParseJson(json));
+        }
+        catch (Exception)
+        {
+            return new EasyObject(null);
+        }
     }
 
     public dynamic ToObject()
