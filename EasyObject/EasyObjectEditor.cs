@@ -55,9 +55,9 @@ namespace Global
                         {
                             Clear(x.list[i]);
                         }
-                        return;
+                        //return;
                     }
-                    if (x.IsObject)
+                    else if (x.IsObject)
                     {
                         var keys = x.Keys;
                         for (int i = 0; i < keys.Count; i++)
@@ -65,7 +65,7 @@ namespace Global
                             string key = keys[i];
                             Clear(x.dictionary[key]);
                         }
-                        return;
+                        //return;
                     }
                 }
             }
@@ -75,9 +75,9 @@ namespace Global
                 {
                     TrimHelper(depth + 1, x.list[i], maxDepth, hideKeys);
                 }
-                return;
+                //return;
             }
-            if (x.IsObject)
+            else if (x.IsObject)
             {
                 var keys = x.Keys;
                 for (int i = 0; i < keys.Count; i++)
@@ -90,7 +90,7 @@ namespace Global
                     }
                     TrimHelper(depth + 1, x.dictionary[key], maxDepth, hideKeys);
                 }
-                return;
+                //return;
             }
         }
 

@@ -293,6 +293,15 @@ class Program
         myArgs = Array.ConvertAll(eoArgs.ToObject().ToArray() as object[], obj => obj?.ToString() ?? "");
         Echo(new { myArgs });
 
+        EasyObject ast;
+        ast = FromJson(BabelOutput.AstJson);
+        ast.Trim(hideKeys: ["loc", "start", "end"], maxDepth: 2);
+        Echo(ast, "ast(1)");
+
+        ast = FromJson(BabelOutput.AstJson);
+        ast.Trim(hideKeys: ["loc", "start", "end"], maxDepth: 3);
+        Echo(ast, "ast(2)");
+
         Log("[END]");
     }
 }
