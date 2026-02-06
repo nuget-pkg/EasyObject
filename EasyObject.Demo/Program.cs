@@ -286,6 +286,13 @@ class Program
         trimTest.Trim(hideKeys: ["a"]);
         Echo(trimTest, "(3)");
 
+        string[] myArgs = ["apple", "melon", "peach"];
+        var eoArgs = FromObject(myArgs);
+        var first = eoArgs.Shift();
+        Echo(new { first, eoArgs });
+        myArgs = Array.ConvertAll(eoArgs.ToObject().ToArray() as object[], obj => obj?.ToString() ?? "");
+        Echo(new { myArgs });
+
         Log("[END]");
     }
 }

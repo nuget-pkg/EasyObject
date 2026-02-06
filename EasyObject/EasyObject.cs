@@ -703,6 +703,15 @@ public class EasyObject :
         return EasyObjectEditor.Clone(this, maxDepth, hideKeys, always);
     }
 
+    public EasyObject Shift()
+    {
+        if (this.list == null) return null;
+        if (this.list.Count == 0) return null;
+        EasyObject result = this.list[0];
+        this.list.RemoveAt(0);
+        return result;
+    }
+
     public object ExportToPlainObject()
     {
         return this.ToObject();
