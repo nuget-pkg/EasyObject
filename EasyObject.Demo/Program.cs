@@ -251,6 +251,41 @@ class Program
         Echo(myData2.S, "myData2.S");
         Echo(myData.ExportToCommonJson(), "myData.ExportToCommonJson()");
         Echo(myData2.ExportToCommonJson(), "myData2.ExportToCommonJson()");
+        string trimmedJson = """
+            {
+              x: [
+                1,
+                2,
+                3,
+                [
+                  "a",
+                  "b",
+                  "c",
+                  [ 11, 22, 33]
+                ]
+              ],
+              y: {
+                a: 1111, b: 2222
+              }
+            }
+            """;
+        EasyObject trimTest;
+
+        trimTest = FromJson(trimmedJson);
+        Echo(trimTest, maxDepth: 1);
+        trimTest.Trim(maxDepth: 1);
+        Echo(trimTest, "(1)");
+
+        trimTest = FromJson(trimmedJson);
+        Echo(trimTest, maxDepth: 2);
+        trimTest.Trim(maxDepth: 2);
+        Echo(trimTest, "(2)");
+
+        trimTest = FromJson(trimmedJson);
+        Echo(trimTest, hideKeys: ["a"]);
+        trimTest.Trim(hideKeys: ["a"]);
+        Echo(trimTest, "(3)");
+
         Log("[END]");
     }
 }

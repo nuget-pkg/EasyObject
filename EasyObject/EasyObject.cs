@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // ReSharper disable once CheckNamespace
@@ -227,13 +228,13 @@ public class EasyObject :
     }
 
     // ReSharper disable once InconsistentNaming
-    private List<EasyObject> list
+    internal List<EasyObject> list
     {
         get { return RealData as List<EasyObject>; }
     }
 
     // ReSharper disable once InconsistentNaming
-    private Dictionary<string, EasyObject> dictionary
+    internal Dictionary<string, EasyObject> dictionary
     {
         get { return RealData as Dictionary<string, EasyObject>; }
     }
@@ -469,26 +470,73 @@ public class EasyObject :
         return poc.ToPrintable(ShowDetail, x, title);
     }
 
-    public static void Echo(object x, string title = null)
+    public static void Echo(
+        object x,
+        string title = null,
+        uint maxDepth = 0,
+        List<string> hideKeys = null
+        )
     {
+        hideKeys ??= new List<string>();
+        if (maxDepth > 0 || hideKeys.Count > 0)
+        {
+            var eo = FromObject(x);
+            x = eo.Clone(
+                maxDepth: maxDepth,
+                hideKeys: hideKeys,
+                always: false);
+        }
         string s = ToPrintable(x, title);
         Console.WriteLine(s);
         System.Diagnostics.Debug.WriteLine(s);
     }
-    public static void Log(object x, string title = null)
+    public static void Log(
+        object x,
+        string title = null,
+        uint maxDepth = 0,
+        List<string> hideKeys = null
+        )
     {
+        hideKeys ??= new List<string>();
+        if (maxDepth > 0 || hideKeys.Count > 0)
+        {
+            var eo = FromObject(x);
+            x = eo.Clone(
+                maxDepth: maxDepth,
+                hideKeys: hideKeys,
+                always: false);
+        }
         string s = ToPrintable(x, title);
         Console.Error.WriteLine("[Log] " + s);
         System.Diagnostics.Debug.WriteLine("[Log] " + s);
     }
-    public static void Debug(object x, string title = null)
+    public static void Debug(
+        object x,
+        string title = null,
+        uint maxDepth = 0,
+        List<string> hideKeys = null
+        )
     {
         if (!DebugOutput) return;
+        hideKeys ??= new List<string>();
+        if (maxDepth > 0 || hideKeys.Count > 0)
+        {
+            var eo = FromObject(x);
+            x = eo.Clone(
+                maxDepth: maxDepth,
+                hideKeys: hideKeys,
+                always: false);
+        }
         string s = ToPrintable(x, title);
         Console.Error.WriteLine("[Debug] " + s);
         System.Diagnostics.Debug.WriteLine("[Debug] " + s);
     }
-    public static void Message(object x, string title = null)
+    public static void Message(
+        object x,
+        string title = null,
+        uint maxDepth = 0,
+        List<string> hideKeys = null
+        )
     {
         if (title == null) title = "Message";
         string s = ToPrintable(x, title: title);
@@ -636,6 +684,23 @@ public class EasyObject :
     public void Nullify()
     {
         this.RealData = null;
+    }
+
+    public void Trim(
+            uint maxDepth = 0,
+            List<string> hideKeys = null
+        )
+    {
+        EasyObjectEditor.Trim( this, maxDepth, hideKeys );
+    }
+
+    public EasyObject Clone(
+        uint maxDepth = 0,
+        List<string> hideKeys = null,
+        bool always = true
+        )
+    {
+        return EasyObjectEditor.Clone(this, maxDepth, hideKeys, always);
     }
 
     public object ExportToPlainObject()
