@@ -22,15 +22,15 @@
 		<EmbedUntrackedSources>true</EmbedUntrackedSources>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 	</PropertyGroup>
-	<PropertyGroup Condition="'$(TargetFramework.TrimEnd(`0123456789`))' == 'net'">
-		<UseWindowsForms>true</UseWindowsForms>
-	</PropertyGroup>
 	<PropertyGroup>
 		<DebugType>full</DebugType>
 	</PropertyGroup>
 	<PropertyGroup>
 		<!--needef for project using xunit-->
 		<IsPackable>true</IsPackable>
+	</PropertyGroup>
+	<PropertyGroup>
+		<DefineConstants>$(DefineConstants);USE_WINCONSOLE</DefineConstants>
 	</PropertyGroup>
 	<ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789`))' == 'net'">
 		<Reference Include="Microsoft.CSharp" />

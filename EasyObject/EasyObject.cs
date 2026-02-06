@@ -442,7 +442,7 @@ public class EasyObject :
         return poc.Stringify(RealData, indent, sortKeys);
     }
 
-#if true
+#if USE_WINCONSOLE
     // ReSharper disable once MemberCanBePrivate.Global
     public static void AllocConsole()
     {

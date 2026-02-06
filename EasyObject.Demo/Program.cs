@@ -302,6 +302,11 @@ class Program
         ast.Trim(hideKeys: ["loc", "start", "end"], maxDepth: 3);
         Echo(ast, "ast(2)");
 
+        if (false)
+        {
+            EasyObject.AllocConsole();
+        }
+
         Log("[END]");
     }
 }
