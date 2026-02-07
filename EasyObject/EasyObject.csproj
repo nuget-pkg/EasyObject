@@ -2,12 +2,13 @@
 	<PropertyGroup>
 		<LangVersion>latest</LangVersion>
 		<TargetFrameworks>netstandard2.0;net462;net8.0</TargetFrameworks>
-		<Version>2026.0207.0331.46</Version>
-		<Nullable>disable</Nullable>
+		<Version>2026.0207.1825.58</Version>
+		<Nullable>enable</Nullable>
 		<ImplicitUsings>disable</ImplicitUsings>
 		<RootNamespace>EasyObject</RootNamespace>
 		<PlatformTarget>AnyCPU</PlatformTarget>
-		<NoWarn>3021,0618,8603,0168,8632,8600,8601,8604,8625,8618,8602</NoWarn>
+		<WarningsAsErrors>nullable</WarningsAsErrors>
+		<NoWarn></NoWarn>
 		<Authors>JavaCommons</Authors>
 		<Company>JavaCommons Technologies</Company>
 		<Product>EasyObject</Product>
@@ -55,7 +56,7 @@
 	<ItemGroup>
 		<PackageReference Include="PlainObjectInterface" Version="2026.122.1836.32" />
 		<PackageReference Include="JsoncParser" Version="2026.122.1022.34" />
-		<PackageReference Include="PlainObjectConverter" Version="2026.124.1019.42" />
+		<PackageReference Include="PlainObjectConverter" Version="2026.207.1704.55" />
 		<PackageReference Include="WinConsole" Version="2026.204.635.46" />
 	</ItemGroup>
 </Project>

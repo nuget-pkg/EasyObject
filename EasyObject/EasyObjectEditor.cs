@@ -10,11 +10,11 @@ namespace Global
         public static EasyObject Clone(
             EasyObject x,
             uint maxDepth = 0,
-            List<string> hideKeys = null,
+            List<string>? hideKeys = null,
             bool always = true
             )
         {
-            if (x == null) return null;
+            if (x == null) return Null;
             hideKeys = hideKeys ?? new List<string>();
             if (!always)
             {
@@ -30,7 +30,7 @@ namespace Global
         public static void Trim(
             EasyObject x,
             uint maxDepth = 0,
-            List<string> hideKeys = null
+            List<string>? hideKeys = null
             )
         {
             if (x == null) return;
@@ -53,7 +53,7 @@ namespace Global
                     {
                         for (int i = 0; i < x.Count; i++)
                         {
-                            Clear(x.list[i]);
+                            Clear(x.list![i]);
                         }
                         //return;
                     }
@@ -63,7 +63,7 @@ namespace Global
                         for (int i = 0; i < keys.Count; i++)
                         {
                             string key = keys[i];
-                            Clear(x.dictionary[key]);
+                            Clear(x.dictionary![key]);
                         }
                         //return;
                     }
@@ -73,7 +73,7 @@ namespace Global
             {
                 for (int i = 0; i < x.Count; i++)
                 {
-                    TrimHelper(depth + 1, x.list[i], maxDepth, hideKeys);
+                    TrimHelper(depth + 1, x.list![i], maxDepth, hideKeys);
                 }
                 //return;
             }
@@ -85,10 +85,10 @@ namespace Global
                     string key = keys[i];
                     if (hideKeys.Contains(key))
                     {
-                        x.dictionary.Remove(key);
+                        x.dictionary!.Remove(key);
                         continue;
                     }
-                    TrimHelper(depth + 1, x.dictionary[key], maxDepth, hideKeys);
+                    TrimHelper(depth + 1, x.dictionary![key], maxDepth, hideKeys);
                 }
                 //return;
             }
@@ -99,11 +99,11 @@ namespace Global
             if (x == null) return;
             if (x.IsArray)
             {
-                x.list.Clear();
+                x.list!.Clear();
             }
             else if (x.IsObject)
             {
-                x.dictionary.Clear();
+                x.dictionary!.Clear();
             }
         }
 

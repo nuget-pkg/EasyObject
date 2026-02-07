@@ -247,6 +247,8 @@ class Program
         Echo(myData.N, "myData.N");
         Echo(myData.S, "myData.S");
         var myData2 = new MyData("""{n: 456, s: "ABC"}""");
+        Echo(myData2 == null);
+        Echo(myData2.RealData == null);
         Echo(myData2.N, "myData2.N");
         Echo(myData2.S, "myData2.S");
         Echo(myData.ExportToCommonJson(), "myData.ExportToCommonJson()");
