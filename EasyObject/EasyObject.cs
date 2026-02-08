@@ -432,9 +432,9 @@ public class EasyObject :
         }
     }
 
-    public static EasyObject? FromJson(string? json, bool ignoreErrors = false)
+    public static EasyObject FromJson(string? json, bool ignoreErrors = false)
     {
-        if (json == null) return null;
+        if (json == null) return Null;
         if (json.StartsWith("#!"))
         {
             string[] lines = TextToLines(json);
