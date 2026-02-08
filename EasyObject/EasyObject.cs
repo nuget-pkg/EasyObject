@@ -489,6 +489,7 @@ public class EasyObject :
 
     public static string ToPrintable(object? x, string? title = null)
     {
+        //x = FromObject(x).ExportToPlainObject(); /**/
         PlainObjectConverter poc = new PlainObjectConverter(jsonParser: JsonParser, forceAscii: ForceAscii);
         return poc.ToPrintable(ShowDetail, x, title);
     }
@@ -778,5 +779,9 @@ public class EasyObject :
             indent: true,
             sortKeys: false
             );
+    }
+    public dynamic? ExportToExpandoObject()
+    {
+        return EasyObjectEditor.ExportToExpandoObject(this);
     }
 }

@@ -307,6 +307,10 @@ class Program
         var noError = FromJson("\n", ignoreErrors: true);
         Echo(noError, "noError");
 
+        ast = FromJson(BabelOutput.AstJson);
+        var xo = ast.ExportToExpandoObject();
+        Echo(xo, "xo");
+
         Log("[END]");
     }
 }
