@@ -2,7 +2,7 @@
 	<PropertyGroup>
 		<LangVersion>latest</LangVersion>
 		<TargetFrameworks>netstandard2.0;net462;net8.0</TargetFrameworks>
-		<Version>2026.0208.1702.44</Version>
+		<Version>2026.0209.0112.40</Version>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>disable</ImplicitUsings>
 		<RootNamespace>EasyObject</RootNamespace>
@@ -30,9 +30,11 @@
 		<!--needef for project using xunit-->
 		<IsPackable>true</IsPackable>
 	</PropertyGroup>
+	<!--
 	<PropertyGroup>
 		<DefineConstants>$(DefineConstants);USE_WINCONSOLE</DefineConstants>
 	</PropertyGroup>
+	-->
 	<ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789`))' == 'net'">
 		<Reference Include="Microsoft.CSharp" />
 		<Reference Include="System" />
@@ -57,6 +59,5 @@
 		<PackageReference Include="PlainObjectInterface" Version="2026.122.1836.32" />
 		<PackageReference Include="JsoncParser" Version="2026.122.1022.34" />
 		<PackageReference Include="PlainObjectConverter" Version="2026.207.1704.55" />
-		<PackageReference Include="WinConsole" Version="2026.204.635.46" />
 	</ItemGroup>
 </Project>

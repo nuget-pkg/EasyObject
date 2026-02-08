@@ -38,7 +38,7 @@ namespace MediaPlayer
         [STAThread]
         private static void Main(string[] args)
         {
-            EasyObject.ReallocConsole();
+            //EasyObject.ReallocConsole();
             Console.WriteLine("ハロー©");
             Echo(new { args });
             string path = "";
