@@ -489,13 +489,12 @@ public class EasyObject :
 
     public static string ToPrintable(object? x, string? title = null)
     {
-        //x = FromObject(x).ToObject();
         PlainObjectConverter poc = new PlainObjectConverter(jsonParser: JsonParser, forceAscii: ForceAscii);
         return poc.ToPrintable(ShowDetail, x, title);
     }
 
     public static void Echo(
-        object x,
+        object? x,
         string? title = null,
         uint maxDepth = 0,
         List<string>? hideKeys = null
@@ -535,7 +534,7 @@ public class EasyObject :
         System.Diagnostics.Debug.WriteLine("[Log] " + s);
     }
     public static void Debug(
-        object x,
+        object? x,
         string? title = null,
         uint maxDepth = 0,
         List<string>? hideKeys = null
@@ -556,7 +555,7 @@ public class EasyObject :
         System.Diagnostics.Debug.WriteLine("[Debug] " + s);
     }
     public static void Message(
-        object x,
+        object? x,
         string? title = null,
         uint maxDepth = 0,
         List<string>? hideKeys = null
