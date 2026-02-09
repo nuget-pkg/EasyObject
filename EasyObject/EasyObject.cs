@@ -703,10 +703,14 @@ public class EasyObject :
         }
     }
 
-    public static string FullName(dynamic x)
+    public static string FullName(dynamic? x)
     {
         if (x is null) return "null";
         string fullName = ((object)x).GetType().FullName!;
+        if (fullName.StartsWith("<>f__AnonymousType"))
+        {
+            return "AnonymousType";
+        }
         return fullName!.Split('`')[0];
     }
 

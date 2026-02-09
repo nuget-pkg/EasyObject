@@ -312,6 +312,8 @@ class Program
         Echo(xo, "xo");
 
         //Echo(ast.ToJson(indent: true));
+        Echo(new { abc = 123, xyz = "abc" });
+        Echo(FullName(new { abc = 123, xyz = "abc" }));
 
         Log("[END]");
     }
