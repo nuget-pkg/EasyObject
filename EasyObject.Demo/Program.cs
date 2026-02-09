@@ -311,6 +311,8 @@ class Program
         var xo = ast.ExportToDynamicObject();
         Echo(xo, "xo");
 
+        //Echo(ast.ToJson(indent: true));
+
         Log("[END]");
     }
 }
