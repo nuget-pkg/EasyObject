@@ -8,3 +8,5 @@ version="${ts}"
 
 cd $cwd/EasyObject
 sed -i -e "s/<Version>.*<\/Version>/<Version>${version}<\/Version>/g" EasyObject.csproj
+cd $cwd/
+echo ${version}>version.txt
