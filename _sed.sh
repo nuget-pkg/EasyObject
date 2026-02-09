@@ -1,5 +1,5 @@
 #! /usr/bin/env bash
-set -uvx
+#set -uvx
 set -e
 cd "$(dirname "$0")"
 cwd=`pwd`
