@@ -9,6 +9,9 @@ cd $cwd
 version=`cat version.txt`
 echo \$version=$version
 
+rm -rf *.nupkg
+dotnet pack -o . -p:Configuration=Release
+
 tag="v$version"
 cd $cwd
 git add .
