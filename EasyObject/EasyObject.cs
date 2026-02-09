@@ -68,7 +68,7 @@ public class EasyObject :
     IImportFromCommonJson
 {
     public object? RealData /*= null*/;
-    public static readonly bool IsConsoleApplication = HasConsole();
+    //public static readonly bool IsConsoleApplication = HasConsole();
 
     // ReSharper disable once MemberCanBePrivate.Global
     public static readonly IParseJson DefaultJsonParser = new CSharpEasyLanguageHandler(numberAsDecimal: true);
@@ -110,10 +110,10 @@ public class EasyObject :
         return this.ToPrintable();
     }
 
-    public object? ToPlainObject()
-    {
-        return this.ToObject();
-    }
+    //public object? ToPlainObject()
+    //{
+    //    return this.ToObject();
+    //}
 
     public string ToPrintable()
     {
@@ -455,9 +455,17 @@ public class EasyObject :
         }
     }
 
-    public dynamic? ToObject()
+    public dynamic? ToObject(bool asDynamicObject = false)
     {
-        return new PlainObjectConverter(jsonParser: null, forceAscii: ForceAscii).Parse(RealData);
+        //return new PlainObjectConverter(jsonParser: null, forceAscii: ForceAscii).Parse(RealData);
+        if (asDynamicObject)
+        {
+            return this.ExportToDynamicObject();
+        }
+        else
+        {
+            return this.ExportToPlainObject();
+        }
     }
 
     public string ToJson(bool indent = false, bool sortKeys = false)
@@ -467,6 +475,20 @@ public class EasyObject :
     }
 
 #if USE_WINCONSOLE
+    public static bool HasConsole()
+    {
+        try
+        {
+            // Attempt to get a console property
+            int left = Console.CursorLeft;
+            return true;
+        }
+        catch (IOException)
+        {
+            // If an exception is caught, no console is available
+            return false;
+        }
+    }
     // ReSharper disable once MemberCanBePrivate.Global
     public static void AllocConsole()
     {
@@ -489,7 +511,6 @@ public class EasyObject :
 
     public static string ToPrintable(object? x, string? title = null)
     {
-        //x = FromObject(x).ExportToPlainObject(); /**/
         PlainObjectConverter poc = new PlainObjectConverter(jsonParser: JsonParser, forceAscii: ForceAscii);
         return poc.ToPrintable(ShowDetail, x, title);
     }
@@ -738,25 +759,6 @@ public class EasyObject :
         return result;
     }
 
-    public object? ExportToPlainObject()
-    {
-        return this.ToObject();
-    }
-    public static bool HasConsole()
-    {
-        try
-        {
-            // Attempt to get a console property
-            int left = Console.CursorLeft;
-            return true;
-        }
-        catch (IOException)
-        {
-            // If an exception is caught, no console is available
-            return false;
-        }
-    }
-
     public void ImportFromPlainObject(object? x)
     {
         var eo = FromObject(x);
@@ -780,7 +782,11 @@ public class EasyObject :
             sortKeys: false
             );
     }
-    public dynamic? ExportToExpandoObject()
+    public object? ExportToPlainObject()
+    {
+        return new PlainObjectConverter(jsonParser: null, forceAscii: ForceAscii).Parse(RealData);
+    }
+    public dynamic? ExportToDynamicObject()
     {
         return EasyObjectEditor.ExportToExpandoObject(this);
     }

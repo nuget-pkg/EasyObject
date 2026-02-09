@@ -308,7 +308,7 @@ class Program
         Echo(noError, "noError");
 
         ast = FromJson(BabelOutput.AstJson);
-        var xo = ast.ExportToExpandoObject();
+        var xo = ast.ExportToDynamicObject();
         Echo(xo, "xo");
 
         Log("[END]");
