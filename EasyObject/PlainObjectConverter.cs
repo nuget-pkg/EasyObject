@@ -73,11 +73,14 @@ class PlainObjectConverter: IConvertParsedResult
             {
                 try
                 {
-                    Type type = x!.GetType();
-                    MethodInfo? method = type.GetMethod("ExportToCommonJson");
-                    if (method != null)
+                    if (x != null)
                     {
-                        x = JsonParser.ParseJson( (string)method.Invoke(x, [])! );
+                        Type type = x!.GetType();
+                        MethodInfo? method = type.GetMethod("ExportToCommonJson");
+                        if (method != null)
+                        {
+                            x = JsonParser.ParseJson((string)method.Invoke(x, [])!);
+                        }
                     }
                 }
                 catch (Exception)
