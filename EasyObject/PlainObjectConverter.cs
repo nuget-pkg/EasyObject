@@ -110,12 +110,12 @@ class PlainObjectConverter: IConvertParsedResult
 
         return member.Name;
     }
-    public string ToPrintable(bool showDetail, object? x, string? title = null)
+    public string ToPrintable(bool showDetail, object? x, string? title = null, bool noIndent = false)
     {
-        var po = Parse(x, numberAsDecimal: true);
-        return ToPrintableHelper(showDetail, po, title, FullName(x));
+        //var po = Parse(x, numberAsDecimal: true);
+        return ToPrintableHelper(showDetail, x, title, noIndent, FullName(x));
     }
-    private string ToPrintableHelper(bool showDetail, object? x, string? title = null, string? fullName = null)
+    private string ToPrintableHelper(bool showDetail, object? x, string? title = null, bool noIndent = false, string? fullName = null)
     {
         if (fullName == null) fullName = FullName(x);
         // ReSharper disable once RedundantArgumentDefaultValue
@@ -131,7 +131,7 @@ class PlainObjectConverter: IConvertParsedResult
         string output /*= null*/;
         try
         {
-            output = op.Stringify(x, indent: true, keyAsSymbol: true);
+            output = op.Stringify(x, indent: !noIndent, keyAsSymbol: true);
         }
         catch (Exception)
         {
@@ -293,8 +293,10 @@ class PlainObjectConverter: IConvertParsedResult
     // ReSharper disable once MemberCanBePrivate.Global
     public string Stringify(object? x, bool indent, bool sortKeys = false, bool keyAsSymbol = false)
     {
+        var po = Parse(x, numberAsDecimal: true);
         StringBuilder sb = new StringBuilder();
-        new JsonStringBuilder(this, this._forceAscii, indent, sortKeys, keyAsSymbol).WriteToSb(sb, x, 0);
+        //new JsonStringBuilder(this, this._forceAscii, indent, sortKeys, keyAsSymbol).WriteToSb(sb, x, 0);
+        new JsonStringBuilder(this, this._forceAscii, indent, sortKeys, keyAsSymbol).WriteToSb(sb, po, 0);
         string json = sb.ToString();
         return json;
     }
@@ -486,18 +488,18 @@ internal class JsonStringBuilder
             // ReSharper disable once RedundantJumpStatement
             return;
         }
-        else if (x is ExpandoObject)
-        {
-            var dic = x as IDictionary<string, object>;
-            var result = new Dictionary<string, object>();
-            foreach (var key in dic!.Keys)
-            {
-                result[key] = dic[key];
-            }
-            WriteToSb(sb, result, level, cancelIndent);
-            // ReSharper disable once RedundantJumpStatement
-            return;
-        }
+        //else if (x is ExpandoObject)
+        //{
+        //    var dic = x as IDictionary<string, object>;
+        //    var result = new Dictionary<string, object>();
+        //    foreach (var key in dic!.Keys)
+        //    {
+        //        result[key] = dic[key];
+        //    }
+        //    WriteToSb(sb, result, level, cancelIndent);
+        //    // ReSharper disable once RedundantJumpStatement
+        //    return;
+        //}
         else if (x is IList)
         {
             IList list = (x as IList)!;
