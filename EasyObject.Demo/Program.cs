@@ -78,8 +78,8 @@ class Program
         Console.WriteLine("(1)");
         EasyObject eoNull = Null;
         Echo(eoNull.ToJson());
-        var poc = new PlainObjectConverter();
-        Echo(poc.Stringify(eoNull, indent: true));
+        //var poc = new PlainObjectConverter();
+        //Echo(poc.Stringify(eoNull, indent: true));
         Echo(eoNull.ToPrintable());
         Echo(eoNull);
         Echo(Null);
@@ -98,7 +98,7 @@ class Program
         Console.WriteLine("(5.1.1)");
         //Echo(a.ToObject());
         Console.WriteLine("(5.1.1.1)");
-        Echo(poc.Stringify(a, true));
+        //Echo(poc.Stringify(a, true));
         Console.WriteLine("(5.1.2)");
         Echo(a, "a");
         Console.WriteLine("(5.2)");
@@ -202,15 +202,15 @@ class Program
         var unpickler = new Unpickler();
         object result = unpickler.loads(list01_bytes);
         Echo(result, "result");
-        var o = new PlainObjectConverter(forceAscii: false).Parse(result);
-        Echo(o, "o");
+        //var o = new PlainObjectConverter(forceAscii: false).Parse(result);
+        //Echo(o, "o");
         var pickler = new Pickler();
-        var bytes = pickler.dumps(o);
-        var ox = unpickler.loads(bytes);
-        Echo(ox, "ox");
-        var eo_ox = EasyObject.FromObject(ox);
-        Echo(eo_ox, "eo_ox");
-        Echo(eo_ox.ToJson(true, true), "eo_ox.ToJson(true, true)");
+        //var bytes = pickler.dumps(o);
+        //var ox = unpickler.loads(bytes);
+        //Echo(ox, "ox");
+        //var eo_ox = EasyObject.FromObject(ox);
+        //Echo(eo_ox, "eo_ox");
+        //Echo(eo_ox.ToJson(true, true), "eo_ox.ToJson(true, true)");
         Echo(DateTime.Now);
 
         string progJson = """
@@ -253,40 +253,6 @@ class Program
         Echo(myData2.S, "myData2.S");
         Echo(myData.ExportToCommonJson(), "myData.ExportToCommonJson()");
         Echo(myData2.ExportToCommonJson(), "myData2.ExportToCommonJson()");
-        string trimmedJson = """
-            {
-              x: [
-                1,
-                2,
-                3,
-                [
-                  "a",
-                  "b",
-                  "c",
-                  [ 11, 22, 33]
-                ]
-              ],
-              y: {
-                a: 1111, b: 2222
-              }
-            }
-            """;
-        EasyObject trimTest;
-
-        trimTest = FromJson(trimmedJson);
-        Echo(trimTest, maxDepth: 1);
-        trimTest.Trim(maxDepth: 1);
-        Echo(trimTest, "(1)");
-
-        trimTest = FromJson(trimmedJson);
-        Echo(trimTest, maxDepth: 2);
-        trimTest.Trim(maxDepth: 2);
-        Echo(trimTest, "(2)");
-
-        trimTest = FromJson(trimmedJson);
-        Echo(trimTest, hideKeys: ["a"]);
-        trimTest.Trim(hideKeys: ["a"]);
-        Echo(trimTest, "(3)");
 
         string[] myArgs = ["apple", "melon", "peach"];
         var eoArgs = FromObject(myArgs);
@@ -314,6 +280,44 @@ class Program
         //Echo(ast.ToJson(indent: true));
         Echo(new { abc = 123, xyz = "abc" });
         Echo(FullName(new { abc = 123, xyz = "abc" }));
+
+        string trimmedJson = """
+            {
+              "x a": [
+                1,
+                2,
+                3,
+                [
+                  "a",
+                  "b",
+                  "c",
+                  [ 11, 22, 33]
+                ]
+              ],
+              y: {
+                a: 1111, b: 2222
+              },
+              _z123ABC: {
+                a: 1111, b: 2222
+              }
+                        }
+            """;
+        EasyObject trimTest;
+
+        trimTest = FromJson(trimmedJson);
+        Echo(trimTest, maxDepth: 1);
+        trimTest.Trim(maxDepth: 1);
+        Echo(trimTest, "(1)");
+
+        trimTest = FromJson(trimmedJson);
+        Echo(trimTest, maxDepth: 2);
+        trimTest.Trim(maxDepth: 2);
+        Echo(trimTest, "(2)");
+
+        trimTest = FromJson(trimmedJson);
+        Echo(trimTest, hideKeys: ["a"]);
+        trimTest.Trim(hideKeys: ["a"]);
+        Echo(trimTest, "(3)");
 
         Log("[END]");
     }

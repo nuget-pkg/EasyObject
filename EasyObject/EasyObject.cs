@@ -1,4 +1,7 @@
-﻿using System;
+﻿// ReSharper disable once CheckNamespace
+namespace Global;
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Dynamic;
@@ -6,9 +9,6 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-
-// ReSharper disable once CheckNamespace
-namespace Global;
 
 public enum EasyObjectType
 {

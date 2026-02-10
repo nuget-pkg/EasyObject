@@ -1,9 +1,8 @@
-using System.Collections.Generic;
-using System.Dynamic;
-
 // ReSharper disable once CheckNamespace
 namespace Global
 {
+    using System.Collections.Generic;
+    using System.Dynamic;
     using static EasyObject;
     internal static class EasyObjectEditor
     {

@@ -58,7 +58,7 @@
 	<ItemGroup>
 		<PackageReference Include="PlainObjectInterface" Version="2026.122.1836.32" />
 		<PackageReference Include="JsoncParser" Version="2026.122.1022.34" />
-		<PackageReference Include="PlainObjectConverter" Version="2026.210.722.33" />
+		<!--<PackageReference Include="PlainObjectConverter" Version="2026.210.722.33" />-->
 
 	</ItemGroup>
 </Project>
