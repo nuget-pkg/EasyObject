@@ -798,9 +798,9 @@ public class EasyObject :
     {
         return EasyObjectEditor.ExportToExpandoObject(this);
     }
-    public static string ObjectToJson(object? x)
+    public static string ObjectToJson(object? x, bool indent = false)
     {
-        return FromObject(x).ToJson(indent: true); ;
+        return FromObject(x).ToJson(indent: indent); ;
     }
     public static object? ObjectToObject(object? x, bool asDynamicObject = false)
     {
