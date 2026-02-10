@@ -468,10 +468,10 @@ public class EasyObject :
         }
     }
 
-    public string ToJson(bool indent = false, bool sortKeys = false)
+    public string ToJson(bool indent = false, bool sortKeys = false, bool keyAsSymbol = false)
     {
         PlainObjectConverter poc = new PlainObjectConverter(jsonParser: JsonParser, forceAscii: ForceAscii);
-        return poc.Stringify(RealData, indent, sortKeys);
+        return poc.Stringify(RealData, indent, sortKeys, keyAsSymbol: keyAsSymbol);
     }
 
 #if USE_WINCONSOLE

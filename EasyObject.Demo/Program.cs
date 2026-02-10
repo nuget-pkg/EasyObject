@@ -321,6 +321,8 @@ class Program
             trimTest.Trim(hideKeys: ["a"]);
             Echo(trimTest, "(3)");
 
+            Echo(trimTest.ToJson(keyAsSymbol: true));
+
             Log("[END]");
         }
         catch (Exception ex)
