@@ -266,7 +266,7 @@ public class EasyObject :
         return dictionary.ContainsKey(name);
     }
 
-    public EasyObject Add(object x)
+    public EasyObject Add(object? x)
     {
         if (list == null) RealData = new List<EasyObject>();
         EasyObject eo = x is EasyObject ? (x as EasyObject)! : new EasyObject(x);
