@@ -110,11 +110,6 @@ public class EasyObject :
         return this.ToPrintable();
     }
 
-    //public object? ToPlainObject()
-    //{
-    //    return this.ToObject();
-    //}
-
     public string ToPrintable(bool noIndent = false)
     {
         return EasyObject.ToPrintable(this, noIndent: noIndent);
@@ -453,6 +448,11 @@ public class EasyObject :
         {
             return new EasyObject(null);
         }
+    }
+
+    public static EasyObject FromFile(string path, bool ignoreErrors = false)
+    {
+        return FromJson(File.ReadAllText(path), ignoreErrors: ignoreErrors);
     }
 
     public dynamic? ToObject(bool asDynamicObject = false)
