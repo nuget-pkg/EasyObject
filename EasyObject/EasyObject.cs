@@ -110,9 +110,9 @@ public class EasyObject :
         return this.ToPrintable();
     }
 
-    public string ToPrintable(bool noIndent = false)
+    public string ToPrintable(bool noIndent = false, bool removeSurrogatePair = false)
     {
-        return EasyObject.ToPrintable(this, noIndent: noIndent);
+        return EasyObject.ToPrintable(this, noIndent: noIndent, removeSurrogatePair: removeSurrogatePair);
     }
 
     public static EasyObject Null { get { return new EasyObject(); } }
@@ -468,10 +468,10 @@ public class EasyObject :
         }
     }
 
-    public string ToJson(bool indent = false, bool sortKeys = false, bool keyAsSymbol = false)
+    public string ToJson(bool indent = false, bool sortKeys = false, bool keyAsSymbol = false, bool removeSurrogatePair = false)
     {
         PlainObjectConverter poc = new PlainObjectConverter(jsonParser: JsonParser, forceAscii: ForceAscii);
-        return poc.Stringify(RealData, indent, sortKeys, keyAsSymbol: keyAsSymbol);
+        return poc.Stringify(RealData, indent, sortKeys, keyAsSymbol: keyAsSymbol, removeSurrogatePair: removeSurrogatePair);
     }
 
 #if USE_WINCONSOLE
@@ -509,10 +509,10 @@ public class EasyObject :
     }
 #endif
 
-    public static string ToPrintable(object? x, string? title = null, bool noIndent = false)
+    public static string ToPrintable(object? x, string? title = null, bool noIndent = false, bool removeSurrogatePair = false)
     {
         PlainObjectConverter poc = new PlainObjectConverter(jsonParser: JsonParser, forceAscii: ForceAscii);
-        return poc.ToPrintable(ShowDetail, x, title, noIndent: noIndent);
+        return poc.ToPrintable(ShowDetail, x, title, noIndent: noIndent, removeSurrogatePair: removeSurrogatePair);
     }
 
     public static void Echo(
@@ -520,7 +520,8 @@ public class EasyObject :
         string? title = null,
         bool noIndent = false,
         uint maxDepth = 0,
-        List<string>? hideKeys = null
+        List<string>? hideKeys = null,
+        bool removeSurrogatePair = false
         )
     {
         hideKeys ??= new List<string>();
@@ -532,7 +533,7 @@ public class EasyObject :
                 hideKeys: hideKeys,
                 always: false);
         }
-        string s = ToPrintable(x, title, noIndent: noIndent);
+        string s = ToPrintable(x, title, noIndent: noIndent, removeSurrogatePair: removeSurrogatePair);
         Console.WriteLine(s);
         System.Diagnostics.Debug.WriteLine(s);
     }
@@ -541,7 +542,8 @@ public class EasyObject :
         string? title = null,
         bool noIndent = false,
         uint maxDepth = 0,
-        List<string>? hideKeys = null
+        List<string>? hideKeys = null,
+        bool removeSurrogatePair = false
         )
     {
         hideKeys ??= new List<string>();
@@ -553,7 +555,7 @@ public class EasyObject :
                 hideKeys: hideKeys,
                 always: false);
         }
-        string s = ToPrintable(x, title, noIndent: noIndent);
+        string s = ToPrintable(x, title, noIndent: noIndent, removeSurrogatePair: removeSurrogatePair);
         Console.Error.WriteLine("[Log] " + s);
         System.Diagnostics.Debug.WriteLine("[Log] " + s);
     }

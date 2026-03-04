@@ -323,6 +323,28 @@ class Program
 
             Echo(trimTest.ToJson(keyAsSymbol: true));
 
+            var parser = new EasyLanguageParser(numberAsDecimal: true, removeSurrogatePair: true);
+            var result1 = parser.ParseJson("'🔥引火★★帝国🔥'");
+            Echo(result1, "result1");
+            var parser2 = new EasyLanguageParser(numberAsDecimal: true, removeSurrogatePair: false);
+            var result2 = parser2.ParseJson("'🔥引火★★帝国🔥'");
+            Echo(result2, "result2");
+
+            var containSurrogate = FromObject(new { title = "🔥引火★★帝国🔥" });
+
+            Echo(containSurrogate);
+            Echo(containSurrogate, removeSurrogatePair: true);
+            Echo(containSurrogate, removeSurrogatePair: false);
+
+            Log(containSurrogate);
+            Log(containSurrogate, removeSurrogatePair: true);
+            Log(containSurrogate, removeSurrogatePair: false);
+
+            var jsonNoSurrogete = containSurrogate.ToJson(indent: true, removeSurrogatePair: true);
+            Log(jsonNoSurrogete, "jsonNoSurrogete");
+            var jsonWithSurrogete = containSurrogate.ToJson(indent: true, removeSurrogatePair: false);
+            Log(jsonWithSurrogete, "jsonWithSurrogete");
+
             Log("[END]");
         }
         catch (Exception ex)
