@@ -345,6 +345,22 @@ class Program
             var jsonWithSurrogete = containSurrogate.ToJson(indent: true, removeSurrogatePair: false);
             Log(jsonWithSurrogete, "jsonWithSurrogete");
 
+            ShowDetail = false;
+
+            var myArray = FromJson("[11, null, 'abc', { x:123, y:777 }]");
+            Log(myArray.Shuffle(), @"myArray.Shuffle()");
+            Log(myArray.Skip(1), @"myArray.Skip(1)");
+            Log(myArray.Take(2), @"myArray.Take(2)");
+            Log(myArray.AsStringArray, @"myArray.AsStringArray");
+            Log(myArray.AsStringList, @"myArray.AsStringList");
+
+            var myDictionary = FromJson("{a:11, b:null, c:'abc', d:{ x:123, y:777 }}");
+            Log(myDictionary.Shuffle(), @"myDictionary.Shuffle()");
+            Log(myDictionary.Skip(2), @"myDictionary.Skip(2)");
+            Log(myDictionary.Take(2), @"myDictionary.Take(2)");
+            Log(myDictionary.AsStringArray, @"myDictionary.AsStringArray");
+            Log(myDictionary.AsStringList, @"myDictionary.AsStringList");
+
             Log("[END]");
         }
         catch (Exception ex)

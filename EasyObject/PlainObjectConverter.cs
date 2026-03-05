@@ -1,4 +1,5 @@
-﻿// ReSharper disable once CheckNamespace
+﻿# if false
+// ReSharper disable once CheckNamespace
 namespace Global;
 
 using System;
@@ -677,3 +678,4 @@ internal class JsonStringBuilder
         return result;
     }
 }
+#endif

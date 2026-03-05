@@ -748,7 +748,7 @@ public class EasyObject :
             List<string>? hideKeys = null
         )
     {
-        EasyObjectEditor.Trim( this, maxDepth, hideKeys );
+        EasyObjectEditor.Trim(this, maxDepth, hideKeys);
     }
 
     public EasyObject Clone(
@@ -767,6 +767,97 @@ public class EasyObject :
         EasyObject result = this.list[0];
         this.list.RemoveAt(0);
         return result;
+    }
+
+    public EasyObject Shuffle()
+    {
+        if (this.list != null)
+        {
+            var list2 = this.list!.Select(i => i).OrderBy(i => Guid.NewGuid()).ToList();
+            return FromObject(list2);
+        }
+        if (this.dictionary != null)
+        {
+            var keys = this.dictionary.Keys!.Select(i => i).OrderBy(i => Guid.NewGuid()).ToList();
+            var result = NewObject();
+            foreach (var key in keys)
+            {
+                result[key] = this.dictionary[key];
+            }
+            return result;
+        }
+        return this.Clone();
+    }
+
+    public EasyObject Skip(int n)
+    {
+        if (this.list != null)
+        {
+            var list2 = this.list!.Select(i => i).Skip(n).ToList();
+            return FromObject(list2);
+        }
+        if (this.dictionary != null)
+        {
+            var keys = this.dictionary.Keys!.Select(i => i).Skip(n).ToList();
+            var result = NewObject();
+            foreach (var key in keys)
+            {
+                result[key] = this.dictionary[key];
+            }
+            return result;
+        }
+        return this.Clone();
+    }
+
+    public EasyObject Take(int n)
+    {
+        if (this.list != null)
+        {
+            var list2 = this.list!.Select(i => i).Take(n).ToList();
+            return FromObject(list2);
+        }
+        if (this.dictionary != null)
+        {
+            var keys = this.dictionary.Keys!.Select(i => i).Take(n).ToList();
+            var result = NewObject();
+            foreach (var key in keys)
+            {
+                result[key] = this.dictionary[key];
+            }
+            return result;
+        }
+        return this.Clone();
+    }
+
+    public string[] AsStringArray
+    {
+        get
+        {
+            if (this.list != null)
+            {
+                return
+                    this.list!
+                    .Select(
+                        i =>
+                        i.IsString ?
+                        i.Cast<string>() :
+                        i.ToJson(keyAsSymbol: true, indent: false))
+                    .ToArray();
+            }
+            if (this.dictionary != null)
+            {
+                return this.dictionary.Keys!.Select(i => i).ToArray();
+            }
+            return [];
+        }
+    }
+
+    public List<string> AsStringList
+    {
+        get
+        {
+            return this.AsStringArray.ToList();
+        }
     }
 
     public void ImportFromPlainObject(object? x)
