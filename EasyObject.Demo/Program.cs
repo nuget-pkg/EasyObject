@@ -157,11 +157,11 @@ class Program
             Echo(eo3["b"].IsArray);
             Echo(eo3["b"].IsNull);
             eo3["b"].Add(777);
-            eo3.AsDictionary["b"].Add(888);
+            eo3.AsDictionary!["b"].Add(888);
             Echo(eo3);
             var i = FromObject(123);
             Echo(i.Cast<double>());
-            var iList1 = eo3["b"].AsList.Select(x => x.Cast<int>()).ToList();
+            var iList1 = eo3["b"].AsList!.Select(x => x.Cast<int>()).ToList();
             Echo(iList1.GetType().FullName);
             Echo(iList1.GetType().ToString());
             var dict = eo3.AsDictionary;
@@ -250,7 +250,7 @@ class Program
             Echo(myData.S, "myData.S");
             var myData2 = new MyData("""{n: 456, s: "ABC"}""");
             Echo(myData2 == null);
-            Echo(myData2.RealData == null);
+            Echo(myData2!.RealData == null);
             Echo(myData2.N, "myData2.N");
             Echo(myData2.S, "myData2.S");
             Echo(myData.ExportToCommonJson(), "myData.ExportToCommonJson()");
@@ -260,7 +260,8 @@ class Program
             var eoArgs = FromObject(myArgs);
             var first = eoArgs.Shift();
             Echo(new { first, eoArgs });
-            myArgs = Array.ConvertAll(eoArgs.ToObject().ToArray() as object[], obj => obj?.ToString() ?? "");
+            //myArgs = Array.ConvertAll(eoArgs.ToObject().ToArray() as object[], obj => obj?.ToString() ?? "");
+            myArgs = eoArgs.AsStringArray;
             Echo(new { myArgs });
 
             EasyObject ast;

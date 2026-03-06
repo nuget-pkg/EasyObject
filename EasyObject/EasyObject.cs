@@ -119,7 +119,7 @@ public class EasyObject :
     public static EasyObject EmptyArray { get { return new EasyObject(new List<EasyObject>()); } }
     public static EasyObject EmptyObject { get { return new EasyObject(new Dictionary<string, EasyObject>()); } }
 
-    public static EasyObject NewArray(params object[] args)
+    public static EasyObject NewArray(params object?[] args)
     {
         EasyObject result = EmptyArray;
         for (int i = 0; i < args.Length; i++)
@@ -128,13 +128,14 @@ public class EasyObject :
         }
         return result;
     }
-    public static EasyObject NewObject(params object[] args)
+    public static EasyObject NewObject(params object?[] args)
     {
         if ((args.Length % 2) != 0) throw new ArgumentException("EasyObject.NewObject() requires even number arguments");
         EasyObject result = EmptyObject;
         for (int i = 0; i < args.Length; i += 2)
         {
-            result.Add(args[i].ToString()!, FromObject(args[i + 1]));
+            if (args[i] == null) continue;
+            result.Add(args[i]!.ToString()!, FromObject(args[i + 1]));
         }
         return result;
     }
