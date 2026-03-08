@@ -349,6 +349,7 @@ class Program
             ShowDetail = false;
 
             var myArray = FromJson("[11, null, 'abc', { x:123, y:777 }]");
+            Log(myArray, @"myArray (ORIGINAL)");
             Log(myArray.Shuffle(), @"myArray.Shuffle()");
             Log(myArray.Skip(1), @"myArray.Skip(1)");
             Log(myArray.Take(2), @"myArray.Take(2)");
@@ -361,6 +362,9 @@ class Program
             Log(myDictionary.Take(2), @"myDictionary.Take(2)");
             Log(myDictionary.AsStringArray, @"myDictionary.AsStringArray");
             Log(myDictionary.AsStringList, @"myDictionary.AsStringList");
+
+            Log(myArray.Reverse(), @"myArray.Reverse()");
+            Log(myDictionary.Reverse(), @"myDictionary.Reverse()");
 
             Log("[END]");
         }

@@ -1,5 +1,4 @@
-﻿// ReSharper disable once CheckNamespace
-namespace Global;
+﻿namespace Global;
 
 using System;
 using System.Collections;
@@ -12,17 +11,11 @@ using System.Runtime.InteropServices;
 
 public enum EasyObjectType
 {
-    // ReSharper disable once InconsistentNaming
     @string,
-    // ReSharper disable once InconsistentNaming
     @number,
-    // ReSharper disable once InconsistentNaming
     @boolean,
-    // ReSharper disable once InconsistentNaming
     @object,
-    // ReSharper disable once InconsistentNaming
     @array,
-    // ReSharper disable once InconsistentNaming
     @null
 }
 
@@ -68,15 +61,10 @@ public class EasyObject :
     IImportFromCommonJson
 {
     public object? RealData /*= null*/;
-    //public static readonly bool IsConsoleApplication = HasConsole();
-
-    // ReSharper disable once MemberCanBePrivate.Global
     public static readonly IParseJson DefaultJsonParser = new CSharpEasyLanguageHandler(numberAsDecimal: true);
     public static IParseJson? JsonParser /*= null*/;
-    // ReSharper disable once MemberCanBePrivate.Global
     public static bool DebugOutput /*= false*/;
     public static bool ShowDetail /*= false*/;
-    // ReSharper disable once MemberCanBePrivate.Global
     public static bool ForceAscii /*= false*/;
 
     public static void ClearSettings()
@@ -97,7 +85,6 @@ public class EasyObject :
         this.RealData = null;
     }
 
-    // ReSharper disable once MemberCanBePrivate.Global
     public EasyObject(object? x)
     {
         this.RealData = new PlainObjectConverter(jsonParser: JsonParser, forceAscii: false, iConvertParsedResult: new EasyObjectConverter()).Parse(x, numberAsDecimal: true);
@@ -140,15 +127,10 @@ public class EasyObject :
         return result;
     }
 
-    // ReSharper disable once InconsistentNaming
     public static EasyObjectType @string { get { return EasyObjectType.@string; } }
-    // ReSharper disable once InconsistentNaming
     public static EasyObjectType @boolean { get { return EasyObjectType.@boolean; } }
-    // ReSharper disable once InconsistentNaming
     public static EasyObjectType @object { get { return EasyObjectType.@object; } }
-    // ReSharper disable once InconsistentNaming
     public static EasyObjectType @array { get { return EasyObjectType.@array; } }
-    // ReSharper disable once InconsistentNaming
     public static EasyObjectType @null { get { return EasyObjectType.@null; } }
 
     public bool IsString { get { return this.TypeValue == EasyObjectType.@string; } }
@@ -223,13 +205,11 @@ public class EasyObject :
         }
     }
 
-    // ReSharper disable once InconsistentNaming
     internal List<EasyObject>? list
     {
         get { return RealData as List<EasyObject>; }
     }
 
-    // ReSharper disable once InconsistentNaming
     internal Dictionary<string, EasyObject>? dictionary
     {
         get { return RealData as Dictionary<string, EasyObject>; }
@@ -490,13 +470,11 @@ public class EasyObject :
             return false;
         }
     }
-    // ReSharper disable once MemberCanBePrivate.Global
     public static void AllocConsole()
     {
         if (IsConsoleApplication) return;
         WinConsole.Alloc();
     }
-    // ReSharper disable once MemberCanBePrivate.Global
     public static void FreeConsole()
     {
         if (IsConsoleApplication) return;
@@ -697,7 +675,6 @@ public class EasyObject :
     {
         get
         {
-            // ReSharper disable once ArrangeAccessorOwnerBody
             return list;
         }
     }
@@ -705,7 +682,6 @@ public class EasyObject :
     {
         get
         {
-            // ReSharper disable once ArrangeAccessorOwnerBody
             return dictionary;
         }
     }
@@ -780,6 +756,26 @@ public class EasyObject :
         if (this.dictionary != null)
         {
             var keys = this.dictionary.Keys!.Select(i => i).OrderBy(i => Guid.NewGuid()).ToList();
+            var result = NewObject();
+            foreach (var key in keys)
+            {
+                result[key] = this.dictionary[key];
+            }
+            return result;
+        }
+        return this.Clone();
+    }
+
+    public EasyObject Reverse()
+    {
+        if (this.list != null)
+        {
+            var list2 = this.list!.AsEnumerable().Reverse().Take(5).ToList();
+            return FromObject(list2);
+        }
+        if (this.dictionary != null)
+        {
+            var keys = this.dictionary.Keys!.AsEnumerable().Reverse().Take(5).ToList();
             var result = NewObject();
             foreach (var key in keys)
             {
