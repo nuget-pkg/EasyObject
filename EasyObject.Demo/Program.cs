@@ -366,7 +366,7 @@ class Program
             Log(myArray.Reverse(), @"myArray.Reverse()");
             Log(myDictionary.Reverse(), @"myDictionary.Reverse()");
 
-            string json = GetStringFromUrl("https://jsonplaceholder.typicode.com/todos/1");
+            string json = Utf8StringFromUrl("https://jsonplaceholder.typicode.com/todos/1");
             Log(json, "json");
             var todo = FromJson(json);
             Log(todo, "todo");

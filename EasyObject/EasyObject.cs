@@ -438,13 +438,13 @@ public class EasyObject :
         return FromJson(File.ReadAllText(path), ignoreErrors: ignoreErrors);
     }
 
-    public static string GetStringFromUrl(string url)
+    public static string Utf8StringFromUrl(string url)
     {
 #pragma warning disable SYSLIB0014
         HttpWebRequest? request = WebRequest.Create(url) as HttpWebRequest;
 #pragma warning restore SYSLIB0014
         HttpWebResponse response = (HttpWebResponse)request!.GetResponse();
-        WebHeaderCollection header = response.Headers;
+        //WebHeaderCollection header = response.Headers;
         using (var reader = new System.IO.StreamReader(response.GetResponseStream(), Encoding.UTF8))
         {
             return reader.ReadToEnd();
@@ -455,12 +455,12 @@ public class EasyObject :
     {
         if (!ignoreErrors)
         {
-            string json = GetStringFromUrl(url);
+            string json = Utf8StringFromUrl(url);
             return FromJson(json, ignoreErrors: ignoreErrors);
         }
         try
         {
-            string json = GetStringFromUrl(url);
+            string json = Utf8StringFromUrl(url);
             return FromJson(json, ignoreErrors: ignoreErrors);
         }
         catch (Exception)
