@@ -453,7 +453,19 @@ public class EasyObject :
         }
     }
 
-    public static EasyObject FromEmbedded(string pathOrUrl, bool ignoreErrors = false)
+    public void InjectToFile(
+        string path,
+        bool indent = false,
+        bool sortKeys = false,
+        bool keyAsSymbol = false,
+        bool removeSurrogatePair = false
+        )
+    {
+        string json = this.ToJson(indent: indent, sortKeys: sortKeys, keyAsSymbol: keyAsSymbol);
+        EasyTextEmbedder.InjectEmbeddedText(path, json);
+    }
+
+    public static EasyObject ExtractFromFile(string pathOrUrl, bool ignoreErrors = false)
     {
         string json = EasyTextEmbedder.ExtractEmbeddedText(pathOrUrl) ?? "null";
         return FromJson(json, ignoreErrors: ignoreErrors);
