@@ -3,12 +3,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Data;
 using System.Dynamic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -77,6 +75,26 @@ public class EasyObject :
         EasyObject.DebugOutput = false;
         EasyObject.ShowDetail = false;
         EasyObject.ForceAscii = false;
+    }
+
+    public static void SetupConsoleEncoding(Encoding? encoding = null)
+    {
+        if (encoding == null) encoding = Encoding.UTF8;
+        try
+        {
+            Console.OutputEncoding = encoding;
+            Console.InputEncoding = encoding;
+            Console.SetError(
+                new StreamWriter(
+                    Console.OpenStandardError(), encoding)
+                {
+                    AutoFlush = true
+                });
+        }
+        catch (Exception)
+        {
+            // Ignore exceptions related to console encoding
+        }
     }
 
     static EasyObject()
