@@ -6,8 +6,10 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Text;
 
 public enum EasyObjectType
 {
@@ -434,6 +436,37 @@ public class EasyObject :
     public static EasyObject FromFile(string path, bool ignoreErrors = false)
     {
         return FromJson(File.ReadAllText(path), ignoreErrors: ignoreErrors);
+    }
+
+    public static string GetStringFromUrl(string url)
+    {
+#pragma warning disable SYSLIB0014
+        HttpWebRequest? request = WebRequest.Create(url) as HttpWebRequest;
+#pragma warning restore SYSLIB0014
+        HttpWebResponse response = (HttpWebResponse)request!.GetResponse();
+        WebHeaderCollection header = response.Headers;
+        using (var reader = new System.IO.StreamReader(response.GetResponseStream(), Encoding.UTF8))
+        {
+            return reader.ReadToEnd();
+        }
+    }
+
+    public static EasyObject FromUrl(string url, bool ignoreErrors = false)
+    {
+        if (!ignoreErrors)
+        {
+            string json = GetStringFromUrl(url);
+            return FromJson(json, ignoreErrors: ignoreErrors);
+        }
+        try
+        {
+            string json = GetStringFromUrl(url);
+            return FromJson(json, ignoreErrors: ignoreErrors);
+        }
+        catch (Exception)
+        {
+            return new EasyObject(null);
+        }
     }
 
     public dynamic? ToObject(bool asDynamicObject = false)
