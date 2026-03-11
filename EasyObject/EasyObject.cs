@@ -453,7 +453,12 @@ public class EasyObject :
         }
     }
 
-    private static List<string>? _FindFirstMatch(string s, params string[] patterns)
+    public static EasyObject FromEmbedded(string pathOrUrl, bool ignoreErrors = false)
+    {
+        string json = EasyTextEmbedder.ExtractEmbeddedText(pathOrUrl) ?? "null";
+        return FromJson(json, ignoreErrors: ignoreErrors);
+    }
+    public static List<string>? MatchForPatterns(string s, params string[] patterns)
     {
         foreach (var pattern in patterns)
         {
@@ -474,7 +479,7 @@ public class EasyObject :
 
     public static EasyObject FromUrl(string url, bool ignoreErrors = false)
     {
-        var m = _FindFirstMatch(
+        var m = MatchForPatterns(
             url,
             @"^(https://github[.]com/[^/]+/[^/]+/)blob(/.+)$",
             @"^(https://gitlab[.]com/nuget-tools/nuget-assets/-/)blob(/.+)$"
@@ -501,7 +506,6 @@ public class EasyObject :
 
     public dynamic? ToObject(bool asDynamicObject = false)
     {
-        //return new PlainObjectConverter(jsonParser: null, forceAscii: ForceAscii).Parse(RealData);
         if (asDynamicObject)
         {
             return this.ExportToDynamicObject();
@@ -953,7 +957,7 @@ public class EasyObject :
     }
     public static string ObjectToJson(object? x, bool indent = false)
     {
-        return FromObject(x).ToJson(indent: indent); ;
+        return FromObject(x).ToJson(indent: indent);
     }
     public static object? ObjectToObject(object? x, bool asDynamicObject = false)
     {
