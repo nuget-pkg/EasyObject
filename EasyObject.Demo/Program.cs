@@ -374,9 +374,14 @@ class Program
             var todo2 = FromUrl("https://jsonplaceholder.typicode.com/todos/1");
             Log(todo2, "todo2");
 
-            string embeddedJsonUrl = "https://raw.githubusercontent.com/nuget-pkg/Global.Sys/refs/tags/2026.0311.1056.12/Global.Sys.Demo/assets/text-embed-text-02.json";
+            //string embeddedJsonUrl = "https://raw.githubusercontent.com/nuget-pkg/Global.Sys/refs/tags/2026.0311.1056.12/Global.Sys.Demo/assets/text-embed-text-02.json";
+            string embeddedJsonUrl = "https://github.com/nuget-pkg/Global.Sys/blob/2026.0311.1056.12/Global.Sys.Demo/assets/text-embed-text-02.json";
             var embeddedEO = FromUrl(embeddedJsonUrl);
-            Log(embeddedEO, "embeddedEO");
+            Log(embeddedEO, "embeddedEO(github)");
+
+            embeddedJsonUrl = "https://gitlab.com/nuget-tools/nuget-assets/-/blob/2026.0311.1156.53/text-embed-text-02.json?ref_type=tags";
+            embeddedEO = FromUrl(embeddedJsonUrl);
+            Log(embeddedEO, "embeddedEO(gitlab)");
 
             Log("[END]");
         }

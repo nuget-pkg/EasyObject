@@ -3,6 +3,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.Dynamic;
 using System.IO;
 using System.Linq;
@@ -10,6 +11,7 @@ using System.Net;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.RegularExpressions;
 
 public enum EasyObjectType
 {
@@ -451,8 +453,36 @@ public class EasyObject :
         }
     }
 
+    private static List<string>? _FindFirstMatch(string s, params string[] patterns)
+    {
+        foreach (var pattern in patterns)
+        {
+            var r = new Regex(pattern);
+            var m = r.Match(s);
+            if (m.Success)
+            {
+                var groups = new List<string>();
+                for (int i = 0; i < m.Groups.Count; i++)
+                {
+                    groups.Add(m.Groups[i].Value);
+                }
+                return groups;
+            }
+        }
+        return null;
+    }
+
     public static EasyObject FromUrl(string url, bool ignoreErrors = false)
     {
+        var m = _FindFirstMatch(
+            url,
+            @"^(https://github[.]com/[^/]+/[^/]+/)blob(/.+)$",
+            @"^(https://gitlab[.]com/nuget-tools/nuget-assets/-/)blob(/.+)$"
+            );
+        if (m != null)
+        {
+            url = m[1] + "raw" + m[2];
+        }
         if (!ignoreErrors)
         {
             string json = Utf8StringFromUrl(url);
