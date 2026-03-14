@@ -75,6 +75,7 @@ class Program
     {
         try
         {
+            SetupConsoleEncoding();
             ShowDetail = true;
             //AllocConsole();
             Console.WriteLine("(1)");
@@ -389,13 +390,23 @@ class Program
             var embedded2 = ExtractFromFile("https://gitlab.com/nuget-tools/nuget-assets/-/blob/2026.0311.1351.11/my-ls.exe?ref_type=tags");
             Log(embedded2, "embedded2(gitlab)");
 
-            SetupConsoleEncoding();
-            Console.Error.WriteLine("This is unicode: ☢ ☃☃☃ ☮");
-            Echo("This is unicode(echo): ☢ ☃☃☃ ☮");
-            Log("This is unicode(log): ☢ ☃☃☃ ☮");
-            Debug("This is unicode(debug1): ☢ ☃☃☃ ☮"); // now shown because DegutOutput is false here
+            Console.WriteLine("[stdout] This is unicode: ⭕️ ☢ ☃☃☃ ☮");
+            Console.Error.WriteLine("[stderr] This is unicode: ⭕️ ☢ ☃☃☃ ☮");
+
+            Echo("This is unicode(echo): ⭕️ ☢ ☃☃☃ ☮");
+            Log("This is unicode(log): ⭕️ ☢ ☃☃☃ ☮");
+            DebugOutput = false;
+            Debug("This is unicode(debug1): ⭕️ ☢ ☃☃☃ ☮"); // now shown because DegutOutput is false here
             DebugOutput = true;
-            Debug("This is unicode(debug2): ☢ ☃☃☃ ☮");
+            Debug("This is unicode(debug2): ⭕️ ☢ ☃☃☃ ☮");
+
+            ForceAscii = true;
+            Echo("This is unicode(echo): ⭕️ ☢ ☃☃☃ ☮");
+            Log("This is unicode(log): ⭕️ ☢ ☃☃☃ ☮");
+            DebugOutput = false;
+            Debug("This is unicode(debug1): ⭕️ ☢ ☃☃☃ ☮"); // now shown because DegutOutput is false here
+            DebugOutput = true;
+            Debug("This is unicode(debug2): ⭕️ ☢ ☃☃☃ ☮");
 
             Log("[END]");
         }

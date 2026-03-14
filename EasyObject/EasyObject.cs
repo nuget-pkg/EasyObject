@@ -993,4 +993,26 @@ public class EasyObject :
     {
         return FromObject(x).ToObject(asDynamicObject: asDynamicObject);
     }
+    public static string EscapeNonAsciiChars(string text)
+    {
+        var sb = new StringBuilder();
+        sb.Length = 0;
+        if (sb.Capacity < text.Length + text.Length / 10)
+            sb.Capacity = text.Length + text.Length / 10;
+        foreach (char c in text)
+        {
+            if (c > 127)
+            {
+                ushort val = c;
+                sb.Append("\\u").Append(val.ToString("X4"));
+            }
+            else
+            {
+                sb.Append(c);
+            }
+        }
+        string result = sb.ToString();
+        sb.Length = 0;
+        return result;
+    }
 }
