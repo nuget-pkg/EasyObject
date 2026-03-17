@@ -387,6 +387,23 @@ class Program {
             DebugOutput = true;
             Debug("This is unicode(debug2): ⭕️ ☢ ☃☃☃ ☮");
 
+            string progJson2 = """
+            #! /usr/bin/env program
+            (defvar $list [11, null, "abc"])
+            """;
+            var prog2 = FromJson(progJson2);
+            Log(prog2, "prog2");
+
+            var parsere3 = new CSharpEasyLanguageHandler(numberAsDecimal: true, removeSurrogatePair: false);
+
+            string cljureCode01 = File.ReadAllText("assets/cljure_code01.clj");
+            Echo(cljureCode01, "cljureCode01");
+            Echo(parsere3.ParseJsonSequence(cljureCode01), "cljureCode01(parsed)");
+
+            string cljureCode02 = File.ReadAllText("assets/cljure_code02.clj");
+            Echo(cljureCode02, "cljureCode02");
+            Echo(parsere3.ParseJsonSequence(cljureCode02), "cljureCode02(parsed)");
+
             Log("[END]");
         }
         catch (Exception ex) {

@@ -419,12 +419,6 @@ public class EasyObject :
         if (json == null) {
             return Null;
         }
-
-        if (json.StartsWith("#!")) {
-            string[] lines = TextToLines(json);
-            lines = lines.Skip(1).ToArray();
-            json = String.Join("\n", lines);
-        }
         if (!ignoreErrors) {
             return new EasyObject(JsonParser!.ParseJson(json));
         }
