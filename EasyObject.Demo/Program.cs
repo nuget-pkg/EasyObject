@@ -404,6 +404,8 @@ class Program {
             Echo(cljureCode02, "cljureCode02");
             Echo(parsere3.ParseJsonSequence(cljureCode02), "cljureCode02(parsed)");
 
+            Console.WriteLine("""[universal]THIS is unicode(log): [252ee4f0-d951-4ea4-bd3f-95e9af976141]2B55[252ee4f0-d951-4ea4-bd3f-95e9af976141]uuFE0F [252ee4f0-d951-4ea4-bd3f-95e9af976141]u2622 [252ee4f0-d951-4ea4-bd3f-95e9af976141]u2603[252ee4f0-d951-4ea4-bd3f-95e9af976141]uu2603[252ee4f0-d951-4ea4-bd3f-95e9af976141]uu2603 [252ee4f0-d951-4ea4-bd3f-95e9af976141]u262E[/universal]""");
+
             Log("[END]");
         }
         catch (Exception ex) {

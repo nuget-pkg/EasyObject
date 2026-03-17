@@ -545,7 +545,13 @@ public class EasyObject :
 
     public static string ToPrintable(object? x, string? title = null, bool noIndent = false, bool removeSurrogatePair = false) {
         PlainObjectConverter poc = new PlainObjectConverter(jsonParser: JsonParser, forceAscii: ForceAscii);
-        return poc.ToPrintable(ShowDetail, x, title, noIndent: noIndent, removeSurrogatePair: removeSurrogatePair);
+        //\u005C
+        //return poc.ToPrintable(ShowDetail, x, title, noIndent: noIndent, removeSurrogatePair: removeSurrogatePair);
+        string printable = poc.ToPrintable(ShowDetail, x, title, noIndent: noIndent, removeSurrogatePair: removeSurrogatePair);
+        if (ForceAscii) {
+            printable = printable.Replace("\\", @"\u005C");
+        }
+        return printable;
     }
 
     public static void Echo(

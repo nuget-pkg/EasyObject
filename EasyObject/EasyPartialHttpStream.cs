@@ -2,8 +2,8 @@ using System.IO;
 using System.Net;
 using System;
 namespace Global;
-class EasyPartialHTTPStream : Stream, IDisposable
-{
+
+class EasyPartialHTTPStream : Stream, IDisposable {
     Stream? stream = null;
     WebResponse? resp = null;
     public string Url {
@@ -19,29 +19,22 @@ class EasyPartialHTTPStream : Stream, IDisposable
         get { return true; }
     }
     long position = 0;
-    public override long Position
-    {
+    public override long Position {
         get { return position; }
-        set
-        {
+        set {
             long len = this.Length;
-            if (value < 0 || value > len)
-            {
+            if (value < 0 || value > len) {
                 throw new ArgumentException($"Position out of range: {value}");
             }
             position = value;
         }
     }
     long? length;
-    public override long Length
-    {
-        get
-        {
-            if (length == null)
-            {
+    public override long Length {
+        get {
+            if (length == null) {
                 HttpWebRequest? req = null;
-                try
-                {
+                try {
 #pragma warning disable SYSLIB0014
                     req = HttpWebRequest.CreateHttp(Url);
 #pragma warning restore SYSLIB0014
@@ -49,10 +42,8 @@ class EasyPartialHTTPStream : Stream, IDisposable
                     req.AllowAutoRedirect = true;
                     length = req.GetResponse().ContentLength;
                 }
-                finally
-                {
-                    if (req != null)
-                    {
+                finally {
+                    if (req != null) {
                         // 連続呼び出しでエラーになる場合があるのでその対策
                         req.Abort();
                     }
@@ -67,22 +58,18 @@ class EasyPartialHTTPStream : Stream, IDisposable
             @"^(https://github[.]com/[^/]+/[^/]+/)blob(/.+)$",
             @"^(https://gitlab[.]com/nuget-tools/nuget-assets/-/)blob(/.+)$"
             );
-        if (m != null)
-        {
+        if (m != null) {
             url = m[1] + "raw" + m[2];
         }
         this.Url = url;
     }
-    public override void SetLength(long value)
-    {
+    public override void SetLength(long value) {
         throw new NotImplementedException();
     }
-    public override int Read(byte[] buffer, int offset, int count)
-    {
+    public override int Read(byte[] buffer, int offset, int count) {
         if (count <= 0) return 0;
         HttpWebRequest? req = null;
-        try
-        {
+        try {
 #pragma warning disable SYSLIB0014
             req = HttpWebRequest.CreateHttp(Url);
 #pragma warning restore SYSLIB0014
@@ -91,10 +78,8 @@ class EasyPartialHTTPStream : Stream, IDisposable
             resp = req.GetResponse();
             int rest = count;
             int nread = 0;
-            using (Stream stream = resp.GetResponseStream())
-            {
-                while (true)
-                {
+            using (Stream stream = resp.GetResponseStream()) {
+                while (true) {
                     int len = stream.Read(buffer, offset, rest);
                     if (len == 0) break;
                     nread += len;
@@ -105,47 +90,39 @@ class EasyPartialHTTPStream : Stream, IDisposable
             Position += nread;
             return nread;
         }
-        finally
-        {
-            if (req != null)
-            {
+        finally {
+            if (req != null) {
                 // 連続呼び出しでエラーになる場合があるのでその対策
                 req.Abort();
             }
         }
     }
-    public override void Write(byte[] buffer, int offset, int count)
-    {
+    public override void Write(byte[] buffer, int offset, int count) {
         throw new NotImplementedException();
     }
-    public override long Seek(long pos, SeekOrigin origin)
-    {
-        switch (origin)
-        {
-        case SeekOrigin.End:
-            Position = Length + pos;
-            break;
-        case SeekOrigin.Begin:
-            Position = pos;
-            break;
-        case SeekOrigin.Current:
-            Position += pos;
-            break;
+    public override long Seek(long pos, SeekOrigin origin) {
+        switch (origin) {
+            case SeekOrigin.End:
+                Position = Length + pos;
+                break;
+            case SeekOrigin.Begin:
+                Position = pos;
+                break;
+            case SeekOrigin.Current:
+                Position += pos;
+                break;
         }
         return Position;
     }
     public override void Flush() {
     }
-    new void Dispose()
-    {
+    new void Dispose() {
         base.Dispose();
-        if (stream != null)
-        {
+        if (stream != null) {
             stream.Dispose();
             stream = null;
         }
-        if (resp != null)
-        {
+        if (resp != null) {
             resp.Dispose();
             resp = null;
         }
