@@ -1,80 +1,61 @@
 ﻿using Global;
-using static Global.EasyObject;
+using NUnit.Framework;
+using Razorvine.Pickle;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using NUnit.Framework;
 using System.IO;
-using Newtonsoft.Json.Linq;
-using Razorvine.Pickle;
+using System.Linq;
+using static Global.EasyObject;
 
 // ReSharper disable once CheckNamespace
 namespace Demo;
 
-class Exchangeable1 : IExportToPlainObject
-{
-    public object ExportToPlainObject()
-    {
+class Exchangeable1 : IExportToPlainObject {
+    public object ExportToPlainObject() {
         return 123;
     }
 }
 
-class Exchangeable2
-{
-    public object ExportToPlainObject()
-    {
+class Exchangeable2 {
+    public object ExportToPlainObject() {
         return 456;
     }
 }
 
-class Exchangeable3 : IExportToCommonJson
-{
-    public string ExportToCommonJson()
-    {
+class Exchangeable3 : IExportToCommonJson {
+    public string ExportToCommonJson() {
         return "[11, 22, 33]";
     }
 }
 
-class Exchangeable4
-{
-    public string ExportToCommonJson()
-    {
+class Exchangeable4 {
+    public string ExportToCommonJson() {
         return "[111, 222, 333]";
     }
 }
 
-class MyData: EasyObject
-{
-    public MyData(int n, string s)
-    {
-        this.ImportFromPlainObject(new { n, s });
+class MyData : EasyObject {
+    public MyData(int n, string s) {
+        ImportFromPlainObject(new { n, s });
     }
-    public MyData(string json)
-    {
-        this.ImportFromCommonJson(json);
+    public MyData(string json) {
+        ImportFromCommonJson(json);
     }
-    public int N
-    {
-        get
-        {
-            return this.Dynamic.n;
+    public int N {
+        get {
+            return Dynamic.n;
         }
     }
-    public string S
-    {
-        get
-        {
-            return this.Dynamic.s;
+    public string S {
+        get {
+            return Dynamic.s;
         }
     }
 }
 
-class Program
-{
-    static void Main()
-    {
-        try
-        {
+class Program {
+    static void Main() {
+        try {
             SetupConsoleEncoding();
             ShowDetail = true;
             //AllocConsole();
@@ -116,8 +97,7 @@ class Program
             Echo(eo[1], "eo[1]");
             Assert.That(eo[1].TypeValue, Is.EqualTo(@null));
             Assert.That(eo[1].IsNull, Is.True);
-            foreach (var pair in eo.Dynamic)
-            {
+            foreach (var pair in eo.Dynamic) {
                 Echo(pair, "pair");
             }
             eo = EasyObject.FromObject(null);
@@ -141,8 +121,7 @@ class Program
 #endif
             //Assert.That((int?)eo[0], Is.EqualTo(null));
             Assert.That(eo[3].Cast<int>(), Is.EqualTo(777));
-            foreach (var e in eo.Dynamic)
-            {
+            foreach (var e in eo.Dynamic) {
                 Echo(e, "e");
             }
             var eo2 = EasyObject.FromObject(eo); // UnWrap() test
@@ -152,7 +131,10 @@ class Program
             Echo(eo3, "eo3");
             Echo(eo3["b"][1]);
             List<int> list = new List<int>();
-            foreach (var e in eo3["b"].Dynamic) list.Add((int)e);
+            foreach (var e in eo3["b"].Dynamic) {
+                list.Add((int)e);
+            }
+
             Echo(list, "list");
             Echo(eo3["b"].TypeName);
             Echo(eo3["b"].IsArray);
@@ -168,8 +150,7 @@ class Program
             var dict = eo3.AsDictionary;
             Echo(dict);
             Echo(dict["a"].Cast<double>());
-            foreach (var e in i.Dynamic)
-            {
+            foreach (var e in i.Dynamic) {
                 Echo(e);
             }
             string bigJson = File.ReadAllText("assets/qiita-9ea0c8fd43b61b01a8da.json");
@@ -177,8 +158,7 @@ class Program
             var sw = new System.Diagnostics.Stopwatch();
             TimeSpan ts;
             sw.Start();
-            for (int c = 0; c < 5; c++)
-            {
+            for (int c = 0; c < 5; c++) {
                 //var test = FromJson(bigJson);
             }
             sw.Stop();
@@ -188,8 +168,7 @@ class Program
             Console.WriteLine($"　{ts.Hours}時間 {ts.Minutes}分 {ts.Seconds}秒 {ts.Milliseconds}ミリ秒");
             Console.WriteLine($"　{sw.ElapsedMilliseconds}ミリ秒");
             sw.Start();
-            for (int c = 0; c < 5; c++)
-            {
+            for (int c = 0; c < 5; c++) {
                 //JObject jsonObject = JObject.Parse(bigJson);
             }
             sw.Stop();
@@ -410,9 +389,8 @@ class Program
 
             Log("[END]");
         }
-        catch (Exception ex)
-        {
+        catch (Exception ex) {
             Console.WriteLine(ex.ToString());
         }
-   }
+    }
 }
