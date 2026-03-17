@@ -58,7 +58,7 @@
 	<ItemGroup>
 		<PackageReference Include="System.Text.Encoding.CodePages" Version="10.0.5" />
 		<PackageReference Include="PlainObjectInterface" Version="2026.122.1836.32" />
-		<PackageReference Include="PlainObjectConverter" Version="2026.314.1932.53" />
+		<!--<PackageReference Include="PlainObjectConverter" Version="2026.314.1932.53" />-->
 		<PackageReference Include="JsoncParser" Version="2026.304.2058.46" />
 	</ItemGroup>
 </Project>
