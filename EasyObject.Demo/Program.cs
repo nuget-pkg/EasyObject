@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Xml.Linq;
 using static Global.EasyObject;
 
 // ReSharper disable once CheckNamespace
@@ -405,6 +406,11 @@ class Program {
             Echo(parsere3.ParseJsonSequence(cljureCode02), "cljureCode02(parsed)");
 
             Console.WriteLine("""[universal]THIS is unicode(log): [252ee4f0-d951-4ea4-bd3f-95e9af976141]2B55[252ee4f0-d951-4ea4-bd3f-95e9af976141]uuFE0F [252ee4f0-d951-4ea4-bd3f-95e9af976141]u2622 [252ee4f0-d951-4ea4-bd3f-95e9af976141]u2603[252ee4f0-d951-4ea4-bd3f-95e9af976141]uu2603[252ee4f0-d951-4ea4-bd3f-95e9af976141]uu2603 [252ee4f0-d951-4ea4-bd3f-95e9af976141]u262E[/universal]""");
+
+            string xmlString = "<Root><Child>Content</Child></Root>";
+            XDocument doc = XDocument.Parse(xmlString);
+            Console.WriteLine(doc.Root?.Name);
+            Log(doc.Root?.ToString());
 
             Log("[END]");
         }
