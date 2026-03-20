@@ -55,62 +55,62 @@ class MyData : EasyObject {
 }
 
 class Program {
-    static void Main() {
+    static void Main(string[] args) {
         try {
             SetupConsoleEncoding();
             ShowDetail = true;
             //AllocConsole();
             Console.WriteLine("(1)");
             EasyObject eoNull = Null;
-            Echo(eoNull.ToJson());
+            Log(eoNull.ToJson());
             //var poc = new PlainObjectConverter();
-            //Echo(poc.Stringify(eoNull, indent: true));
-            Echo(eoNull.ToPrintable());
-            Echo(eoNull);
-            Echo(Null);
+            //Log(poc.Stringify(eoNull, indent: true));
+            Log(eoNull.ToPrintable());
+            Log(eoNull);
+            Log(Null);
             Console.WriteLine("(2)");
             var eo = EasyObject.FromObject(new { a = 123 });
-            Echo(eo);
+            Log(eo);
             Console.WriteLine("(3)");
-            Echo(eo.TypeValue, "eo.TypeValue");
+            Log(eo.TypeValue, "eo.TypeValue");
             Console.WriteLine("(4)");
             Assert.That(eo.TypeValue, Is.EqualTo(@object));
             Console.WriteLine("(5)");
             EasyObject a = eo["a"];
             Console.WriteLine("(5.1)");
-            Echo(FullName(a));
-            Echo(a.GetType() == typeof(double));
+            Log(FullName(a));
+            Log(a.GetType() == typeof(double));
             Console.WriteLine("(5.1.1)");
-            //Echo(a.ToObject());
+            //Log(a.ToObject());
             Console.WriteLine("(5.1.1.1)");
-            //Echo(poc.Stringify(a, true));
+            //Log(poc.Stringify(a, true));
             Console.WriteLine("(5.1.2)");
-            Echo(a, "a");
+            Log(a, "a");
             Console.WriteLine("(5.2)");
             Console.WriteLine(eo["a"]);
             Console.WriteLine("(6)");
             Assert.That(eo["a"].Cast<int>(), Is.EqualTo(123));
             Console.WriteLine("(7)");
             Assert.That(eo.Keys, Is.EqualTo(new List<string> { "a" }));
-            Echo(eo[0], "eo[0]");
+            Log(eo[0], "eo[0]");
             Assert.That(eo[0].TypeValue, Is.EqualTo(@null));
             Assert.That(eo[0].IsNull, Is.True);
-            Echo(eo[1], "eo[1]");
+            Log(eo[1], "eo[1]");
             Assert.That(eo[1].TypeValue, Is.EqualTo(@null));
             Assert.That(eo[1].IsNull, Is.True);
             foreach (var pair in eo.Dynamic) {
-                Echo(pair, "pair");
+                Log(pair, "pair");
             }
             eo = EasyObject.FromObject(null);
-            Echo(eo.TypeValue, "eo.TypeValue");
+            Log(eo.TypeValue, "eo.TypeValue");
             Assert.That(eo.TypeValue, Is.EqualTo(@null));
             eo["b"] = true;
             Assert.That(eo["b"].Cast<bool>(), Is.EqualTo(true));
-            Echo(eo["b"].TypeValue, "eo.b.TypeValue");
+            Log(eo["b"].TypeValue, "eo.b.TypeValue");
             Assert.That(eo["b"].TypeValue, Is.EqualTo(@boolean));
             eo[3] = 777;
-            Echo(eo[3].Cast<int>());
-            Echo(eo.TypeValue, "eo.TypeValue");
+            Log(eo[3].Cast<int>());
+            Log(eo.TypeValue, "eo.TypeValue");
             Assert.That(eo.TypeValue, Is.EqualTo(EasyObject.array));
             Assert.That(eo.Count, Is.EqualTo(4));
             Assert.That(eo[0].TypeValue, Is.EqualTo(@null));
@@ -123,39 +123,39 @@ class Program {
             //Assert.That((int?)eo[0], Is.EqualTo(null));
             Assert.That(eo[3].Cast<int>(), Is.EqualTo(777));
             foreach (var e in eo.Dynamic) {
-                Echo(e, "e");
+                Log(e, "e");
             }
             var eo2 = EasyObject.FromObject(eo); // UnWrap() test
             EasyObject eo3 = EasyObject.FromJson("""
             { a: 123, b: [11, 22, 33] }
             """);
-            Echo(eo3, "eo3");
-            Echo(eo3["b"][1]);
+            Log(eo3, "eo3");
+            Log(eo3["b"][1]);
             List<int> list = new List<int>();
             foreach (var e in eo3["b"].Dynamic) {
                 list.Add((int)e);
             }
 
-            Echo(list, "list");
-            Echo(eo3["b"].TypeName);
-            Echo(eo3["b"].IsArray);
-            Echo(eo3["b"].IsNull);
+            Log(list, "list");
+            Log(eo3["b"].TypeName);
+            Log(eo3["b"].IsArray);
+            Log(eo3["b"].IsNull);
             eo3["b"].Add(777);
             eo3.AsDictionary!["b"].Add(888);
-            Echo(eo3);
+            Log(eo3);
             var i = FromObject(123);
-            Echo(i.Cast<double>());
+            Log(i.Cast<double>());
             var iList1 = eo3["b"].AsList!.Select(x => x.Cast<int>()).ToList();
-            Echo(iList1.GetType().FullName);
-            Echo(iList1.GetType().ToString());
+            Log(iList1.GetType().FullName);
+            Log(iList1.GetType().ToString());
             var dict = eo3.AsDictionary;
-            Echo(dict);
-            Echo(dict["a"].Cast<double>());
+            Log(dict);
+            Log(dict["a"].Cast<double>());
             foreach (var e in i.Dynamic) {
-                Echo(e);
+                Log(e);
             }
             string bigJson = File.ReadAllText("assets/qiita-9ea0c8fd43b61b01a8da.json");
-            //Echo(bigJson);
+            //Log(bigJson);
             var sw = new System.Diagnostics.Stopwatch();
             TimeSpan ts;
             sw.Start();
@@ -180,90 +180,90 @@ class Program {
             Console.WriteLine($"　{sw.ElapsedMilliseconds}ミリ秒");
             //var list01_txt = File.ReadAllText("assets/list01.txt");
             var list01_txt = File.ReadAllText("assets/mydict.txt");
-            Echo(list01_txt);
+            Log(list01_txt);
             var list01_bytes = Convert.FromBase64String(list01_txt);
             var unpickler = new Unpickler();
             object result = unpickler.loads(list01_bytes);
-            Echo(result, "result");
+            Log(result, "result");
             //var o = new PlainObjectConverter(forceAscii: false).Parse(result);
-            //Echo(o, "o");
+            //Log(o, "o");
             var pickler = new Pickler();
             //var bytes = pickler.dumps(o);
             //var ox = unpickler.loads(bytes);
-            //Echo(ox, "ox");
+            //Log(ox, "ox");
             //var eo_ox = EasyObject.FromObject(ox);
-            //Echo(eo_ox, "eo_ox");
-            //Echo(eo_ox.ToJson(true, true), "eo_ox.ToJson(true, true)");
-            Echo(DateTime.Now);
+            //Log(eo_ox, "eo_ox");
+            //Log(eo_ox.ToJson(true, true), "eo_ox.ToJson(true, true)");
+            Log(DateTime.Now);
 
             string progJson = """
             #! /usr/bin/env program
             [11, null, "abc"]
             """;
-            Echo(EasyObject.FromJson(progJson));
-            Echo(EasyObject.FromJson(null));
+            Log(EasyObject.FromJson(progJson));
+            Log(EasyObject.FromJson(null));
             var array = EasyObject.NewArray(1, null, "abc", EasyObject.FromJson(progJson));
-            Echo(array, "array");
+            Log(array, "array");
             var obj = EasyObject.NewObject("a", 111, "b", EasyObject.FromJson(progJson));
-            Echo(obj, "obj");
+            Log(obj, "obj");
             // Test newLisp expression
             EasyObject assocList = EasyObject.FromJson("""
             ( ("a" 123) ("b" true) ("c" false) ("d" nil) )
             """);
-            Echo(assocList, "assocList");
+            Log(assocList, "assocList");
             var member = assocList["a"];
-            Echo(member, "member");
+            Log(member, "member");
             dynamic assocDyn = assocList;
             var member2 = assocDyn["a"];
-            Echo(member2, "member2");
+            Log(member2, "member2");
             var member3 = assocDyn.a;
-            Echo(member3, "member3");
+            Log(member3, "member3");
             var exc1 = new Exchangeable1();
-            Echo(exc1, "exc1");
+            Log(exc1, "exc1");
             var exc2 = new Exchangeable2();
-            Echo(exc2, "exc2");
+            Log(exc2, "exc2");
             var exc3 = new Exchangeable3();
-            Echo(exc3, "exc3");
+            Log(exc3, "exc3");
             var exc4 = new Exchangeable4();
-            Echo(exc4, "exc4");
+            Log(exc4, "exc4");
             var myData = new MyData(123, "xyz");
-            Echo(myData.N, "myData.N");
-            Echo(myData.S, "myData.S");
+            Log(myData.N, "myData.N");
+            Log(myData.S, "myData.S");
             var myData2 = new MyData("""{n: 456, s: "ABC"}""");
-            Echo(myData2 == null);
-            Echo(myData2!.RealData == null);
-            Echo(myData2.N, "myData2.N");
-            Echo(myData2.S, "myData2.S");
-            Echo(myData.ExportToCommonJson(), "myData.ExportToCommonJson()");
-            Echo(myData2.ExportToCommonJson(), "myData2.ExportToCommonJson()");
+            Log(myData2 == null);
+            Log(myData2!.RealData == null);
+            Log(myData2.N, "myData2.N");
+            Log(myData2.S, "myData2.S");
+            Log(myData.ExportToCommonJson(), "myData.ExportToCommonJson()");
+            Log(myData2.ExportToCommonJson(), "myData2.ExportToCommonJson()");
 
             string[] myArgs = ["apple", "melon", "peach"];
             var eoArgs = FromObject(myArgs);
             var first = eoArgs.Shift();
-            Echo(new { first, eoArgs });
+            Log(new { first, eoArgs });
             //myArgs = Array.ConvertAll(eoArgs.ToObject().ToArray() as object[], obj => obj?.ToString() ?? "");
             myArgs = eoArgs.AsStringArray;
-            Echo(new { myArgs });
+            Log(new { myArgs });
 
             EasyObject ast;
             ast = FromJson(BabelOutput.AstJson);
             ast.Trim(hideKeys: ["loc", "start", "end"], maxDepth: 2);
-            Echo(ast, "ast(1)");
+            Log(ast, "ast(1)");
 
             ast = FromJson(BabelOutput.AstJson);
             ast.Trim(hideKeys: ["loc", "start", "end"], maxDepth: 3);
-            Echo(ast, "ast(2)");
+            Log(ast, "ast(2)");
 
             var noError = FromJson("\n", ignoreErrors: true);
-            Echo(noError, "noError");
+            Log(noError, "noError");
 
             ast = FromJson(BabelOutput.AstJson);
             var xo = ast.ExportToDynamicObject();
-            Echo(xo, "xo");
+            Log(xo, "xo");
 
-            //Echo(ast.ToJson(indent: true));
-            Echo(new { abc = 123, xyz = "abc" });
-            Echo(FullName(new { abc = 123, xyz = "abc" }));
+            //Log(ast.ToJson(indent: true));
+            Log(new { abc = 123, xyz = "abc" });
+            Log(FullName(new { abc = 123, xyz = "abc" }));
 
             string trimmedJson = """
             {
@@ -289,34 +289,34 @@ class Program {
             EasyObject trimTest;
 
             trimTest = FromJson(trimmedJson);
-            Echo(trimTest, maxDepth: 1);
+            Log(trimTest, maxDepth: 1);
             trimTest.Trim(maxDepth: 1);
-            Echo(trimTest, "(1)");
+            Log(trimTest, "(1)");
 
             trimTest = FromJson(trimmedJson);
-            Echo(trimTest, maxDepth: 2);
+            Log(trimTest, maxDepth: 2);
             trimTest.Trim(maxDepth: 2);
-            Echo(trimTest, "(2)");
+            Log(trimTest, "(2)");
 
             trimTest = FromJson(trimmedJson);
-            Echo(trimTest, hideKeys: ["a"]);
+            Log(trimTest, hideKeys: ["a"]);
             trimTest.Trim(hideKeys: ["a"]);
-            Echo(trimTest, "(3)");
+            Log(trimTest, "(3)");
 
-            Echo(trimTest.ToJson(keyAsSymbol: true));
+            Log(trimTest.ToJson(keyAsSymbol: true));
 
             var parser = new EasyLanguageParser(numberAsDecimal: true, removeSurrogatePair: true);
             var result1 = parser.ParseJson("'🔥引火★★帝国🔥'");
-            Echo(result1, "result1");
+            Log(result1, "result1");
             var parser2 = new EasyLanguageParser(numberAsDecimal: true, removeSurrogatePair: false);
             var result2 = parser2.ParseJson("'🔥引火★★帝国🔥'");
-            Echo(result2, "result2");
+            Log(result2, "result2");
 
             var containSurrogate = FromObject(new { title = "🔥引火★★帝国🔥" });
 
-            Echo(containSurrogate);
-            Echo(containSurrogate, removeSurrogatePair: true);
-            Echo(containSurrogate, removeSurrogatePair: false);
+            Log(containSurrogate);
+            Log(containSurrogate, removeSurrogatePair: true);
+            Log(containSurrogate, removeSurrogatePair: false);
 
             Log(containSurrogate);
             Log(containSurrogate, removeSurrogatePair: true);
@@ -373,7 +373,7 @@ class Program {
             Console.WriteLine("[stdout] This is unicode: ⭕️ ☢ ☃☃☃ ☮");
             Console.Error.WriteLine("[stderr] This is unicode: ⭕️ ☢ ☃☃☃ ☮");
 
-            Echo("This is unicode(echo): ⭕️ ☢ ☃☃☃ ☮");
+            Log("This is unicode(echo): ⭕️ ☢ ☃☃☃ ☮");
             Log("This is unicode(log): ⭕️ ☢ ☃☃☃ ☮");
             DebugOutput = false;
             Debug("This is unicode(debug1): ⭕️ ☢ ☃☃☃ ☮"); // now shown because DegutOutput is false here
@@ -381,7 +381,7 @@ class Program {
             Debug("This is unicode(debug2): ⭕️ ☢ ☃☃☃ ☮");
 
             ForceAscii = true;
-            Echo("This is unicode(echo): ⭕️ ☢ ☃☃☃ ☮");
+            Log("This is unicode(echo): ⭕️ ☢ ☃☃☃ ☮");
             Log("This is unicode(log): ⭕️ ☢ ☃☃☃ ☮");
             DebugOutput = false;
             Debug("This is unicode(debug1): ⭕️ ☢ ☃☃☃ ☮"); // now shown because DegutOutput is false here
@@ -392,18 +392,22 @@ class Program {
             #! /usr/bin/env program
             (defvar $list [11, null, "abc"])
             """;
+
+            UseAnsiConsole = true;
+
             var prog2 = FromJson(progJson2);
-            Log(prog2, "prog2");
+            //Log(prog2, "prog2");
+            prog2.Dump(title: "prog2");
 
             var parsere3 = new CSharpEasyLanguageHandler(numberAsDecimal: true, removeSurrogatePair: false);
 
             string cljureCode01 = File.ReadAllText("assets/cljure_code01.clj");
-            Echo(cljureCode01, "cljureCode01");
-            Echo(parsere3.ParseJsonSequence(cljureCode01), "cljureCode01(parsed)");
+            Log(cljureCode01, "cljureCode01");
+            DumpObject(parsere3.ParseJsonSequence(cljureCode01), "cljureCode01(parsed)");
 
             string cljureCode02 = File.ReadAllText("assets/cljure_code02.clj");
-            Echo(cljureCode02, "cljureCode02");
-            Echo(parsere3.ParseJsonSequence(cljureCode02), "cljureCode02(parsed)");
+            Log(cljureCode02, "cljureCode02");
+            DumpObject(parsere3.ParseJsonSequence(cljureCode02), "cljureCode02(parsed)");
 
             Console.WriteLine("""[universal]THIS is unicode(log): [252ee4f0-d951-4ea4-bd3f-95e9af976141]2B55[252ee4f0-d951-4ea4-bd3f-95e9af976141]uuFE0F [252ee4f0-d951-4ea4-bd3f-95e9af976141]u2622 [252ee4f0-d951-4ea4-bd3f-95e9af976141]u2603[252ee4f0-d951-4ea4-bd3f-95e9af976141]uu2603[252ee4f0-d951-4ea4-bd3f-95e9af976141]uu2603 [252ee4f0-d951-4ea4-bd3f-95e9af976141]u262E[/universal]""");
 
@@ -412,6 +416,18 @@ class Program {
             Console.WriteLine(doc.Root?.Name);
             Log(doc.Root?.ToString());
 
+            ForceAscii = false;
+            var printed = FromJson(trimmedJson);
+            DumpObject(printed, "⁅markup⁆[blue]printed[/]");
+            printed.Dump("⁅red⁆printed⁅/⁆");
+            Log("⁅blue⁆printed⁅/⁆", title: "⁅red⁆(?°□°)?⁅/⁆ ⁅blue⁆┻━┻⁅/⁆");
+            Log("⁅blue⁆printed⁅/⁆", title: "⁅red⁆(?°□°)?⁅/⁆ ⁅blue⁆┻━┻⁅/⁆");
+            WriteLine("⁅blue⁆⁅link=https://www.youtube.com/⁆Ctrl+click this link to visit YouTube⁅/⁆⁅/⁆!", title: "⁅red⁆(?°□°)?⁅/⁆ ⁅blue⁆┻━┻⁅/⁆");
+
+            FromObject(parsere3.ParseJsonSequence(cljureCode02)).Dump(hideKeys: ["!"]);
+
+            Echo("⁅markup⁆[green]This is green.[/]");
+            Echo(new { args }, "args");
             Log("[END]");
         }
         catch (Exception ex) {

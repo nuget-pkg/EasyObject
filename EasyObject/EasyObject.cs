@@ -1,5 +1,9 @@
 ﻿namespace Global;
 
+#if USE_SPECTRE_CONSOLE
+using Spectre.Console;
+using Spectre.Console.Json;
+#endif
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -59,19 +63,28 @@ public class EasyObject :
     public static bool DebugOutput /*= false*/;
     public static bool ShowDetail /*= false*/;
     public static bool ForceAscii /*= false*/;
+    public static IAnsiConsole AnsiErrorConsole;
+    public static bool UseAnsiConsole;
+
+    static EasyObject() {
+        EasyObject.ClearSettings();
+        AnsiErrorConsole = AnsiConsole.Create(new AnsiConsoleSettings {
+            Out = new AnsiConsoleOutput(Console.Error)
+        });
+    }
 
     public static void ClearSettings() {
         EasyObject.JsonParser = DefaultJsonParser;
         EasyObject.DebugOutput = false;
         EasyObject.ShowDetail = false;
         EasyObject.ForceAscii = false;
+        EasyObject.UseAnsiConsole = false;
     }
 
     public static void SetupConsoleEncoding(Encoding? encoding = null) {
         if (encoding == null) {
             encoding = Encoding.UTF8;
         }
-
         try {
             Console.OutputEncoding = encoding;
             Console.InputEncoding = encoding;
@@ -80,15 +93,18 @@ public class EasyObject :
                     Console.OpenStandardError(), encoding) {
                     AutoFlush = true
                 });
+            AnsiErrorConsole = AnsiConsole.Create(new AnsiConsoleSettings {
+                Out = new AnsiConsoleOutput(Console.Error)
+            });
         }
         catch (Exception) {
             // Ignore exceptions related to console encoding
         }
     }
 
-    static EasyObject() {
-        EasyObject.ClearSettings();
-    }
+    //static EasyObject() {
+    //    EasyObject.ClearSettings();
+    //}
 
     public EasyObject() {
         RealData = null;
@@ -545,8 +561,6 @@ public class EasyObject :
 
     public static string ToPrintable(object? x, string? title = null, bool noIndent = false, bool removeSurrogatePair = false) {
         PlainObjectConverter poc = new PlainObjectConverter(jsonParser: JsonParser, forceAscii: ForceAscii);
-        //\u005C
-        //return poc.ToPrintable(ShowDetail, x, title, noIndent: noIndent, removeSurrogatePair: removeSurrogatePair);
         string printable = poc.ToPrintable(ShowDetail, x, title, noIndent: noIndent, removeSurrogatePair: removeSurrogatePair);
         if (ForceAscii) {
             printable = printable.Replace("\\", @"\u005C");
@@ -554,6 +568,40 @@ public class EasyObject :
         return printable;
     }
 
+#if USE_SPECTRE_CONSOLE
+    public static void Write(
+        string str,
+        string? title = null
+        ) {
+        if (title != null) {
+            if (title.Contains("⁅markup⁆") || title.Contains("⁅/⁆")) {
+                title = title.Replace("⁅markup⁆", "").Replace("⁅", "[").Replace("⁆", "]");
+                AnsiConsole.Markup($"{title}: ");
+            } else {
+                AnsiConsole.Write($"{title}: ");
+            }
+        }
+        str = str.Replace("⁅", "[").Replace("⁆", "]");
+        AnsiConsole.Markup(str);
+        System.Diagnostics.Debug.Write(str);
+    }
+    public static void WriteLine(
+        string str,
+        string? title = null
+        ) {
+        if (title != null) {
+            if (title.Contains("⁅markup⁆") || title.Contains("⁅/⁆")) {
+                title = title.Replace("⁅markup⁆", "").Replace("⁅", "[").Replace("⁆", "]");
+                AnsiConsole.Markup($"{title}: ");
+            } else {
+                AnsiConsole.Write($"{title}: ");
+            }
+        }
+        str = str.Replace("⁅", "[").Replace("⁆", "]");
+        AnsiConsole.MarkupLine(str);
+        System.Diagnostics.Debug.WriteLine(str);
+    }
+#endif
     public static void Echo(
         object? x,
         string? title = null,
@@ -570,6 +618,30 @@ public class EasyObject :
                 hideKeys: hideKeys,
                 always: false);
         }
+#if USE_SPECTRE_CONSOLE
+        if (UseAnsiConsole) {
+            if (title != null) {
+                if (title.Contains("⁅markup⁆") || title.Contains("⁅/⁆")) {
+                    title = title.Replace("⁅markup⁆", "").Replace("⁅", "[").Replace("⁆", "]");
+                    AnsiConsole.Markup($"{title}: ");
+                } else {
+                    AnsiConsole.Write($"{title}: ");
+                }
+            }
+            if (x != null && x is string str) {
+                if (str.Contains("⁅markup⁆") || str.Contains("⁅/⁆")) {
+                    str = str.Replace("⁅markup⁆", "").Replace("⁅", "[").Replace("⁆", "]");
+                    AnsiConsole.MarkupLine(str);
+                    System.Diagnostics.Debug.WriteLine(str);
+                    return;
+                }
+            }
+            string s2 = ToPrintable(x, title, noIndent: noIndent, removeSurrogatePair: removeSurrogatePair);
+            Console.WriteLine(s2);
+            System.Diagnostics.Debug.WriteLine(s2);
+            return;
+        }
+#endif
         string s = ToPrintable(x, title, noIndent: noIndent, removeSurrogatePair: removeSurrogatePair);
         Console.WriteLine(s);
         System.Diagnostics.Debug.WriteLine(s);
@@ -582,14 +654,31 @@ public class EasyObject :
         List<string>? hideKeys = null,
         bool removeSurrogatePair = false
         ) {
-        hideKeys ??= new List<string>();
-        if (maxDepth > 0 || hideKeys.Count > 0) {
-            var eo = FromObject(x);
-            x = eo.Clone(
-                maxDepth: maxDepth,
-                hideKeys: hideKeys,
-                always: false);
+#if USE_SPECTRE_CONSOLE
+        if (UseAnsiConsole) {
+            AnsiErrorConsole.Markup("[cyan][[Log]][/] ");
+            if (title != null) {
+                if (title.Contains("⁅markup⁆") || title.Contains("⁅/⁆")) {
+                    title = title.Replace("⁅markup⁆", "").Replace("⁅", "[").Replace("⁆", "]");
+                    AnsiErrorConsole.Markup($"{title}: ");
+                } else {
+                    AnsiErrorConsole.Write($"{title}: ");
+                }
+            }
+            if (x != null && x is string str) {
+                if (str.Contains("⁅markup⁆") || str.Contains("⁅/⁆")) {
+                    str = str.Replace("⁅markup⁆", "").Replace("⁅", "[").Replace("⁆", "]");
+                    AnsiErrorConsole.MarkupLine(str);
+                    System.Diagnostics.Debug.WriteLine(str);
+                    return;
+                }
+            }
+            string s2 = ToPrintable(x, title, noIndent: noIndent, removeSurrogatePair: removeSurrogatePair);
+            Console.Error.WriteLine(s2);
+            System.Diagnostics.Debug.WriteLine("[Log] " + s2);
+            return;
         }
+#endif
         string s = ToPrintable(x, title, noIndent: noIndent, removeSurrogatePair: removeSurrogatePair);
         Console.Error.WriteLine("[Log] " + s);
         System.Diagnostics.Debug.WriteLine("[Log] " + s);
@@ -627,11 +716,43 @@ public class EasyObject :
         if (title == null) {
             title = "Message";
         }
-
         string s = ToPrintable(x, title: title, noIndent: noIndent);
         NativeMethods.MessageBoxW(IntPtr.Zero, s, title, 0);
     }
 
+#if USE_SPECTRE_CONSOLE
+    public static void DumpObject(
+        object? x,
+        string? title = null,
+        bool noIndent = false,
+        uint maxDepth = 0,
+        List<string>? hideKeys = null,
+        bool removeSurrogatePair = false
+        ) {
+        var printable = FromObject(x).Clone(maxDepth: maxDepth, hideKeys: hideKeys, always: false);
+        var json = printable.ToJson(indent: !noIndent, removeSurrogatePair: removeSurrogatePair);
+        var jsonText = new JsonText(json);
+        if (title != null) {
+            if (title.Contains("⁅markup⁆") || title.Contains("⁅/⁆")) {
+                title = title.Replace("⁅markup⁆", "").Replace("⁅", "[").Replace("⁆", "]");
+                AnsiConsole.Markup($"{title}: ");
+            } else {
+                AnsiConsole.Write($"{title}: ");
+            }
+        }
+        AnsiConsole.Write(jsonText);
+        AnsiConsole.WriteLine();
+    }
+    public void Dump(
+        string? title = null,
+        bool noIndent = false,
+        uint maxDepth = 0,
+        List<string>? hideKeys = null,
+        bool removeSurrogatePair = false
+        ) {
+        DumpObject(this, title: title, noIndent: noIndent, maxDepth: maxDepth, hideKeys: hideKeys, removeSurrogatePair: removeSurrogatePair);
+    }
+#endif
     private static class NativeMethods {
         [DllImport("user32.dll", CharSet = CharSet.Unicode)]
         internal static extern int MessageBoxW(
