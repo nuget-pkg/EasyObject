@@ -1,4 +1,4 @@
-﻿using Global;
+using Global;
 using NUnit.Framework;
 using Razorvine.Pickle;
 using System;
@@ -429,6 +429,9 @@ class Program {
             Echo(new { args }, "⁅markup⁆[green]args[/]");
 
             WriteLine("⁅markup⁆[blue][link=https://www.youtube.com/]Ctrl+click this link to visit YouTube[/][/]!", title: "⁅markup⁆[red](?°□°)?[/] [blue]┻━┻[/]");
+
+            double videoDuration = 9999;
+            Log(videoDuration, "⁅markup⁆[red]Duration too long...skipping![/]");
 
             Log("[END]");
         }

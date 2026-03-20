@@ -599,7 +599,6 @@ public class EasyObject :
         }
         str = str.Replace("⁅markup⁆", "");
         AnsiConsole.MarkupLine(str);
-        System.Diagnostics.Debug.WriteLine(str);
     }
 #endif
     public static void Echo(
@@ -632,19 +631,16 @@ public class EasyObject :
                 if (str.StartsWith("⁅markup⁆")) {
                     str = str.Replace("⁅markup⁆", "");
                     AnsiConsole.MarkupLine(str);
-                    System.Diagnostics.Debug.WriteLine(str);
                     return;
                 }
             }
             string s2 = ToPrintable(x, title, noIndent: noIndent, removeSurrogatePair: removeSurrogatePair);
             Console.WriteLine(s2);
-            System.Diagnostics.Debug.WriteLine(s2);
             return;
         }
 #endif
         string s = ToPrintable(x, title, noIndent: noIndent, removeSurrogatePair: removeSurrogatePair);
         Console.WriteLine(s);
-        System.Diagnostics.Debug.WriteLine(s);
     }
     public static void Log(
         object? x,
@@ -669,19 +665,16 @@ public class EasyObject :
                 if (str.StartsWith("⁅markup⁆")) {
                     str = str.Replace("⁅markup⁆", "");
                     AnsiErrorConsole.MarkupLine(str);
-                    System.Diagnostics.Debug.WriteLine(str);
                     return;
                 }
             }
-            string s2 = ToPrintable(x, title, noIndent: noIndent, removeSurrogatePair: removeSurrogatePair);
+            string s2 = ToPrintable(x, title: null, noIndent: noIndent, removeSurrogatePair: removeSurrogatePair);
             Console.Error.WriteLine(s2);
-            System.Diagnostics.Debug.WriteLine("[Log] " + s2);
             return;
         }
 #endif
         string s = ToPrintable(x, title, noIndent: noIndent, removeSurrogatePair: removeSurrogatePair);
         Console.Error.WriteLine("[Log] " + s);
-        System.Diagnostics.Debug.WriteLine("[Log] " + s);
     }
     public static void Debug(
         object? x,
@@ -704,7 +697,6 @@ public class EasyObject :
         }
         string s = ToPrintable(x, title, noIndent: noIndent);
         Console.Error.WriteLine("[Debug] " + s);
-        System.Diagnostics.Debug.WriteLine("[Debug] " + s);
     }
     public static void Message(
         object? x,
