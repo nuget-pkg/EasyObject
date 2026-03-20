@@ -9,12 +9,18 @@ if [[ "${str:0:1}" == "@" ]]; then
     shift
   elif [[ "$str" == "@exe" ]]; then
     if [ ! -f "$script_dir/demo01.exe" ]; then
-      "$script_dir/.r.demo01.sh" "@merge" -f 1>&2
+      bash "$script_dir/.r.demo01.sh" "@merge" -f 1>&2
+    fi
+    shift
+    $script_dir/demo01.exe "$@"
+  elif [[ "$str" == "@bin" ]]; then
+    if [ ! -f "$script_dir/demo01.exe" ]; then
+      bash "$script_dir/.r.demo01.sh" "@pack" -f 1>&2
     fi
     shift
     $script_dir/demo01.exe "$@"
   else
-    "$script_dir/.r.demo01.sh" "$@"
+    bash.exe "$script_dir/.r.demo01.sh" "$@"
   fi
 else
   cscs -nuget:restore "$script_dir/demo01.main.cs" 1>&2

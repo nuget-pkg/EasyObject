@@ -647,7 +647,7 @@ public class EasyObject :
             }
             string s2 = ToPrintable(x, title, noIndent: noIndent, removeSurrogatePair: removeSurrogatePair);
             string s3 = MarkupSafeString(s2);
-            AnsiConsole.WriteLine(s3);
+            AnsiConsole.MarkupLine(s3);
             return;
         }
 #endif
@@ -691,7 +691,7 @@ public class EasyObject :
             //Debug("8");
             string s2 = ToPrintable(x, title: null, noIndent: noIndent, removeSurrogatePair: removeSurrogatePair);
             string s3 = MarkupSafeString(s2);
-            AnsiErrorConsole.WriteLine(s3);
+            AnsiErrorConsole.MarkupLine(s3);
             return;
         }
 #endif
