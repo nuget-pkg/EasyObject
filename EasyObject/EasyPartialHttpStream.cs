@@ -1,9 +1,13 @@
+using System;
 using System.IO;
 using System.Net;
-using System;
 namespace Global;
 
+#if GLOBAL_SYS
+class PartialHTTPStream : Stream, IDisposable {
+#else
 class EasyPartialHTTPStream : Stream, IDisposable {
+#endif
     Stream? stream = null;
     WebResponse? resp = null;
     public string Url {
@@ -22,7 +26,7 @@ class EasyPartialHTTPStream : Stream, IDisposable {
     public override long Position {
         get { return position; }
         set {
-            long len = this.Length;
+            long len = Length;
             if (value < 0 || value > len) {
                 throw new ArgumentException($"Position out of range: {value}");
             }
@@ -52,7 +56,11 @@ class EasyPartialHTTPStream : Stream, IDisposable {
             return length.Value;
         }
     }
+#if GLOBAL_SYS
+    public PartialHTTPStream(string url) {
+#else
     public EasyPartialHTTPStream(string url) {
+#endif
         var m = EasyObject.MatchForPatterns(
             url,
             @"^(https://github[.]com/[^/]+/[^/]+/)blob(/.+)$",
@@ -61,13 +69,16 @@ class EasyPartialHTTPStream : Stream, IDisposable {
         if (m != null) {
             url = m[1] + "raw" + m[2];
         }
-        this.Url = url;
+        Url = url;
     }
     public override void SetLength(long value) {
         throw new NotImplementedException();
     }
     public override int Read(byte[] buffer, int offset, int count) {
-        if (count <= 0) return 0;
+        if (count <= 0) {
+            return 0;
+        }
+
         HttpWebRequest? req = null;
         try {
 #pragma warning disable SYSLIB0014
@@ -81,7 +92,10 @@ class EasyPartialHTTPStream : Stream, IDisposable {
             using (Stream stream = resp.GetResponseStream()) {
                 while (true) {
                     int len = stream.Read(buffer, offset, rest);
-                    if (len == 0) break;
+                    if (len == 0) {
+                        break;
+                    }
+
                     nread += len;
                     offset += len;
                     rest -= len;
@@ -116,8 +130,7 @@ class EasyPartialHTTPStream : Stream, IDisposable {
     }
     public override void Flush() {
     }
-    new void Dispose() {
-        base.Dispose();
+    protected override void Dispose(bool disposing) {
         if (stream != null) {
             stream.Dispose();
             stream = null;

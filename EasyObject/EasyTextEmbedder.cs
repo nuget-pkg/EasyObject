@@ -4,10 +4,17 @@ using System.Text;
 using System.Text.RegularExpressions;
 namespace Global;
 
+#if GLOBAL_SYS
+public static class TextEmbedder {
+#else
 public static class EasyTextEmbedder {
+#endif
     const long MinimumCheckLength = 8192;
-    //const long MinimumCheckLength = 256;
+#if GLOBAL_SYS
+    static TextEmbedder() {
+#else
     static EasyTextEmbedder() {
+#endif
         Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
     }
     internal class SearchResult {
@@ -19,6 +26,25 @@ public static class EasyTextEmbedder {
         }
         public long EndPos {
             get; set;
+        }
+    }
+    private static long GetLength(string path) {
+        try {
+            if (path.StartsWith("http:") || path.StartsWith("https:")) {
+#if GLOBAL_SYS
+                using (var fs = new PartialHTTPStream(path)) {
+#else
+                using (var fs = new EasyPartialHTTPStream(path)) {
+#endif
+                    return fs.Length;
+                }
+            }
+            using (var fs = File.OpenRead(path)) {
+                return fs.Length;
+            }
+        }
+        catch {
+            return 0;
         }
     }
     private static SearchResult CheckTailBytes(long offset, byte[] bytes) {
@@ -47,21 +73,20 @@ public static class EasyTextEmbedder {
         }
         return result;
     }
-    private static long GetLength(string path) {
-        if (path.StartsWith("http:") || path.StartsWith("https:")) {
-            using (var fs = new EasyPartialHTTPStream(path)) {
-                return fs.Length;
-            }
-        }
-        using (var fs = File.OpenRead(path)) {
-            return fs.Length;
-        }
-    }
     public static byte[] GetHeadBytes(string path, long size) {
+        if (GetLength(path) == 0) {
+            return new byte[0];
+        }
         if (path.StartsWith("http:") || path.StartsWith("https:")) {
+#if GLOBAL_SYS
+            using (var fs = new PartialHTTPStream(path)) {
+#else
             using (var fs = new EasyPartialHTTPStream(path)) {
+#endif
                 long fileLen = fs.Length;
-                if (size > fileLen) size = fileLen;
+                if (size > fileLen) {
+                    size = fileLen;
+                }
                 byte[] result = new byte[size];
                 fs.Read(result, 0, result.Length);
                 return result;
@@ -69,17 +94,28 @@ public static class EasyTextEmbedder {
         }
         using (var fs = File.OpenRead(path)) {
             long fileLen = fs.Length;
-            if (size > fileLen) size = fileLen;
+            if (size > fileLen) {
+                size = fileLen;
+            }
             byte[] result = new byte[size];
             fs.Read(result, 0, result.Length);
             return result;
         }
     }
     public static byte[] GetTailBytes(string path, long size) {
+        if (GetLength(path) == 0) {
+            return new byte[0];
+        }
         if (path.StartsWith("http:") || path.StartsWith("https:")) {
+#if GLOBAL_SYS
+            using (var fs = new PartialHTTPStream(path)) {
+#else
             using (var fs = new EasyPartialHTTPStream(path)) {
+#endif
                 long fileLen = fs.Length;
-                if (size > fileLen) size = fileLen;
+                if (size > fileLen) {
+                    size = fileLen;
+                }
                 long pos = fileLen - size;
                 byte[] result = new byte[size];
                 fs.Seek(pos, SeekOrigin.Begin);
@@ -89,7 +125,9 @@ public static class EasyTextEmbedder {
         }
         using (var fs = File.OpenRead(path)) {
             long fileLen = fs.Length;
-            if (size > fileLen) size = fileLen;
+            if (size > fileLen) {
+                size = fileLen;
+            }
             long pos = fileLen - size;
             byte[] result = new byte[size];
             fs.Seek(pos, SeekOrigin.Begin);
@@ -98,17 +136,7 @@ public static class EasyTextEmbedder {
         }
     }
     public static bool HasEmbeddedText(string path) {
-        long fileLen = GetLength(path);
-        long checkLen = MinimumCheckLength;
-        while (true) {
-            if (checkLen > fileLen) checkLen = fileLen;
-            byte[] check = GetTailBytes(path, checkLen);
-            SearchResult checkResult = CheckTailBytes(fileLen - checkLen, check);
-            if (checkResult.EndPos < 0) return false;
-            if (checkResult.StartPos >= 0) return true;
-            if (checkLen >= fileLen) return false;
-            checkLen *= 2;
-        }
+        return ExtractEmbeddedText(path) != null;
     }
     public static string GetRandomDigits(/*int length*/) {
         return Guid.NewGuid().ToString("D");
@@ -118,8 +146,13 @@ public static class EasyTextEmbedder {
             throw new InvalidOperationException("Cannot remove embedded text from a URL");
         }
         long fileLen = GetLength(path);
+        if (fileLen == 0) {
+            return;
+        }
         long contentSize = GetOriginalContentSize(path);
-        if (fileLen == contentSize) return;
+        if (fileLen == contentSize) {
+            return;
+        }
         using (var fs = new FileStream(path, FileMode.Open, FileAccess.Write)) {
             fs.SetLength(contentSize);
         }
@@ -140,14 +173,19 @@ public static class EasyTextEmbedder {
     }
     public static string? ExtractEmbeddedText(string path) {
         long fileLen = GetLength(path);
+        if (fileLen == 0) {
+            return null;
+        }
         long checkLen = MinimumCheckLength;
         while (true) {
-            if (checkLen > fileLen) checkLen = fileLen;
-            {
+            if (checkLen > fileLen) {
+                checkLen = fileLen;
             }
             byte[] check = GetTailBytes(path, checkLen);
             SearchResult checkResult = CheckTailBytes(fileLen - checkLen, check);
-            if (checkResult.EndPos < 0) return null;
+            if (checkResult.EndPos < 0) {
+                return null;
+            }
             if (checkResult.StartPos >= 0) {
                 long len = checkResult.EndPos - checkResult.StartPos;
                 byte[] result = new byte[len];
@@ -162,12 +200,19 @@ public static class EasyTextEmbedder {
     }
     public static long GetOriginalContentSize(string path) {
         long fileLen = GetLength(path);
+        if (fileLen == 0) {
+            return 0;
+        }
         long checkLen = MinimumCheckLength;
         while (true) {
-            if (checkLen > fileLen) checkLen = fileLen;
+            if (checkLen > fileLen) {
+                checkLen = fileLen;
+            }
             byte[] check = GetTailBytes(path, checkLen);
             SearchResult checkResult = CheckTailBytes(fileLen - checkLen, check);
-            if (checkResult.EndPos < 0) return checkResult.Length;
+            if (checkResult.EndPos < 0) {
+                return checkResult.Length;
+            }
             if (checkResult.StartPos >= 0) {
                 return checkResult.Length;
             }
