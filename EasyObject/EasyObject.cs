@@ -581,7 +581,7 @@ public class EasyObject :
                 AnsiConsole.Write($"{title}: ");
             }
         }
-        str = str.Replace("⁅", "[").Replace("⁆", "]");
+        str = str.Replace("⁅markup⁆", "").Replace("⁅", "[").Replace("⁆", "]");
         AnsiConsole.Markup(str);
         System.Diagnostics.Debug.Write(str);
     }
@@ -597,7 +597,7 @@ public class EasyObject :
                 AnsiConsole.Write($"{title}: ");
             }
         }
-        str = str.Replace("⁅", "[").Replace("⁆", "]");
+        str = str.Replace("⁅markup⁆", "").Replace("⁅", "[").Replace("⁆", "]");
         AnsiConsole.MarkupLine(str);
         System.Diagnostics.Debug.WriteLine(str);
     }
