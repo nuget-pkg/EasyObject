@@ -1,6 +1,7 @@
 using Global;
 using NUnit.Framework;
 using Razorvine.Pickle;
+using Spectre.Console;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -428,15 +429,25 @@ class Program {
             Echo("⁅markup⁆[green]This is green.[/]");
             Echo(new { args }, "⁅markup⁆[green]args[/]");
 
-            WriteLine("⁅markup⁆[blue][link=https://www.youtube.com/]Ctrl+click this link to visit YouTube[/][/]!", title: "⁅markup⁆[red](?°□°)?[/] [blue]┻━┻[/]");
-
             double videoDuration = 9999;
             Log(videoDuration, "⁅markup⁆[red]Duration too long...skipping![/]");
+
+            DebugOutput = true;
+            //string title = """[blue][link=https://www.youtube.com/]Ctrl+click this link to visit YouTube[/][/]!""";
+            //AnsiErrorConsole.Markup($"{title}: ");
+            Debug(new { a = 123, b = "xyz" }, "⁅markup⁆[green]Debug[/] with [blue][link=https://en.wikipedia.org/wiki/ANSI_escape_code]Ansi Color(Ctrl-Click Me!)[/][/]");
+            string messageToEscape = """[this is not markup tag...so print this message with square brackets]""";
+            string safeMessage = MarkupSafeString(messageToEscape);
+            Log(safeMessage, "safeMessage");
+            Log($"⁅markup⁆[green]{safeMessage}[/]");
+
+            WriteLine("⁅markup⁆[blue][link=https://www.youtube.com/]Ctrl+Click this link to visit YouTube[/][/]!", title: "⁅markup⁆[red](?°□°)?[/] [blue]┻━┻[/]");
 
             Log("[END]");
         }
         catch (Exception ex) {
             Console.WriteLine(ex.ToString());
+            Environment.Exit(1);
         }
     }
 }
