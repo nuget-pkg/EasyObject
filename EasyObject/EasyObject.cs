@@ -574,14 +574,14 @@ public class EasyObject :
         string? title = null
         ) {
         if (title != null) {
-            if (title.Contains("⁅markup⁆") || title.Contains("⁅/⁆")) {
-                title = title.Replace("⁅markup⁆", "").Replace("⁅", "[").Replace("⁆", "]");
+            if (title.StartsWith("⁅markup⁆")) {
+                title = title.Replace("⁅markup⁆", "");
                 AnsiConsole.Markup($"{title}: ");
             } else {
                 AnsiConsole.Write($"{title}: ");
             }
         }
-        str = str.Replace("⁅markup⁆", "").Replace("⁅", "[").Replace("⁆", "]");
+        str = str.Replace("⁅markup⁆", "");
         AnsiConsole.Markup(str);
         System.Diagnostics.Debug.Write(str);
     }
@@ -590,14 +590,14 @@ public class EasyObject :
         string? title = null
         ) {
         if (title != null) {
-            if (title.Contains("⁅markup⁆") || title.Contains("⁅/⁆")) {
-                title = title.Replace("⁅markup⁆", "").Replace("⁅", "[").Replace("⁆", "]");
+            if (title.StartsWith("⁅markup⁆")) {
+                title = title.Replace("⁅markup⁆", "");
                 AnsiConsole.Markup($"{title}: ");
             } else {
                 AnsiConsole.Write($"{title}: ");
             }
         }
-        str = str.Replace("⁅markup⁆", "").Replace("⁅", "[").Replace("⁆", "]");
+        str = str.Replace("⁅markup⁆", "");
         AnsiConsole.MarkupLine(str);
         System.Diagnostics.Debug.WriteLine(str);
     }
@@ -621,16 +621,16 @@ public class EasyObject :
 #if USE_SPECTRE_CONSOLE
         if (UseAnsiConsole) {
             if (title != null) {
-                if (title.Contains("⁅markup⁆") || title.Contains("⁅/⁆")) {
-                    title = title.Replace("⁅markup⁆", "").Replace("⁅", "[").Replace("⁆", "]");
+                if (title.StartsWith("⁅markup⁆")) {
+                    title = title.Replace("⁅markup⁆", "");
                     AnsiConsole.Markup($"{title}: ");
                 } else {
                     AnsiConsole.Write($"{title}: ");
                 }
             }
             if (x != null && x is string str) {
-                if (str.Contains("⁅markup⁆") || str.Contains("⁅/⁆")) {
-                    str = str.Replace("⁅markup⁆", "").Replace("⁅", "[").Replace("⁆", "]");
+                if (str.StartsWith("⁅markup⁆")) {
+                    str = str.Replace("⁅markup⁆", "");
                     AnsiConsole.MarkupLine(str);
                     System.Diagnostics.Debug.WriteLine(str);
                     return;
@@ -658,16 +658,16 @@ public class EasyObject :
         if (UseAnsiConsole) {
             AnsiErrorConsole.Markup("[cyan][[Log]][/] ");
             if (title != null) {
-                if (title.Contains("⁅markup⁆") || title.Contains("⁅/⁆")) {
-                    title = title.Replace("⁅markup⁆", "").Replace("⁅", "[").Replace("⁆", "]");
+                if (title.StartsWith("⁅markup⁆")) {
+                    title = title.Replace("⁅markup⁆", "");
                     AnsiErrorConsole.Markup($"{title}: ");
                 } else {
                     AnsiErrorConsole.Write($"{title}: ");
                 }
             }
             if (x != null && x is string str) {
-                if (str.Contains("⁅markup⁆") || str.Contains("⁅/⁆")) {
-                    str = str.Replace("⁅markup⁆", "").Replace("⁅", "[").Replace("⁆", "]");
+                if (str.StartsWith("⁅markup⁆")) {
+                    str = str.Replace("⁅markup⁆", "");
                     AnsiErrorConsole.MarkupLine(str);
                     System.Diagnostics.Debug.WriteLine(str);
                     return;
@@ -733,8 +733,8 @@ public class EasyObject :
         var json = printable.ToJson(indent: !noIndent, removeSurrogatePair: removeSurrogatePair);
         var jsonText = new JsonText(json);
         if (title != null) {
-            if (title.Contains("⁅markup⁆") || title.Contains("⁅/⁆")) {
-                title = title.Replace("⁅markup⁆", "").Replace("⁅", "[").Replace("⁆", "]");
+            if (title.StartsWith("⁅markup⁆")) {
+                title = title.Replace("⁅markup⁆", "");
                 AnsiConsole.Markup($"{title}: ");
             } else {
                 AnsiConsole.Write($"{title}: ");

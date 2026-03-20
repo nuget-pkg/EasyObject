@@ -419,15 +419,17 @@ class Program {
             ForceAscii = false;
             var printed = FromJson(trimmedJson);
             DumpObject(printed, "⁅markup⁆[blue]printed[/]");
-            printed.Dump("⁅red⁆printed⁅/⁆");
-            Log("⁅blue⁆printed⁅/⁆", title: "⁅red⁆(?°□°)?⁅/⁆ ⁅blue⁆┻━┻⁅/⁆");
-            Log("⁅blue⁆printed⁅/⁆", title: "⁅red⁆(?°□°)?⁅/⁆ ⁅blue⁆┻━┻⁅/⁆");
-            WriteLine("⁅blue⁆⁅link=https://www.youtube.com/⁆Ctrl+click this link to visit YouTube⁅/⁆⁅/⁆!", title: "⁅red⁆(?°□°)?⁅/⁆ ⁅blue⁆┻━┻⁅/⁆");
+            printed.Dump("⁅markup⁆[red]printed[/]");
+            Log("⁅markup⁆[blue]printed[/]", title: "⁅markup⁆[red](?°□°)?[/] [blue]┻━┻[/]");
+            Log("⁅markup⁆[blue]printed[/]", title: "⁅markup⁆[red](?°□°)?[/] [blue]┻━┻[/]");
 
             FromObject(parsere3.ParseJsonSequence(cljureCode02)).Dump(hideKeys: ["!"]);
 
             Echo("⁅markup⁆[green]This is green.[/]");
-            Echo(new { args }, "args");
+            Echo(new { args }, "⁅markup⁆[green]args[/]");
+
+            WriteLine("⁅markup⁆[blue][link=https://www.youtube.com/]Ctrl+click this link to visit YouTube[/][/]!", title: "⁅markup⁆[red](?°□°)?[/] [blue]┻━┻[/]");
+
             Log("[END]");
         }
         catch (Exception ex) {
