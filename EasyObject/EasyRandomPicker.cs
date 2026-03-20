@@ -1,5 +1,5 @@
 //css_nuget EasyObject;
-//+#def CS_SCRIPT
+//+#def     CS_SCRIPT
 using System;
 using System.Collections.Generic;
 
