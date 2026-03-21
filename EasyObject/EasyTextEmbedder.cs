@@ -58,7 +58,7 @@ public static class EasyTextEmbedder {
         string pattern = @"\[/embed(:[-0-9a-zA-Z]+)?\]\s*$";
         Match m = Regex.Match(part, pattern);
         if (m.Success) {
-            string startTag = $"//[embed{m.Groups[1].Value}]";
+            string startTag = $"\n//[embed{m.Groups[1].Value}]";
             string endTag = $"[/embed{m.Groups[1].Value}]";
             result.EndPos = part.LastIndexOf(endTag);
             if (result.EndPos >= 0) {
@@ -165,7 +165,7 @@ public static class EasyTextEmbedder {
             RemoveEmbeddedText(path);
         }
         string randomDigits = GetRandomDigits();
-        string embedText = $"//[embed:{randomDigits}]{text}[/embed:{randomDigits}]\n";
+        string embedText = $"\n//[embed:{randomDigits}]{text}[/embed:{randomDigits}]\n";
         byte[] embedBytes = Encoding.UTF8.GetBytes(embedText);
         using (var fs = new FileStream(path, FileMode.Append, FileAccess.Write)) {
             fs.Write(embedBytes, 0, embedBytes.Length);

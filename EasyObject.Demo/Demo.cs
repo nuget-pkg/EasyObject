@@ -356,21 +356,6 @@ class Program {
             var todo2 = FromUrl("https://jsonplaceholder.typicode.com/todos/1");
             Log(todo2, "todo2");
 
-            //string embeddedJsonUrl = "https://raw.githubusercontent.com/nuget-pkg/Global.Sys/refs/tags/2026.0311.1056.12/Global.Sys.Demo/assets/text-embed-text-02.json";
-            string embeddedJsonUrl = "https://github.com/nuget-pkg/Global.Sys/blob/2026.0311.1056.12/Global.Sys.Demo/assets/text-embed-text-02.json";
-            var embeddedEO = FromUrl(embeddedJsonUrl);
-            Log(embeddedEO, "embeddedEO(github)");
-
-            embeddedJsonUrl = "https://gitlab.com/nuget-tools/nuget-assets/-/blob/2026.0311.1156.53/text-embed-text-02.json?ref_type=tags";
-            embeddedEO = FromUrl(embeddedJsonUrl);
-            Log(embeddedEO, "embeddedEO(gitlab)");
-
-            var embedded1 = ExtractFromFile("https://gitlab.com/nuget-tools/nuget-assets/-/blob/2026.0311.1339.52/json-with-embedded-json.json?ref_type=tags");
-            Log(embedded1, "embedded1(gitlab)");
-
-            var embedded2 = ExtractFromFile("https://gitlab.com/nuget-tools/nuget-assets/-/blob/2026.0320.1027.27/my-ls.exe?ref_type=tags");
-            Log(embedded2, "embedded2(gitlab)");
-
             Console.WriteLine("[stdout] This is unicode: ⭕️ ☢ ☃☃☃ ☮");
             Console.Error.WriteLine("[stderr] This is unicode: ⭕️ ☢ ☃☃☃ ☮");
 
@@ -442,6 +427,21 @@ class Program {
             Log($"⁅markup⁆[green]{safeMessage}[/]");
 
             WriteLine("⁅markup⁆[blue][link=https://www.youtube.com/]Ctrl+Click this link to visit YouTube[/][/]!", title: "⁅markup⁆[red](?°□°)?[/] [blue]┻━┻[/]");
+
+            //string embeddedJsonUrl = "https://raw.githubusercontent.com/nuget-pkg/Global.Sys/refs/tags/2026.0311.1056.12/Global.Sys.Demo/assets/text-embed-text-02.json";
+            string embeddedJsonUrl = "https://github.com/nuget-pkg/Global.Sys/blob/2026.0311.1056.12/Global.Sys.Demo/assets/text-embed-text-02.json";
+            var embeddedEO = FromUrl(embeddedJsonUrl);
+            Log(embeddedEO, "embeddedEO(github)");
+
+            embeddedJsonUrl = "https://gitlab.com/nuget-tools/nuget-assets/-/blob/2026.0311.1156.53/text-embed-text-02.json?ref_type=tags";
+            embeddedEO = FromUrl(embeddedJsonUrl);
+            Log(embeddedEO, "embeddedEO(gitlab)");
+
+            var embedded1 = ExtractFromFile("https://gitlab.com/nuget-tools/nuget-assets/-/blob/2026.0321.1903.42/json-with-embedded-json.json?ref_type=tags");
+            Log(embedded1, "embedded1(gitlab)");
+
+            var embedded2 = ExtractFromFile("https://gitlab.com/nuget-tools/nuget-assets/-/blob/2026.0320.1027.27/my-ls.exe?ref_type=tags");
+            Log(embedded2, "embedded2(gitlab)");
 
             Log("[END]");
         }
