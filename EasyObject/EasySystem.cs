@@ -8,6 +8,7 @@ using System.Net;
 using System.Net.Http;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -92,13 +93,13 @@ namespace Global {
             }
             if (Directory.Exists(dir) && !string.IsNullOrWhiteSpace(dir) && !string.IsNullOrWhiteSpace(zipout)) {
                 try {
-                    using var zip = ZipStorer.Create(zipout, comment); // true for stream
+                    using var zip = EasyZipStorer.Create(zipout, comment); // true for stream
                     zip.EncodeUTF8 = true;
                     zip.ForceDeflating = true;
                     foreach (string listDir in Directory.EnumerateDirectories(dir, "*", SearchOption.TopDirectoryOnly)) {
                         // Add folders with files to the archive
                         try {
-                            zip.AddDirectory(ZipStorer.Compression.Deflate, listDir, string.Empty);
+                            zip.AddDirectory(EasyZipStorer.Compression.Deflate, listDir, string.Empty);
                         }
                         catch {
                             ;
@@ -108,7 +109,7 @@ namespace Global {
                     foreach (string listFiles in Directory.EnumerateFiles(dir, "*.*", SearchOption.TopDirectoryOnly)) {
                         // Add residual files in the current directory to the archive.
                         try {
-                            zip.AddFile(ZipStorer.Compression.Deflate, listFiles, Path.GetFileName(listFiles));
+                            zip.AddFile(EasyZipStorer.Compression.Deflate, listFiles, Path.GetFileName(listFiles));
                         }
                         catch {
                             ;
@@ -471,61 +472,63 @@ namespace Global {
             return str;
         }
         public static string AdjustFileName(string fileName, string replaceSurrogate = "★") {
-            fileName = fileName
-                .Replace("!", "❢")
-                .Replace("！", "❢")
-                //.Replace("\"", "”")
-                .Replace("\"", "“")
-                //.Replace("'", "’")
-                .Replace("'", "‘")
-                .Replace("#", "＃")
-                .Replace("%", "％")
-                .Replace("&", "＆")
-                .Replace("(", "｟")
-                .Replace(")", "｠")
-                .Replace("（", "｟")
-                .Replace("）", "｠")
-                .Replace("^", "＾")
-                .Replace("~", "～")
-                .Replace("\\", "＼")
-                .Replace("|", "￤")
-                .Replace("｜", "￤")
-                .Replace("`", "｀")
-                .Replace(";", "；")
-                .Replace(":", "：")
-                .Replace("*", "＊")
-                .Replace("[", "⁅")
-                .Replace("]", "⁆")
-                .Replace("［", "⁅")
-                .Replace("］", "⁆")
-                .Replace("{", "〘")
-                .Replace("}", "〙")
-                .Replace("｛", "〘")
-                .Replace("｝", "〙")
-                .Replace("<", "≪")
-                .Replace(">", "≫")
-                .Replace("＜", "≪")
-                .Replace("＞", "≫")
-                .Replace("/", "／")
-                .Replace("?", "❔")
-                .Replace("？", "❔")
-                //〚あいうえお〛
-                //〖あいうえお〗
-                .Replace("　", " ")
-                ;
-            fileName = RemoveSurrogatePair(fileName, replaceSurrogate);
-            return fileName;
+            return UniversalTransformer.SafeFileName(fileName, replaceSurrogate: replaceSurrogate);
+            //fileName = fileName
+            //    .Replace("!", "❢")
+            //    .Replace("！", "❢")
+            //    //.Replace("\"", "”")
+            //    .Replace("\"", "“")
+            //    //.Replace("'", "’")
+            //    .Replace("'", "‘")
+            //    .Replace("#", "＃")
+            //    .Replace("%", "％")
+            //    .Replace("&", "＆")
+            //    .Replace("(", "｟")
+            //    .Replace(")", "｠")
+            //    .Replace("（", "｟")
+            //    .Replace("）", "｠")
+            //    .Replace("^", "＾")
+            //    .Replace("~", "～")
+            //    .Replace("\\", "＼")
+            //    .Replace("|", "￤")
+            //    .Replace("｜", "￤")
+            //    .Replace("`", "｀")
+            //    .Replace(";", "；")
+            //    .Replace(":", "：")
+            //    .Replace("*", "＊")
+            //    .Replace("[", "⁅")
+            //    .Replace("]", "⁆")
+            //    .Replace("［", "⁅")
+            //    .Replace("］", "⁆")
+            //    .Replace("{", "〘")
+            //    .Replace("}", "〙")
+            //    .Replace("｛", "〘")
+            //    .Replace("｝", "〙")
+            //    .Replace("<", "≪")
+            //    .Replace(">", "≫")
+            //    .Replace("＜", "≪")
+            //    .Replace("＞", "≫")
+            //    .Replace("/", "／")
+            //    .Replace("?", "❔")
+            //    .Replace("？", "❔")
+            //    //〚あいうえお〛
+            //    //〖あいうえお〗
+            //    .Replace("　", " ")
+            //    ;
+            //fileName = RemoveSurrogatePair(fileName, replaceSurrogate);
+            //return fileName;
         }
         public static string AdjustMetaData(string metadata, string replaceSurrogate = "★") {
-            metadata = metadata
-                //.Replace("\"", "”")
-                .Replace("\"", "“")
-                //.Replace("'", "’")
-                .Replace("'", "‘")
-                .Replace("\\", "＼")
-                ;
-            metadata = RemoveSurrogatePair(metadata, replaceSurrogate);
-            return metadata;
+            return UniversalTransformer.SafeMetaData(metadata, replaceSurrogate: replaceSurrogate);
+            //metadata = metadata
+            //    //.Replace("\"", "”")
+            //    .Replace("\"", "“")
+            //    //.Replace("'", "’")
+            //    .Replace("'", "‘")
+            //    .Replace("\\", "＼")
+            //    ;
+            //metadata = RemoveSurrogatePair(metadata, replaceSurrogate);
+            //return metadata;
         }
         public static string GetEnv(string name, string fallback = "") {
             return Environment.GetEnvironmentVariable(name) ?? fallback;

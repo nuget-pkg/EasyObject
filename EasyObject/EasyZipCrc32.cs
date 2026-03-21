@@ -9,9 +9,9 @@ namespace Global /*System.IO.Compression*/ {
         If bit 3 of the general purpose flag is set, this field is set to zero in the local header and the correct
         value is put in the data descriptor and in the central directory.
     */
-    public static class ZipCrc32 {
+    public static class EasyZipCrc32 {
         private static UInt32[]? CrcTable = null;
-        static ZipCrc32() {
+        static EasyZipCrc32() {
             // Generate CRC32 table
             CrcTable = new UInt32[256];
             for (int i = 0; i < CrcTable.Length; i++) {

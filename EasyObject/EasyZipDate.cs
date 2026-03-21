@@ -1,7 +1,7 @@
 namespace Global /*System.IO.Compression*/
 {
     using System;
-    public static class ZipDate {
+    public static class EasyZipDate {
         /* DOS Date and time:
             MS-DOS date. The date is a packed value with the following format. Bits Description
                 0-4 Day of the month (131)

@@ -6,9 +6,9 @@ namespace Global /*System.IO.Compression*/ {
     /// <summary>
     /// Represents an entry in Zip file directory
     /// </summary>
-    public class ZipFileEntry {
+    public class EasyZipFileEntry {
         /// <summary>Compression method</summary>
-        public ZipStorer.Compression Method { get; set; }
+        public EasyZipStorer.Compression Method { get; set; }
         /// <summary>Full path and filename as stored in Zip</summary>
         public string? FilenameInZip { get; set; }
         /// <summary>Original file size</summary>
@@ -40,7 +40,7 @@ namespace Global /*System.IO.Compression*/ {
             return FilenameInZip;
         }
         public override bool Equals(object? obj) {
-            ZipFileEntry? o = obj as ZipFileEntry;
+            EasyZipFileEntry? o = obj as EasyZipFileEntry;
 
             if (o is null) {
                 return false;
@@ -108,9 +108,11 @@ namespace Global /*System.IO.Compression*/ {
                         var data = BitConverter.ToInt64(buffer, pos + 4 + fieldOffset);
                         if (FileSize == 0xFFFFFFFF) {
                             FileSize = data;
-                        } else if (CompressedSize == 0xFFFFFFFF) {
+                        }
+                        else if (CompressedSize == 0xFFFFFFFF) {
                             CompressedSize = data;
-                        } else if (HeaderOffset == 0xFFFFFFFF) {
+                        }
+                        else if (HeaderOffset == 0xFFFFFFFF) {
                             HeaderOffset = data;
                         }
                         fieldOffset += 8;
