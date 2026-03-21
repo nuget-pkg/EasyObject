@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 using static Global.EasyObject;
+using static Global.EasySystem;
 
 // ReSharper disable once CheckNamespace
 namespace Demo;
@@ -246,22 +247,6 @@ class Program {
             myArgs = eoArgs.AsStringArray;
             Log(new { myArgs });
 
-            EasyObject ast;
-            ast = FromJson(BabelOutput.AstJson);
-            ast.Trim(hideKeys: ["loc", "start", "end"], maxDepth: 2);
-            Log(ast, "ast(1)");
-
-            ast = FromJson(BabelOutput.AstJson);
-            ast.Trim(hideKeys: ["loc", "start", "end"], maxDepth: 3);
-            Log(ast, "ast(2)");
-
-            var noError = FromJson("\n", ignoreErrors: true);
-            Log(noError, "noError");
-
-            ast = FromJson(BabelOutput.AstJson);
-            var xo = ast.ExportToDynamicObject();
-            Log(xo, "xo");
-
             //Log(ast.ToJson(indent: true));
             Log(new { abc = 123, xyz = "abc" });
             Log(FullName(new { abc = 123, xyz = "abc" }));
@@ -442,6 +427,26 @@ class Program {
 
             var embedded2 = ExtractFromFile("https://gitlab.com/nuget-tools/nuget-assets/-/blob/2026.0320.1027.27/my-ls.exe?ref_type=tags");
             Log(embedded2, "embedded2(gitlab)");
+
+            EasyObject ast;
+
+            ast = FromJson(BabelOutput.AstJson);
+            var xo = ast.ExportToDynamicObject();
+            Log(xo, "xo");
+
+
+            ast = FromJson(BabelOutput.AstJson);
+            ast.Trim(hideKeys: ["loc", "start", "end"], maxDepth: 3);
+            Log(ast, "ast(1)");
+
+            ast = FromJson(BabelOutput.AstJson);
+            ast.Trim(hideKeys: ["loc", "start", "end"]/*, maxDepth: 2*/);
+            Log(ast, "ast(2)", maxDepth: 2);
+
+            //Crash();
+
+            var noError = FromJson("\n", ignoreErrors: true);
+            Log(noError, "noError");
 
             Log("[END]");
         }
