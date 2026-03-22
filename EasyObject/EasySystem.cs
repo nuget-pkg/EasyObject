@@ -336,7 +336,6 @@ namespace Global {
             while (Marshal.ReadByte(s, len) != 0) {
                 ++len;
             }
-
             byte[] buffer = new byte[len];
             Marshal.Copy(s, buffer, 0, buffer.Length);
             return Encoding.UTF8.GetString(buffer);
