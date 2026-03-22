@@ -1,12 +1,12 @@
-using Global;
-using NUnit.Framework;
-using Razorvine.Pickle;
-using Spectre.Console;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
+using Global;
+using NUnit.Framework;
+using Razorvine.Pickle;
+using Spectre.Console;
 using static Global.EasyObject;
 using static Global.EasySystem;
 
@@ -448,9 +448,12 @@ class Program {
             var noError = FromJson("\n", ignoreErrors: true);
             Log(noError, "noError");
 
+
+            LogWebLink("⭕️❝RD:ビデオ❞公開URL)", "https://raindrop.io/univlang01/rd-68540774");
+            EchoWebLink("⭕️❝RD:ビデオ❞(公開URL)", "https://raindrop.io/univlang01/rd-68540774");
+
             Log("[END]");
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             Console.WriteLine(ex.ToString());
             Environment.Exit(1);
         }

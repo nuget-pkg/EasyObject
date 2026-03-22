@@ -36,8 +36,7 @@ internal class EasyObjectConverter : IConvertParsedResult {
                 result[key] = eo;
             }
             return result;
-        }
-        else if (x is List<object>) {
+        } else if (x is List<object>) {
             var list = x as List<object>;
             var result = new List<EasyObject>();
             foreach (var e in list!) {
@@ -105,8 +104,7 @@ public class EasyObject :
                 Out = new AnsiConsoleOutput(Console.Error)
             });
 #endif
-        }
-        catch (Exception) {
+        } catch (Exception) {
             // Ignore exceptions related to console encoding
         }
     }
@@ -412,8 +410,7 @@ public class EasyObject :
             }
             result = new List<EasyObject>().Select(x => x);
             return true;
-        }
-        else {
+        } else {
             result = Convert.ChangeType(RealData, binder.Type);
             return true;
         }
@@ -435,8 +432,7 @@ public class EasyObject :
         }
         try {
             return new EasyObject(obj);
-        }
-        catch (Exception) {
+        } catch (Exception) {
             return new EasyObject(null);
         }
     }
@@ -450,8 +446,7 @@ public class EasyObject :
         }
         try {
             return new EasyObject(JsonParser!.ParseJson(json));
-        }
-        catch (Exception) {
+        } catch (Exception) {
             return new EasyObject(null);
         }
     }
@@ -517,8 +512,7 @@ public class EasyObject :
         try {
             string json = Utf8StringFromUrl(url);
             return FromJson(json, ignoreErrors: ignoreErrors);
-        }
-        catch (Exception) {
+        } catch (Exception) {
             return new EasyObject(null);
         }
     }
@@ -526,8 +520,7 @@ public class EasyObject :
     public dynamic? ToObject(bool asDynamicObject = false) {
         if (asDynamicObject) {
             return ExportToDynamicObject();
-        }
-        else {
+        } else {
             return ExportToPlainObject();
         }
     }
@@ -594,8 +587,7 @@ public class EasyObject :
             if (title.StartsWith("⁅markup⁆")) {
                 title = title.Replace("⁅markup⁆", "");
                 AnsiConsole.Markup($"{title}: ");
-            }
-            else {
+            } else {
                 AnsiConsole.Write($"{title}: ");
             }
         }
@@ -611,8 +603,7 @@ public class EasyObject :
             if (title.StartsWith("⁅markup⁆")) {
                 title = title.Replace("⁅markup⁆", "");
                 AnsiConsole.Markup($"{title}: ");
-            }
-            else {
+            } else {
                 AnsiConsole.Write($"{title}: ");
             }
         }
@@ -642,8 +633,7 @@ public class EasyObject :
                 if (title.StartsWith("⁅markup⁆")) {
                     title = title.Replace("⁅markup⁆", "");
                     AnsiConsole.Markup($"{title}: ");
-                }
-                else {
+                } else {
                     AnsiConsole.Write($"{title}: ");
                 }
             }
@@ -681,8 +671,7 @@ public class EasyObject :
                     //Debug("3");
                     title = title.Replace("⁅markup⁆", "");
                     AnsiErrorConsole.Markup($"{title}: ");
-                }
-                else {
+                } else {
                     //Debug("4");
                     AnsiErrorConsole.Write($"{title}: ");
                 }
@@ -734,8 +723,7 @@ public class EasyObject :
                 if (title.StartsWith("⁅markup⁆")) {
                     title = title.Replace("⁅markup⁆", "");
                     AnsiErrorConsole.Markup($"{title}: ");
-                }
-                else {
+                } else {
                     AnsiErrorConsole.Write($"{title}: ");
                 }
             }
@@ -785,8 +773,7 @@ public class EasyObject :
             if (title.StartsWith("⁅markup⁆")) {
                 title = title.Replace("⁅markup⁆", "");
                 AnsiConsole.Markup($"{title}: ");
-            }
-            else {
+            } else {
                 AnsiConsole.Write($"{title}: ");
             }
         }
@@ -821,8 +808,7 @@ public class EasyObject :
                 }
             }
             return Null;
-        }
-        catch (Exception /*e*/) {
+        } catch (Exception /*e*/) {
             return Null;
         }
     }
@@ -1097,8 +1083,7 @@ public class EasyObject :
             if (c > 127) {
                 ushort val = c;
                 sb.Append("\\u").Append(val.ToString("X4"));
-            }
-            else {
+            } else {
                 sb.Append(c);
             }
         }
@@ -1106,4 +1091,29 @@ public class EasyObject :
         sb.Length = 0;
         return result;
     }
+    public static void LogWebLink(string title, string url) {
+#if USE_SPECTRE_CONSOLE
+
+        if (UseAnsiConsole) {
+            EasyObject.Log($"⁅markup⁆[green][link={url}]{EasyObject.MarkupSafeString(title)}[/][/] => [blue]{EasyObject.MarkupSafeString(url)}[/]");
+        } else {
+            EasyObject.Log($"{EasyObject.MarkupSafeString(title)} => {EasyObject.MarkupSafeString(url)}");
+        }
+#else
+            EasyObject.Log({title)} => {url}");
+#endif
+    }
+    public static void EchoWebLink(string title, string url) {
+#if USE_SPECTRE_CONSOLE
+        if (UseAnsiConsole) {
+            EasyObject.Echo($"⁅markup⁆[green][link={url}]{EasyObject.MarkupSafeString(title)}[/][/] => [blue]{EasyObject.MarkupSafeString(url)}[/]");
+        } else {
+            EasyObject.Echo($"{EasyObject.MarkupSafeString(title)} => {EasyObject.MarkupSafeString(url)}");
+
+        }
+#else
+            EasyObject.Ecjp{title)} => {url}");
+#endif
+    }
+
 }
