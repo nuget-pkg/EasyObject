@@ -103,6 +103,7 @@ public class EasyObject :
             AnsiErrorConsole = AnsiConsole.Create(new AnsiConsoleSettings {
                 Out = new AnsiConsoleOutput(Console.Error)
             });
+            Console.Error.WriteLine();
 #endif
         } catch (Exception) {
             // Ignore exceptions related to console encoding
