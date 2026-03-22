@@ -100,23 +100,19 @@ namespace Global {
                         // Add folders with files to the archive
                         try {
                             zip.AddDirectory(EasyZipStorer.Compression.Deflate, listDir, string.Empty);
-                        }
-                        catch {
+                        } catch {
                             ;
                         }
                     }
-
                     foreach (string listFiles in Directory.EnumerateFiles(dir, "*.*", SearchOption.TopDirectoryOnly)) {
                         // Add residual files in the current directory to the archive.
                         try {
                             zip.AddFile(EasyZipStorer.Compression.Deflate, listFiles, Path.GetFileName(listFiles));
-                        }
-                        catch {
+                        } catch {
                             ;
                         }
                     }
-                }
-                catch (Exception ex) { Console.WriteLine(ex); }
+                } catch (Exception ex) { Console.WriteLine(ex); }
             }
             return zipout!;
         }
@@ -161,7 +157,6 @@ namespace Global {
             if (!SilentFlag) {
                 System.Console.Error.WriteLine($"SetCwd(): {path}");
             }
-
             Prepare(path);
             Directory.SetCurrentDirectory(path);
         }
@@ -286,8 +281,7 @@ namespace Global {
             if (m != null) {
                 if (m.Count == 2) {
                     path = $"{m[1].ToUpper()}:/";
-                }
-                else if (m.Count == 3) {
+                } else if (m.Count == 3) {
                     path = $"{m[1].ToUpper()}:/{m[2]}";
                 }
             }
@@ -365,8 +359,7 @@ namespace Global {
 
                 if (args[i].Contains(" ")) {
                     argList += $"\"{args[i]}\"";
-                }
-                else {
+                } else {
                     argList += args[i];
                 }
             }
@@ -622,6 +615,18 @@ namespace Global {
         }
         public static void Sleep(int milliseconds) {
             Thread.Sleep(milliseconds);
+        }
+        public static void SaveAllLines(
+            string path, IEnumerable<string> lines, string separator = "\n") {
+            using StreamWriter writer = new StreamWriter(path);
+            foreach (string line in lines) {
+                writer.Write(line);
+                writer.Write(separator);
+            }
+        }
+        public static void SaveAllText(string path, string text) {
+            List<string> lines = TextToLines(text);
+            SaveAllLines(path, lines, "\n");
         }
     }
 }

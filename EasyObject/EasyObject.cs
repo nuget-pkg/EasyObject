@@ -1,4 +1,4 @@
-﻿namespace Global;
+namespace Global;
 
 #if USE_SPECTRE_CONSOLE
 using Spectre.Console;
