@@ -105,7 +105,8 @@ public class EasyObject :
             });
 #endif
             //Console.SetCursorPosition(0, 1);
-            Console.Clear();
+            //Console.Clear();
+            Console.CursorLeft = 0;
         } catch (Exception) {
             // Ignore exceptions related to console encoding
         }
