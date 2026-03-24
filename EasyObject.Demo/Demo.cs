@@ -450,8 +450,14 @@ class Program {
             Log("⁅markup⁆[green]This is green.[/]");
             Log(new { args }, "⁅markup⁆[green]args[/]");
 
-            LogWebLink("⭕️❝RD:ビデオ❞公開URL)", "https://raindrop.io/univlang01/rd-68540774");
-            EchoWebLink("⭕️❝RD:ビデオ❞(公開URL)", "https://raindrop.io/univlang01/rd-68540774");
+            void LinkTest(string title, string url) {
+                LogWebLink(title, url);
+                EchoWebLink(title, url);
+            }
+            LinkTest(
+                "⭕️⁅🌐⁆@⁅反転mirror⁆パイパイ仮面でどうかしらん？ / 宝鐘マリン FULL 踊ってみた【練習用】",
+                "https://www.youtube.com/watch?v=sLpodTN4xhI&list=PLTvSv0jkjbk9-emLIV2vM-0p7CeMnTYG2"
+              );
 
             Log("[END]");
         } catch (Exception ex) {
