@@ -30,6 +30,12 @@ namespace Global {
             return OperatingSystem.IsWindows();
 #endif
         }
+        public static void ConsoleClearCurrentLine() {
+            int currentLine = Console.CursorTop;
+            Console.SetCursorPosition(0, Console.CursorTop);
+            Console.Write(new string(' ', Console.WindowWidth));
+            Console.SetCursorPosition(0, currentLine);
+        }
         public static string ProfilePath() {
             return Environment.GetFolderPath(Environment.SpecialFolder.UserProfile).Replace('/', Path.DirectorySeparatorChar);
         }

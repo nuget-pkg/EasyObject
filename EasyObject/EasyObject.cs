@@ -104,9 +104,7 @@ public class EasyObject :
                 Out = new AnsiConsoleOutput(Console.Error)
             });
 #endif
-            //Console.SetCursorPosition(0, 1);
-            //Console.Clear();
-            Console.CursorLeft = 0;
+            EasySystem.ConsoleClearCurrentLine();
         } catch (Exception) {
             // Ignore exceptions related to console encoding
         }
