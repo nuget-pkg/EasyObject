@@ -103,8 +103,8 @@ public class EasyObject :
             AnsiErrorConsole = AnsiConsole.Create(new AnsiConsoleSettings {
                 Out = new AnsiConsoleOutput(Console.Error)
             });
-            Console.Error.WriteLine();
 #endif
+            Console.SetCursorPosition(0, 1);
         } catch (Exception) {
             // Ignore exceptions related to console encoding
         }
@@ -592,9 +592,12 @@ public class EasyObject :
                 AnsiConsole.Write($"{title}: ");
             }
         }
-        str = str.Replace("⁅markup⁆", "");
-        AnsiConsole.Markup(str);
-        System.Diagnostics.Debug.Write(str);
+        if (str.StartsWith("⁅markup⁆")) {
+            str = str.Replace("⁅markup⁆", "");
+            AnsiConsole.MarkupLine($"[purple]{str}[/]");
+        } else {
+            AnsiConsole.Write(str);
+        }
     }
     public static void WriteLine(
         string str,
@@ -603,13 +606,17 @@ public class EasyObject :
         if (title != null) {
             if (title.StartsWith("⁅markup⁆")) {
                 title = title.Replace("⁅markup⁆", "");
-                AnsiConsole.Markup($"{title}: ");
+                AnsiConsole.MarkupLine($"{title}: ");
             } else {
                 AnsiConsole.Write($"{title}: ");
             }
         }
-        str = str.Replace("⁅markup⁆", "");
-        AnsiConsole.MarkupLine(str);
+        if (str.StartsWith("⁅markup⁆")) {
+            str = str.Replace("⁅markup⁆", "");
+            AnsiConsole.MarkupLine($"[purple]{str}[/]");
+        } else {
+            AnsiConsole.WriteLine(str);
+        }
     }
 #endif
     public static void Echo(
@@ -645,7 +652,7 @@ public class EasyObject :
                     return;
                 }
             }
-            string s2 = ToPrintable(x, title, noIndent: noIndent, maxDepth: maxDepth, removeSurrogatePair: removeSurrogatePair);
+            string s2 = ToPrintable(x, title: null, noIndent: noIndent, maxDepth: maxDepth, removeSurrogatePair: removeSurrogatePair);
             string s3 = MarkupSafeString(s2);
             AnsiConsole.MarkupLine(s3);
             return;
@@ -664,31 +671,22 @@ public class EasyObject :
         ) {
 #if USE_SPECTRE_CONSOLE
         if (UseAnsiConsole) {
-            //Debug("1");
             AnsiErrorConsole.Markup("[cyan][[Log]][/] ");
             if (title != null) {
-                //Debug("2");
                 if (title.StartsWith("⁅markup⁆")) {
-                    //Debug("3");
                     title = title.Replace("⁅markup⁆", "");
                     AnsiErrorConsole.Markup($"{title}: ");
                 } else {
-                    //Debug("4");
                     AnsiErrorConsole.Write($"{title}: ");
                 }
             }
-            //Debug("5");
             if (x != null && x is string str) {
-                //Debug("6");
                 if (str.StartsWith("⁅markup⁆")) {
-                    //Debug(str, "7");
                     str = str.Replace("⁅markup⁆", "");
-                    //Debug(str, "8");
                     AnsiErrorConsole.MarkupLine(str);
                     return;
                 }
             }
-            //Debug("8");
             string s2 = ToPrintable(x, title: null, noIndent: noIndent, maxDepth: maxDepth, removeSurrogatePair: removeSurrogatePair);
             string s3 = MarkupSafeString(s2);
             AnsiErrorConsole.MarkupLine(s3);

@@ -61,8 +61,10 @@ class Program {
         try {
             SetupConsoleEncoding();
             ShowDetail = true;
-            //AllocConsole();
-            Console.WriteLine("(1)");
+            UseAnsiConsole = true;
+            DebugOutput = true;
+            Log("⭕️ハロー©⭕️");
+            WriteLine("(1)");
             EasyObject eoNull = Null;
             Log(eoNull.ToJson());
             //var poc = new PlainObjectConverter();
@@ -70,29 +72,29 @@ class Program {
             Log(eoNull.ToPrintable());
             Log(eoNull);
             Log(Null);
-            Console.WriteLine("(2)");
+            WriteLine("(2)");
             var eo = EasyObject.FromObject(new { a = 123 });
             Log(eo);
-            Console.WriteLine("(3)");
+            WriteLine("(3)");
             Log(eo.TypeValue, "eo.TypeValue");
-            Console.WriteLine("(4)");
+            WriteLine("(4)");
             Assert.That(eo.TypeValue, Is.EqualTo(@object));
-            Console.WriteLine("(5)");
+            WriteLine("(5)");
             EasyObject a = eo["a"];
-            Console.WriteLine("(5.1)");
+            WriteLine("(5.1)");
             Log(FullName(a));
             Log(a.GetType() == typeof(double));
-            Console.WriteLine("(5.1.1)");
+            WriteLine("(5.1.1)");
             //Log(a.ToObject());
-            Console.WriteLine("(5.1.1.1)");
+            WriteLine("(5.1.1.1)");
             //Log(poc.Stringify(a, true));
-            Console.WriteLine("(5.1.2)");
+            WriteLine("(5.1.2)");
             Log(a, "a");
-            Console.WriteLine("(5.2)");
-            Console.WriteLine(eo["a"]);
-            Console.WriteLine("(6)");
+            WriteLine("(5.2)");
+            Log(eo["a"]);
+            WriteLine("(6)");
             Assert.That(eo["a"].Cast<int>(), Is.EqualTo(123));
-            Console.WriteLine("(7)");
+            WriteLine("(7)");
             Assert.That(eo.Keys, Is.EqualTo(new List<string> { "a" }));
             Log(eo[0], "eo[0]");
             Assert.That(eo[0].TypeValue, Is.EqualTo(@null));
@@ -165,21 +167,21 @@ class Program {
                 //var test = FromJson(bigJson);
             }
             sw.Stop();
-            Console.WriteLine("■EasyObject");
+            WriteLine("■EasyObject");
             ts = sw.Elapsed;
-            Console.WriteLine($"　{ts}");
-            Console.WriteLine($"　{ts.Hours}時間 {ts.Minutes}分 {ts.Seconds}秒 {ts.Milliseconds}ミリ秒");
-            Console.WriteLine($"　{sw.ElapsedMilliseconds}ミリ秒");
+            WriteLine($"　{ts}");
+            WriteLine($"　{ts.Hours}時間 {ts.Minutes}分 {ts.Seconds}秒 {ts.Milliseconds}ミリ秒");
+            WriteLine($"　{sw.ElapsedMilliseconds}ミリ秒");
             sw.Start();
             for (int c = 0; c < 5; c++) {
                 //JObject jsonObject = JObject.Parse(bigJson);
             }
             sw.Stop();
-            Console.WriteLine("■Newtonsoft.Json");
+            WriteLine("■Newtonsoft.Json");
             ts = sw.Elapsed;
-            Console.WriteLine($"　{ts}");
-            Console.WriteLine($"　{ts.Hours}時間 {ts.Minutes}分 {ts.Seconds}秒 {ts.Milliseconds}ミリ秒");
-            Console.WriteLine($"　{sw.ElapsedMilliseconds}ミリ秒");
+            WriteLine($"　{ts}");
+            WriteLine($"　{ts.Hours}時間 {ts.Minutes}分 {ts.Seconds}秒 {ts.Milliseconds}ミリ秒");
+            WriteLine($"　{sw.ElapsedMilliseconds}ミリ秒");
             //var list01_txt = File.ReadAllText("assets/list01.txt");
             var list01_txt = File.ReadAllText("assets/mydict.txt");
             Log(list01_txt);
@@ -333,15 +335,15 @@ class Program {
             Log(myArray.Reverse(), @"myArray.Reverse()");
             Log(myDictionary.Reverse(), @"myDictionary.Reverse()");
 
-            string json = Utf8StringFromUrl("https://jsonplaceholder.typicode.com/todos/1");
-            Log(json, "json");
-            var todo = FromJson(json);
-            Log(todo, "todo");
+            //string json = Utf8StringFromUrl("https://jsonplaceholder.typicode.com/todos/1");
+            //Log(json, "json");
+            //var todo = FromJson(json);
+            //Log(todo, "todo");
 
-            var todo2 = FromUrl("https://jsonplaceholder.typicode.com/todos/1");
-            Log(todo2, "todo2");
+            //var todo2 = FromUrl("https://jsonplaceholder.typicode.com/todos/1");
+            //Log(todo2, "todo2");
 
-            Console.WriteLine("[stdout] This is unicode: ⭕️ ☢ ☃☃☃ ☮");
+            WriteLine("[stdout] This is unicode: ⭕️ ☢ ☃☃☃ ☮");
             Console.Error.WriteLine("[stderr] This is unicode: ⭕️ ☢ ☃☃☃ ☮");
 
             Log("This is unicode(echo): ⭕️ ☢ ☃☃☃ ☮");
@@ -380,11 +382,10 @@ class Program {
             Log(cljureCode02, "cljureCode02");
             DumpObject(parsere3.ParseJsonSequence(cljureCode02), "cljureCode02(parsed)");
 
-            Console.WriteLine("""[universal]THIS is unicode(log): [252ee4f0-d951-4ea4-bd3f-95e9af976141]2B55[252ee4f0-d951-4ea4-bd3f-95e9af976141]uuFE0F [252ee4f0-d951-4ea4-bd3f-95e9af976141]u2622 [252ee4f0-d951-4ea4-bd3f-95e9af976141]u2603[252ee4f0-d951-4ea4-bd3f-95e9af976141]uu2603[252ee4f0-d951-4ea4-bd3f-95e9af976141]uu2603 [252ee4f0-d951-4ea4-bd3f-95e9af976141]u262E[/universal]""");
+            WriteLine("""[universal]THIS is unicode(log): [252ee4f0-d951-4ea4-bd3f-95e9af976141]2B55[252ee4f0-d951-4ea4-bd3f-95e9af976141]uuFE0F [252ee4f0-d951-4ea4-bd3f-95e9af976141]u2622 [252ee4f0-d951-4ea4-bd3f-95e9af976141]u2603[252ee4f0-d951-4ea4-bd3f-95e9af976141]uu2603[252ee4f0-d951-4ea4-bd3f-95e9af976141]uu2603 [252ee4f0-d951-4ea4-bd3f-95e9af976141]u262E[/universal]""");
 
             string xmlString = "<Root><Child>Content</Child></Root>";
             XDocument doc = XDocument.Parse(xmlString);
-            Console.WriteLine(doc.Root?.Name);
             Log(doc.Root?.ToString());
 
             ForceAscii = false;
@@ -396,15 +397,10 @@ class Program {
 
             FromObject(parsere3.ParseJsonSequence(cljureCode02)).Dump(hideKeys: ["!"]);
 
-            Echo("⁅markup⁆[green]This is green.[/]");
-            Echo(new { args }, "⁅markup⁆[green]args[/]");
-
             double videoDuration = 9999;
             Log(videoDuration, "⁅markup⁆[red]Duration too long...skipping![/]");
 
             DebugOutput = true;
-            //string title = """[blue][link=https://www.youtube.com/]Ctrl+click this link to visit YouTube[/][/]!""";
-            //AnsiErrorConsole.Markup($"{title}: ");
             Debug(new { a = 123, b = "xyz" }, "⁅markup⁆[green]Debug[/] with [blue][link=https://en.wikipedia.org/wiki/ANSI_escape_code]Ansi Color(Ctrl-Click Me!)[/][/]");
             string messageToEscape = """[this is not markup tag...so print this message with square brackets]""";
             string safeMessage = MarkupSafeString(messageToEscape);
@@ -412,21 +408,6 @@ class Program {
             Log($"⁅markup⁆[green]{safeMessage}[/]");
 
             WriteLine("⁅markup⁆[blue][link=https://www.youtube.com/]Ctrl+Click this link to visit YouTube[/][/]!", title: "⁅markup⁆[red](?°□°)?[/] [blue]┻━┻[/]");
-
-            //string embeddedJsonUrl = "https://raw.githubusercontent.com/nuget-pkg/Global.Sys/refs/tags/2026.0311.1056.12/Global.Sys.Demo/assets/text-embed-text-02.json";
-            string embeddedJsonUrl = "https://github.com/nuget-pkg/Global.Sys/blob/2026.0311.1056.12/Global.Sys.Demo/assets/text-embed-text-02.json";
-            var embeddedEO = FromUrl(embeddedJsonUrl);
-            Log(embeddedEO, "embeddedEO(github)");
-
-            embeddedJsonUrl = "https://gitlab.com/nuget-tools/nuget-assets/-/blob/2026.0311.1156.53/text-embed-text-02.json?ref_type=tags";
-            embeddedEO = FromUrl(embeddedJsonUrl);
-            Log(embeddedEO, "embeddedEO(gitlab)");
-
-            var embedded1 = ExtractFromFile("https://gitlab.com/nuget-tools/nuget-assets/-/blob/2026.0321.1903.42/json-with-embedded-json.json?ref_type=tags");
-            Log(embedded1, "embedded1(gitlab)");
-
-            var embedded2 = ExtractFromFile("https://gitlab.com/nuget-tools/nuget-assets/-/blob/2026.0320.1027.27/my-ls.exe?ref_type=tags");
-            Log(embedded2, "embedded2(gitlab)");
 
             EasyObject ast;
 
@@ -444,18 +425,37 @@ class Program {
             Log(ast, "ast(2)", maxDepth: 2);
 
             //Crash();
+            string embeddedJsonUrl = "https://github.com/nuget-pkg/Global.Sys/blob/2026.0311.1056.12/Global.Sys.Demo/assets/text-embed-text-02.json";
+            var embeddedEO = FromUrl(embeddedJsonUrl);
+            Log(embeddedEO, "embeddedEO(github)");
+
+
+            //https://github.com/nuget-pkg/nuget-assets/blob/2026.0325.0322.35/my-ls.exe
+            embeddedJsonUrl = "https://github.com/nuget-pkg/nuget-assets/blob/2026.0325.0322.35/my-ls.exe";
+            var text1 = EasyTextEmbedder.ExtractEmbeddedText(embeddedJsonUrl);
+            Log(text1, "text1");
+            var eo1 = FromJson(text1);
+            Log(eo1);
+            //Crash();
+            embeddedEO = ExtractFromFile(embeddedJsonUrl);
+            Log(embeddedEO, "embeddedEO(nuget-assets::my-ls.exe)");
+            //Crash();
 
             var noError = FromJson("\n", ignoreErrors: true);
             Log(noError, "noError");
 
+            Echo("⁅markup⁆[green]This is green.[/]");
+            Echo(new { args }, "⁅markup⁆[green]args[/]");
+
+            Log("⁅markup⁆[green]This is green.[/]");
+            Log(new { args }, "⁅markup⁆[green]args[/]");
 
             LogWebLink("⭕️❝RD:ビデオ❞公開URL)", "https://raindrop.io/univlang01/rd-68540774");
             EchoWebLink("⭕️❝RD:ビデオ❞(公開URL)", "https://raindrop.io/univlang01/rd-68540774");
 
             Log("[END]");
         } catch (Exception ex) {
-            Console.WriteLine(ex.ToString());
-            Environment.Exit(1);
+            Crash(ex);
         }
     }
 }
