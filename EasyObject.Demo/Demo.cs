@@ -485,6 +485,10 @@ class Program {
                 "⭕️🈂️❝FG⁅ｼﾞﾝｷﾞｽｶﾝ⁆❞🈂️ファイターズガール「ジンギスカン」踊ってみた 歌詞付き",
                 "https://www.youtube.com/watch?v=sLpodTN4xhI&list=PLTvSv0jkjbk9-emLIV2vM-0p7CeMnTYG2"
               );
+            LinkTest(
+                "⭕️⁅🌐⁆@ラム:DANCING STAR 2026",
+                "https://www.youtube.com/playlist?list=PLTvSv0jkjbk8gtWLMLXLHYrWio5ciOi8c"
+              );
 
             Log("[END]");
         } catch (Exception ex) {

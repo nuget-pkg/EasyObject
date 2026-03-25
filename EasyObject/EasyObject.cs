@@ -99,9 +99,14 @@ public class EasyObject :
             });
 #endif
             //EasySystem.ConsoleClearCurrentLine();
-            Console.CursorLeft = 0;
+            //Console.CursorLeft = 0;
         } catch (Exception) {
             // Ignore exceptions related to console encoding
+        }
+    }
+    private static void _EnsureCursorLeft() {
+        if (UseAnsiConsole) {
+            Console.CursorLeft = 0;
         }
     }
     public EasyObject() {
@@ -368,16 +373,6 @@ public class EasyObject :
             return true;
         }
     }
-    //private static string[] TextToLines(string text) {
-    //    List<string> lines = new List<string>();
-    //    using (StringReader sr = new StringReader(text)) {
-    //        string? line;
-    //        while ((line = sr.ReadLine()) != null) {
-    //            lines.Add(line);
-    //        }
-    //    }
-    //    return lines.ToArray();
-    //}
     public static EasyObject FromObject(object? obj, bool ignoreErrors = false) {
         if (!ignoreErrors) {
             return new EasyObject(obj);
@@ -580,6 +575,7 @@ public class EasyObject :
         List<string>? hideKeys = null,
         bool removeSurrogatePair = false
         ) {
+        _EnsureCursorLeft();
         hideKeys ??= new List<string>();
         if (maxDepth > 0 || hideKeys.Count > 0) {
             var eo = FromObject(x);
@@ -622,6 +618,15 @@ public class EasyObject :
         List<string>? hideKeys = null,
         bool removeSurrogatePair = false
         ) {
+        _EnsureCursorLeft();
+        hideKeys ??= new List<string>();
+        if (maxDepth > 0 || hideKeys.Count > 0) {
+            var eo = FromObject(x);
+            x = eo.Clone(
+                maxDepth: maxDepth,
+                hideKeys: hideKeys,
+                always: false);
+        }
 #if USE_SPECTRE_CONSOLE
         if (UseAnsiConsole) {
             AnsiErrorConsole.Markup("[cyan][[Log]][/] ");
@@ -660,6 +665,7 @@ public class EasyObject :
         if (!DebugOutput) {
             return;
         }
+        _EnsureCursorLeft();
         hideKeys ??= new List<string>();
         if (maxDepth > 0 || hideKeys.Count > 0) {
             var eo = FromObject(x);
@@ -706,6 +712,14 @@ public class EasyObject :
         if (title == null) {
             title = "Message";
         }
+        hideKeys ??= new List<string>();
+        if (maxDepth > 0 || hideKeys.Count > 0) {
+            var eo = FromObject(x);
+            x = eo.Clone(
+                maxDepth: maxDepth,
+                hideKeys: hideKeys,
+                always: false);
+        }
         string s = ToPrintable(x, title: title, compact: compact);
         NativeMethods.MessageBoxW(IntPtr.Zero, s, title, 0);
     }
@@ -717,6 +731,7 @@ public class EasyObject :
         List<string>? hideKeys = null,
         bool removeSurrogatePair = false
         ) {
+        _EnsureCursorLeft();
 #if USE_SPECTRE_CONSOLE
         var printable = FromObject(x).Clone(maxDepth: maxDepth, hideKeys: hideKeys, always: false);
         var json = printable.ToJson(indent: !compact, removeSurrogatePair: removeSurrogatePair);
