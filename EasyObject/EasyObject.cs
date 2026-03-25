@@ -720,7 +720,7 @@ public class EasyObject :
                 hideKeys: hideKeys,
                 always: false);
         }
-        string s = ToPrintable(x, title: title, compact: compact);
+        string s = ToPrintable(x, title: null, compact: compact);
         NativeMethods.MessageBoxW(IntPtr.Zero, s, title, 0);
     }
     public static void DumpObject(
