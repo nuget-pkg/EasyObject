@@ -104,7 +104,8 @@ public class EasyObject :
                 Out = new AnsiConsoleOutput(Console.Error)
             });
 #endif
-            EasySystem.ConsoleClearCurrentLine();
+            //EasySystem.ConsoleClearCurrentLine();
+            Console.CursorLeft = 0;
         } catch (Exception) {
             // Ignore exceptions related to console encoding
         }
