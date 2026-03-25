@@ -450,12 +450,39 @@ class Program {
             Log("⁅markup⁆[green]This is green.[/]");
             Log(new { args }, "⁅markup⁆[green]args[/]");
 
+            string code =
+                """
+                //!?"'#%&^~\|`;:()[]{}<>, + - * / = ❝　❞←全角スペース
+                namespace HelloWorldApp
+                {
+                    class Program
+                    {
+                        static void Main(string[] args)
+                        {
+                            Console.WriteLine("Hello, World!?");
+                        }
+                    }
+                }
+                """;
+            Debug(FromJson(BabelOutput.AstJson), "ast", compact: true, maxDepth: 2, hideKeys: ["start", "end", "loc"]);
+            Debug(FromJson(BabelOutput.AstJson), "⁅markup⁆[green]ast[/]", compact: true, maxDepth: 2, hideKeys: ["start", "end", "loc"]);
+
+            Log(UniversalTransformer.SafeSourceCode(code));
+            string fname = """[1080p] ✅ 👀 🫧 💻 🌐 🎵 <xml>aaa</xml> ; {Title}!? x=11+22-33; ,(🔥引火帝国🔥):"name1" 'name2'?.txt""";
+            Log(UniversalTransformer.SafeFileName(fname), "⁅markup⁆[blue]adjusted file name[/]");
+            Log(UniversalTransformer.SafeFileName(fname, replaceSurrogate: ""), "⁅markup⁆[green]adjusted file name (keeping surrogate pairs)[/]");
+            Log(UniversalTransformer.SafeFileName(fname, replaceSurrogate: "@"), "⁅markup⁆[purple]adjusted file name (spicifying surrogate pairs' replacement)[/]");
+
             void LinkTest(string title, string url) {
                 LogWebLink(title, url);
                 EchoWebLink(title, url);
             }
             LinkTest(
                 "⭕️⁅🌐⁆@⁅反転mirror⁆パイパイ仮面でどうかしらん？ / 宝鐘マリン FULL 踊ってみた【練習用】",
+                "https://www.youtube.com/watch?v=sLpodTN4xhI&list=PLTvSv0jkjbk9-emLIV2vM-0p7CeMnTYG2"
+              );
+            LinkTest(
+                "⭕️🈂️❝FG⁅ｼﾞﾝｷﾞｽｶﾝ⁆❞🈂️ファイターズガール「ジンギスカン」踊ってみた 歌詞付き",
                 "https://www.youtube.com/watch?v=sLpodTN4xhI&list=PLTvSv0jkjbk9-emLIV2vM-0p7CeMnTYG2"
               );
 

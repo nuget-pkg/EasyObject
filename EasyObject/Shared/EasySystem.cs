@@ -459,80 +459,36 @@ namespace Global {
             }
             return input;
         }
-        public static string RemoveSurrogatePair(string str, string replaceSurrogate = "★") {
-            if (replaceSurrogate == "") {
-                return str;
-            }
-            // https://teratail.com/questions/53520 絵文字の判別方法
-            str = Regex.Replace(str, @"[\uD800-\uDFFF]", "{ddbea68e-d93f-4e85-92b5-83b1ace6d50f}");
-            str = str.Replace("{ddbea68e-d93f-4e85-92b5-83b1ace6d50f}{ddbea68e-d93f-4e85-92b5-83b1ace6d50f}", replaceSurrogate);
-            str = str.Replace("{ddbea68e-d93f-4e85-92b5-83b1ace6d50f}", replaceSurrogate);
-            return str;
+        public static string RemoveSurrogatePair(string str, string replaceSurrogate = "✅") {
+            return UniversalTransformer.ReplaceSurrogatePair(str, replaceSurrogate: replaceSurrogate);
         }
-        public static string AdjustFileName(string fileName, string replaceSurrogate = "★") {
+        public static string AdjustFileName(string fileName, string replaceSurrogate = "✅") {
             return UniversalTransformer.SafeFileName(fileName, replaceSurrogate: replaceSurrogate);
-            //fileName = fileName
-            //    .Replace("!", "❢")
-            //    .Replace("！", "❢")
-            //    //.Replace("\"", "”")
-            //    .Replace("\"", "“")
-            //    //.Replace("'", "’")
-            //    .Replace("'", "‘")
-            //    .Replace("#", "＃")
-            //    .Replace("%", "％")
-            //    .Replace("&", "＆")
-            //    .Replace("(", "｟")
-            //    .Replace(")", "｠")
-            //    .Replace("（", "｟")
-            //    .Replace("）", "｠")
-            //    .Replace("^", "＾")
-            //    .Replace("~", "～")
-            //    .Replace("\\", "＼")
-            //    .Replace("|", "￤")
-            //    .Replace("｜", "￤")
-            //    .Replace("`", "｀")
-            //    .Replace(";", "；")
-            //    .Replace(":", "：")
-            //    .Replace("*", "＊")
-            //    .Replace("[", "⁅")
-            //    .Replace("]", "⁆")
-            //    .Replace("［", "⁅")
-            //    .Replace("］", "⁆")
-            //    .Replace("{", "〘")
-            //    .Replace("}", "〙")
-            //    .Replace("｛", "〘")
-            //    .Replace("｝", "〙")
-            //    .Replace("<", "≪")
-            //    .Replace(">", "≫")
-            //    .Replace("＜", "≪")
-            //    .Replace("＞", "≫")
-            //    .Replace("/", "／")
-            //    .Replace("?", "❔")
-            //    .Replace("？", "❔")
-            //    //〚あいうえお〛
-            //    //〖あいうえお〗
-            //    .Replace("　", " ")
-            //    ;
-            //fileName = RemoveSurrogatePair(fileName, replaceSurrogate);
-            //return fileName;
         }
-        public static string AdjustMetaData(string metadata, string replaceSurrogate = "★") {
+        public static string AdjustMetaData(string metadata, string replaceSurrogate = "✅") {
             return UniversalTransformer.SafeMetaData(metadata, replaceSurrogate: replaceSurrogate);
-            //metadata = metadata
-            //    //.Replace("\"", "”")
-            //    .Replace("\"", "“")
-            //    //.Replace("'", "’")
-            //    .Replace("'", "‘")
-            //    .Replace("\\", "＼")
-            //    ;
-            //metadata = RemoveSurrogatePair(metadata, replaceSurrogate);
-            //return metadata;
         }
         public static string GetEnv(string name, string fallback = "") {
             return Environment.GetEnvironmentVariable(name) ?? fallback;
         }
         public static void SetEnv(string name, string value) {
             Environment.SetEnvironmentVariable(name, value);
+        }
+        public static string SafeBaseName(string baseName) {
+            // [⭕ファイル名に使えない文字 - Google](https://bit.ly/invalid-filename-chars)
+            // \ / : * ? " < > |
+            baseName = baseName
+                .Replace("\\", "￥")
+                .Replace("/", "／")
+                .Replace(":", "：")
+                .Replace("*", "＊")
+                .Replace("?", "❓")
+                .Replace("\"", "“")
+                .Replace("<", "≪")
+                .Replace(">", "≫")
+                .Replace("|", "￤")
+                ;
+            return baseName;
         }
         public static string HomeFile(params string[] relatives) {
             string home = GetEnv("HOME", "");
@@ -541,8 +497,7 @@ namespace Global {
             }
             string result = home;
             foreach (string x in relatives) {
-                string relative = x;
-                relative = AdjustFileName(relative);
+                string relative = SafeBaseName(x); ;
                 result = Path.Combine(result, relative);
             }
             PrepareForFile(result);
@@ -555,8 +510,7 @@ namespace Global {
             }
             string result = home;
             foreach (string x in relatives) {
-                string relative = x;
-                relative = AdjustFileName(relative);
+                string relative = SafeBaseName(x); ;
                 result = Path.Combine(result, relative);
             }
             Prepare(result);
@@ -569,8 +523,7 @@ namespace Global {
             }
             string result = root;
             foreach (string x in relatives) {
-                string relative = x;
-                relative = AdjustFileName(relative);
+                string relative = SafeBaseName(x); ;
                 result = Path.Combine(result, relative);
             }
             PrepareForFile(result);
@@ -583,8 +536,7 @@ namespace Global {
             }
             string result = root;
             foreach (string x in relatives) {
-                string relative = x;
-                relative = AdjustFileName(relative);
+                string relative = SafeBaseName(x); ;
                 result = Path.Combine(result, relative);
             }
             Prepare(result);
