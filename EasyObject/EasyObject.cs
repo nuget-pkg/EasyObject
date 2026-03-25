@@ -77,9 +77,9 @@ public class EasyObject :
         EasyObject.DebugOutput = false;
         EasyObject.ShowDetail = false;
         EasyObject.ForceAscii = false;
-#if USE_SPECTRE_CONSOLE
+        //#if USE_SPECTRE_CONSOLE
         EasyObject.UseAnsiConsole = false;
-#endif
+        //#endif
     }
     public static void SetupConsoleEncoding(Encoding? encoding = null) {
         if (encoding == null) {

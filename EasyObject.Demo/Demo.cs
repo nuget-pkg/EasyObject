@@ -474,7 +474,7 @@ class Program {
             Log(UniversalTransformer.SafeFileName(fname, replaceSurrogate: "@"), "⁅markup⁆[purple]adjusted file name (spicifying surrogate pairs' replacement)[/]");
 
             void LinkTest(string title, string url) {
-                LogWebLink(title, url);
+                //LogWebLink(title, url);
                 EchoWebLink(title, url);
             }
             LinkTest(
@@ -488,6 +488,10 @@ class Program {
             LinkTest(
                 "⭕️⁅🌐⁆@ラム:DANCING STAR 2026",
                 "https://www.youtube.com/playlist?list=PLTvSv0jkjbk8gtWLMLXLHYrWio5ciOi8c"
+              );
+            LinkTest(
+                "⭕️⁅🌐⁆@エレクトロニック・ダンス・ミュージック",
+                "https://www.youtube.com/playlist?list=PLTvSv0jkjbk_u4GZBJK74w7aWylX-8FSt"
               );
 
             Log("[END]");

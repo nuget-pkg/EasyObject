@@ -2,7 +2,7 @@
 	<PropertyGroup>
 		<LangVersion>latest</LangVersion>
 		<TargetFrameworks>net462;net8.0</TargetFrameworks>
-		<Version>2026.0325.2346.41</Version>
+		<Version>2026.0326.0535.10</Version>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>disable</ImplicitUsings>
 		<RootNamespace>EasyObject</RootNamespace>
@@ -59,6 +59,6 @@
 		<PackageReference Include="PlainObjectConverter" Version="2026.325.1801.12" />
 		<PackageReference Include="JsoncParser" Version="2026.318.150.53" />
 		<PackageReference Include="Spectre.Console.Json" Version="0.54.0" />
-		<PackageReference Include="UniversalEncoding" Version="2026.325.2322.3" />
+		<PackageReference Include="UniversalEncoding" Version="2026.326.517.35" />
 	</ItemGroup>
 </Project>
