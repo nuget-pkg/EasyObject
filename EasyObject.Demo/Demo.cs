@@ -478,23 +478,25 @@ class Program {
                 "⭕️⁅🌐⁆@エレクトロニック・ダンス・ミュージック",
                 "https://www.youtube.com/playlist?list=PLTvSv0jkjbk_u4GZBJK74w7aWylX-8FSt"
               );
+            LinkTest(
+                "⭕️⁅🌐⁆@⁅CHANNEL：〘!!GREAT!!〙Blackpink Diaries⁆⭕️❝BLACKPINK➡️Ice Cream (2026 Official Music Video)❞",
+                "https://www.youtube.com/playlist?list=PLTvSv0jkjbk9vEyRq7pK_U8fbGrXirdAi"
+              );
 
-            //Log(CurrentSourceCodeLine());
+            //Log("This is unicode(echo): ⭕️ ☢ ☃☃☃ ☮");
+            //Log("This is unicode(log): ⭕️ ☢ ☃☃☃ ☮");
+            //DebugOutput = false;
+            //Debug("This is unicode(debug1): ⭕️ ☢ ☃☃☃ ☮"); // now shown because DegutOutput is false here
+            //DebugOutput = true;
+            //Debug("This is unicode(debug2): ⭕️ ☢ ☃☃☃ ☮");
 
-            Log("This is unicode(echo): ⭕️ ☢ ☃☃☃ ☮");
-            Log("This is unicode(log): ⭕️ ☢ ☃☃☃ ☮");
-            DebugOutput = false;
-            Debug("This is unicode(debug1): ⭕️ ☢ ☃☃☃ ☮"); // now shown because DegutOutput is false here
-            DebugOutput = true;
-            Debug("This is unicode(debug2): ⭕️ ☢ ☃☃☃ ☮");
-
-            ForceAscii = true;
-            Log("This is unicode(echo): ⭕️ ☢ ☃☃☃ ☮");
-            Log("This is unicode(log): ⭕️ ☢ ☃☃☃ ☮");
-            DebugOutput = false;
-            Debug("This is unicode(debug1): ⭕️ ☢ ☃☃☃ ☮"); // now shown because DegutOutput is false here
-            DebugOutput = true;
-            Debug("This is unicode(debug2): ⭕️ ☢ ☃☃☃ ☮");
+            //ForceAscii = true;
+            //Log("This is unicode(echo): ⭕️ ☢ ☃☃☃ ☮");
+            //Log("This is unicode(log): ⭕️ ☢ ☃☃☃ ☮");
+            //DebugOutput = false;
+            //Debug("This is unicode(debug1): ⭕️ ☢ ☃☃☃ ☮"); // now shown because DegutOutput is false here
+            //DebugOutput = true;
+            //Debug("This is unicode(debug2): ⭕️ ☢ ☃☃☃ ☮");
 
             ForceAscii = false; Echo("⁅markup⁆[green]This is unicode(before END): ⭕️ ☢ ☃☃☃ ☮[/]", title: "⁅markup⁆[cyan]Echo() does not emit SOURCE CODE LOCATION![/]");
 
