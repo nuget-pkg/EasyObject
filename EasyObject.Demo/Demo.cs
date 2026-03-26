@@ -468,19 +468,19 @@ class Program {
               );
             LinkTest(
                 "⭕️🈂️❝FG⁅ｼﾞﾝｷﾞｽｶﾝ⁆❞🈂️ファイターズガール「ジンギスカン」踊ってみた 歌詞付き",
-                "https://www.youtube.com/watch?v=sLpodTN4xhI&list=PLTvSv0jkjbk9-emLIV2vM-0p7CeMnTYG2"
+                "https://www.youtube.com/watch?v=DHbIIBmqHsw&list=PLTvSv0jkjbk8wtAgpVJH1L21EgeMi_ULc"
               );
             LinkTest(
                 "⭕️⁅🌐⁆@ラム:DANCING STAR 2026",
-                "https://www.youtube.com/playlist?list=PLTvSv0jkjbk8gtWLMLXLHYrWio5ciOi8c"
+                "https://www.youtube.com/watch?v=wzcdhDyNmMM&list=PLTvSv0jkjbk8gtWLMLXLHYrWio5ciOi8c"
               );
             LinkTest(
                 "⭕️⁅🌐⁆@エレクトロニック・ダンス・ミュージック",
-                "https://www.youtube.com/playlist?list=PLTvSv0jkjbk_u4GZBJK74w7aWylX-8FSt"
+                "https://www.youtube.com/watch?v=4B5IHILMWOM&list=PLTvSv0jkjbk_u4GZBJK74w7aWylX-8FSt"
               );
             LinkTest(
                 "⭕️⁅🌐⁆@⁅CHANNEL：〘!!GREAT!!〙Blackpink Diaries⁆⭕️❝BLACKPINK➡️Ice Cream (2026 Official Music Video)❞",
-                "https://www.youtube.com/playlist?list=PLTvSv0jkjbk9vEyRq7pK_U8fbGrXirdAi"
+                "https://www.youtube.com/watch?v=YwhhB8rKb6U&list=PLTvSv0jkjbk9vEyRq7pK_U8fbGrXirdAi"
               );
 
             //Log("This is unicode(echo): ⭕️ ☢ ☃☃☃ ☮");
