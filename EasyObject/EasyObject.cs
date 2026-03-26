@@ -64,6 +64,7 @@ public class EasyObject :
 #if USE_SPECTRE_CONSOLE
     public static IAnsiConsole AnsiErrorConsole;
 #endif
+    public static bool ShowLineNumbers = true; /* Introduced @ 2026-03-26 17:02 */
     static EasyObject() {
         EasyObject.ClearSettings();
 #if USE_SPECTRE_CONSOLE
@@ -77,9 +78,8 @@ public class EasyObject :
         EasyObject.DebugOutput = false;
         EasyObject.ShowDetail = false;
         EasyObject.ForceAscii = false;
-        //#if USE_SPECTRE_CONSOLE
         EasyObject.UseAnsiConsole = false;
-        //#endif
+        EasyObject.ShowLineNumbers = true;
     }
     public static void SetupConsoleEncoding(Encoding? encoding = null) {
         if (encoding == null) {
@@ -105,8 +105,11 @@ public class EasyObject :
         }
     }
     private static void _EnsureCursorLeft() {
-        if (UseAnsiConsole) {
-            Console.CursorLeft = 0;
+        try {
+            if (UseAnsiConsole) {
+                Console.CursorLeft = 0;
+            }
+        } catch {
         }
     }
     public EasyObject() {
@@ -642,17 +645,26 @@ public class EasyObject :
                 if (str.StartsWith("⁅markup⁆")) {
                     str = str.Replace("⁅markup⁆", "");
                     AnsiErrorConsole.MarkupLine(str);
+                    if (ShowLineNumbers) {
+                        AnsiErrorConsole.MarkupLine($"      [blue]{MarkupSafeString(CurrentSourceCodeLine())}[/]");
+                    }
                     return;
                 }
             }
             string s2 = ToPrintable(x, title: null, compact: compact, maxDepth: maxDepth, removeSurrogatePair: removeSurrogatePair);
             string s3 = MarkupSafeString(s2);
             AnsiErrorConsole.MarkupLine(s3);
+            if (ShowLineNumbers) {
+                AnsiErrorConsole.MarkupLine($"      [blue]{MarkupSafeString(CurrentSourceCodeLine())}[/]");
+            }
             return;
         }
 #endif
         string s = ToPrintable(x, title, compact: compact, maxDepth: maxDepth, removeSurrogatePair: removeSurrogatePair);
         Console.Error.WriteLine("[Log] " + s);
+        if (ShowLineNumbers) {
+            Console.Error.WriteLine($"      {CurrentSourceCodeLine()}");
+        }
     }
     public static void Debug(
         object? x,
@@ -682,7 +694,6 @@ public class EasyObject :
                     title = title.Replace("⁅markup⁆", "");
                     AnsiErrorConsole.Markup($"{title}: ");
                 } else {
-                    //AnsiErrorConsole.Write($"{title}: ");
                     AnsiErrorConsole.Markup($"[purple]{MarkupSafeString(title)}[/]");
                 }
             }
@@ -690,17 +701,26 @@ public class EasyObject :
                 if (str.StartsWith("⁅markup⁆")) {
                     str = str.Replace("⁅markup⁆", "");
                     AnsiErrorConsole.MarkupLine($"[purple]{str}[/]");
+                    //if (ShowLineNumbers) {
+                    AnsiErrorConsole.MarkupLine($"        [purple]{MarkupSafeString(CurrentSourceCodeLine())}[/]");
+                    //}
                     return;
                 }
             }
             string s2 = ToPrintable(x, title: null, compact: compact, maxDepth: maxDepth, removeSurrogatePair: removeSurrogatePair);
             string s3 = MarkupSafeString(s2);
             AnsiErrorConsole.MarkupLine($"[purple]{s3}[/]");
+            //if (ShowLineNumbers) {
+            AnsiErrorConsole.MarkupLine($"        [purple]{MarkupSafeString(CurrentSourceCodeLine())}[/]");
+            //}
             return;
         }
 #endif
         string s = ToPrintable(x, title, compact: compact, maxDepth: maxDepth, removeSurrogatePair: removeSurrogatePair);
         Console.Error.WriteLine("[Debug] " + s);
+        //if (ShowLineNumbers) {
+        Console.Error.WriteLine($"  {CurrentSourceCodeLine()}");
+        //}
     }
     public static void Message(
         object? x,
@@ -1026,24 +1046,6 @@ public class EasyObject :
     public static object? ObjectToObject(object? x, bool asDynamicObject = false) {
         return FromObject(x).ToObject(asDynamicObject: asDynamicObject);
     }
-    public static string EscapeNonAsciiChars(string text) {
-        var sb = new StringBuilder();
-        sb.Length = 0;
-        if (sb.Capacity < text.Length + (text.Length / 10)) {
-            sb.Capacity = text.Length + (text.Length / 10);
-        }
-        foreach (char c in text) {
-            if (c > 127) {
-                ushort val = c;
-                sb.Append("\\u").Append(val.ToString("X4"));
-            } else {
-                sb.Append(c);
-            }
-        }
-        string result = sb.ToString();
-        sb.Length = 0;
-        return result;
-    }
     public static void LogWebLink(string title, string url) {
 #if USE_SPECTRE_CONSOLE
         if (UseAnsiConsole) {
@@ -1066,5 +1068,13 @@ public class EasyObject :
 #else
         EasyObject.Echo($"{title} => {url}");
 #endif
+    }
+    public static string CurrentSourceCodeLine() {
+        string trace = Environment.StackTrace;
+        List<string> lines = EasySystem.TextToLines(trace);
+        if (lines.Count == 0) {
+            return "[!! UNKNOWN SOURCE CODE LINE !!]";
+        }
+        return lines[lines.Count - 1].Trim();
     }
 }

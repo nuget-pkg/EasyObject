@@ -9,7 +9,8 @@ public static class TextEmbedder {
 #else
 public static class EasyTextEmbedder {
 #endif
-    const long MinimumCheckLength = 8192;
+    //const long MinimumCheckLength = 8192;
+    const long MinimumCheckLength = 512;
 #if GLOBAL_SYS
     static TextEmbedder() {
 #else
@@ -42,8 +43,7 @@ public static class EasyTextEmbedder {
             using (var fs = File.OpenRead(path)) {
                 return fs.Length;
             }
-        }
-        catch {
+        } catch {
             return 0;
         }
     }

@@ -346,21 +346,6 @@ class Program {
             WriteLine("[stdout] This is unicode: ⭕️ ☢ ☃☃☃ ☮");
             Console.Error.WriteLine("[stderr] This is unicode: ⭕️ ☢ ☃☃☃ ☮");
 
-            Log("This is unicode(echo): ⭕️ ☢ ☃☃☃ ☮");
-            Log("This is unicode(log): ⭕️ ☢ ☃☃☃ ☮");
-            DebugOutput = false;
-            Debug("This is unicode(debug1): ⭕️ ☢ ☃☃☃ ☮"); // now shown because DegutOutput is false here
-            DebugOutput = true;
-            Debug("This is unicode(debug2): ⭕️ ☢ ☃☃☃ ☮");
-
-            ForceAscii = true;
-            Log("This is unicode(echo): ⭕️ ☢ ☃☃☃ ☮");
-            Log("This is unicode(log): ⭕️ ☢ ☃☃☃ ☮");
-            DebugOutput = false;
-            Debug("This is unicode(debug1): ⭕️ ☢ ☃☃☃ ☮"); // now shown because DegutOutput is false here
-            DebugOutput = true;
-            Debug("This is unicode(debug2): ⭕️ ☢ ☃☃☃ ☮");
-
             string progJson2 = """
             #! /usr/bin/env program
             (defvar $list [11, null, "abc"])
@@ -494,7 +479,28 @@ class Program {
                 "https://www.youtube.com/playlist?list=PLTvSv0jkjbk_u4GZBJK74w7aWylX-8FSt"
               );
 
-            Log("[END]");
+            //Log(CurrentSourceCodeLine());
+
+            Log("This is unicode(echo): ⭕️ ☢ ☃☃☃ ☮");
+            Log("This is unicode(log): ⭕️ ☢ ☃☃☃ ☮");
+            DebugOutput = false;
+            Debug("This is unicode(debug1): ⭕️ ☢ ☃☃☃ ☮"); // now shown because DegutOutput is false here
+            DebugOutput = true;
+            Debug("This is unicode(debug2): ⭕️ ☢ ☃☃☃ ☮");
+
+            ForceAscii = true;
+            Log("This is unicode(echo): ⭕️ ☢ ☃☃☃ ☮");
+            Log("This is unicode(log): ⭕️ ☢ ☃☃☃ ☮");
+            DebugOutput = false;
+            Debug("This is unicode(debug1): ⭕️ ☢ ☃☃☃ ☮"); // now shown because DegutOutput is false here
+            DebugOutput = true;
+            Debug("This is unicode(debug2): ⭕️ ☢ ☃☃☃ ☮");
+
+            ForceAscii = false; Echo("⁅markup⁆[green]This is unicode(before END): ⭕️ ☢ ☃☃☃ ☮[/]", title: "⁅markup⁆[cyan]Echo() does not emit SOURCE CODE LOCATION![/]");
+
+            DebugOutput = true;
+            ShowLineNumbers = false; ForceAscii = false; Log("⭕️🈂️❝END❞🈂️", "ShowLineNumbers = false");
+            ShowLineNumbers = false; ForceAscii = false; Debug("⭕️🈂️❝END❞🈂️", "Debug() shows line info even if `ShowLineNumbers == false`");
         } catch (Exception ex) {
             Crash(ex);
         }
