@@ -482,6 +482,10 @@ class Program {
                 "⭕️⁅🌐⁆@⁅CHANNEL：〘!!GREAT!!〙Blackpink Diaries⁆⭕️❝BLACKPINK➡️Ice Cream (2026 Official Music Video)❞",
                 "https://www.youtube.com/watch?v=YwhhB8rKb6U&list=PLTvSv0jkjbk9vEyRq7pK_U8fbGrXirdAi"
               );
+            LinkTest(
+                "⭕️⁅🌐⁆@⁅CHANNEL：〘!!GREAT!!〙Alyssa' s Music Loop⁆⭕️❝🎙 More Than Is Good for Me ( Original ) ✨️ EDM - Electronic Dance Music ✨️ # 179❞",
+                "https://www.youtube.com/watch?v=qrW3yK7AWjE&list=PLTvSv0jkjbk-8ABf2TXzCXWk7zn10Ute7"
+              );
 
             //Log("This is unicode(echo): ⭕️ ☢ ☃☃☃ ☮");
             //Log("This is unicode(log): ⭕️ ☢ ☃☃☃ ☮");
