@@ -70,6 +70,8 @@ namespace Global {
         }
         public static void Crash(object? message = null, int exitCode = 1) {
             ShowDetail = false;
+            ShowLineNumbers = false;
+            UseAnsiConsole = false;
             Log("[!! PROGRAM CRASHED !!]");
             if (message != null && !(message is Exception)) {
                 Log(message, "MESSAGE");
