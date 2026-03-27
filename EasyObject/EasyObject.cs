@@ -7,6 +7,7 @@ using Spectre.Console.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Dynamic;
 using System.IO;
 using System.Linq;
@@ -1072,27 +1073,29 @@ public class EasyObject :
         if (lines.Count == 0) {
             return "[!! UNKNOWN SOURCE CODE LINE !!]";
         }
-        return lines[lines.Count - 1].Trim();
+        return ReplacePathsWithUrls(lines[lines.Count - 1].Trim());
     }
     public static string ReplacePathsWithUrls(string stackTrace) { // https://shorturl.ly/FToES C# search through string like stack trace for source code path and replace all of them to a "file:" urls - Google
+        stackTrace = stackTrace.Replace("場所 ", "in ");
+        stackTrace = stackTrace.Replace(":行 ", ":line ");
         // This regex looks for common file path patterns, especially those with drive letters (C:\) 
         // or starting with a slash (/) often followed by common extensions like .cs, .vb, etc., within the context of a stack trace line.
         // The pattern aims to capture the full file path including extension and line number info if present.
         // Group 1 captures the path part for replacement.
-        var filePathRegex = new Regex(@"(?:場所\s+)(?<path>[a-zA-Z]:\\(?:[^<>:""/\\|?*]+\\)*[^<>:""/\\|?*]+|/(?:[^/]+\s?)+(?<enging>:行\s+\d+)$)", RegexOptions.Multiline | RegexOptions.IgnoreCase);
+        var filePathRegex = new Regex(@"(?:in\s+)(?<path>[a-zA-Z]:\\(?:[^<>:""/\\|?*]+\\)*[^<>:""/\\|?*]+|/(?:[^/]+\s?)+(?<enging>:line\s+\d+)$)", RegexOptions.Multiline | RegexOptions.IgnoreCase);
         // Use a MatchEvaluator delegate for the replacement to apply the Uri conversion logic to each match.
         string result = filePathRegex.Replace(stackTrace, match =>
         {
             string filePath = match.Groups["path"].Value;
-            Log(filePath, "filePath");
+            //Log(filePath, "filePath");
             string ending = match.Groups["ending"].Value;
-            Log(ending, "ending");
+            //Log(ending, "ending");
             try {
                 // The System.Uri constructor handles the specific formatting requirements for file URIs, 
                 // including correct handling of slashes and special characters like spaces.
                 var fileUri = new Uri(filePath);
                 // We use AbsoluteUri which correctly formats the scheme (file://) and path for a URL.
-                return $"in {fileUri.AbsoluteUri}{ending}";
+                return $"in {fileUri.AbsoluteUri} {ending}";
             } catch (UriFormatException) {
                 // Fallback for paths that the Uri class might not handle correctly (e.g., highly unusual formats)
                 return match.Value;
@@ -1110,13 +1113,13 @@ public class EasyObject :
         }
         if (message is Exception e) {
             string exTrace = e.ToString();
-            Log(exTrace, "(1)");
+            //Log(exTrace, "(1)");
             try {
                 exTrace = ReplacePathsWithUrls(exTrace);
             } catch (Exception ex) {
                 Console.Error.WriteLine(ex);
             }
-            Log(exTrace, "(2)");
+            //Log(exTrace, "(2)");
             Console.Error.WriteLine(
                 exTrace
                 );
