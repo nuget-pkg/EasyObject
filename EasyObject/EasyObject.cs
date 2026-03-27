@@ -1082,14 +1082,14 @@ public class EasyObject :
         // or starting with a slash (/) often followed by common extensions like .cs, .vb, etc., within the context of a stack trace line.
         // The pattern aims to capture the full file path including extension and line number info if present.
         // Group 1 captures the path part for replacement.
-        var filePathRegex = new Regex(@"(?:in\s+)(?<path>[a-zA-Z]:\\(?:[^<>:""/\\|?*]+\\)*[^<>:""/\\|?*]+|/(?:[^/]+\s?)+(?<enging>:line\s+\d+)$)", RegexOptions.Multiline | RegexOptions.IgnoreCase);
+        var filePathRegex = new Regex(@"(?:in\s+)(?<path>[a-zA-Z]:\\(?:[^<>:""/\\|?*]+\\)*[^<>:""/\\|?*]+|/(?:[^/]+\s?)+(?<enging>:line\s+(?<line_num>\d+))$)", RegexOptions.Multiline | RegexOptions.IgnoreCase);
         // Use a MatchEvaluator delegate for the replacement to apply the Uri conversion logic to each match.
         string result = filePathRegex.Replace(stackTrace, match =>
         {
             string filePath = match.Groups["path"].Value;
-            //Log(filePath, "filePath");
-            string ending = match.Groups["ending"].Value;
-            //Log(ending, "ending");
+            Log(filePath, "filePath");
+            string line_num = match.Groups["line_num"].Value;
+            Log(line_num, "line_num");
             try {
                 // The System.Uri constructor handles the specific formatting requirements for file URIs, 
                 // including correct handling of slashes and special characters like spaces.
