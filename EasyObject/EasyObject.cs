@@ -1082,20 +1082,25 @@ public class EasyObject :
         // or starting with a slash (/) often followed by common extensions like .cs, .vb, etc., within the context of a stack trace line.
         // The pattern aims to capture the full file path including extension and line number info if present.
         // Group 1 captures the path part for replacement.
-        var filePathRegex = new Regex(@"(?:in\s+)(?<path>[a-zA-Z]:\\(?:[^<>:""/\\|?*]+\\)*[^<>:""/\\|?*]+|/(?:[^/]+\s?)+(?<enging>:line\s+(?<line_num>\d+))$)", RegexOptions.Multiline | RegexOptions.IgnoreCase);
+        var filePathRegex = new Regex(@"(?:in\s+)(?<path>[a-zA-Z]:\\(?:[^<>:""/\\|?*]+\\)*[^<>:""/\\|?*]+:line\s+(?<line_num>\d+))$", RegexOptions.Multiline | RegexOptions.IgnoreCase);
         // Use a MatchEvaluator delegate for the replacement to apply the Uri conversion logic to each match.
         string result = filePathRegex.Replace(stackTrace, match =>
         {
             string filePath = match.Groups["path"].Value;
-            Console.Error.WriteLine($"filePath={filePath}");
+            Console.WriteLine($"filePath={filePath}");
             string line_num = match.Groups["line_num"].Value;
-            Console.Error.WriteLine($"line_num={line_num}");
+            Console.WriteLine($"line_num(1)={line_num}");
+            //Message(line_num, "line_num(1)");
+            line_num = line_num.Replace(":line ", "");
+            Console.WriteLine($"line_num(2)={line_num}");
+            //Message(line_num, "line_num(1)");
             try {
                 // The System.Uri constructor handles the specific formatting requirements for file URIs, 
                 // including correct handling of slashes and special characters like spaces.
                 var fileUri = new Uri(filePath);
                 // We use AbsoluteUri which correctly formats the scheme (file://) and path for a URL.
-                return $"in {fileUri.AbsoluteUri} line_num={line_num}";
+                Console.WriteLine($"line_num(3)={line_num}");
+                return $"in {fileUri.AbsoluteUri} line_num=★{line_num}★";
             } catch (UriFormatException) {
                 // Fallback for paths that the Uri class might not handle correctly (e.g., highly unusual formats)
                 return match.Value;
