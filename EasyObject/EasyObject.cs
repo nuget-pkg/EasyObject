@@ -680,7 +680,7 @@ public class EasyObject :
                     title = title.Replace("⁅markup⁆", "");
                     AnsiErrorConsole.Markup($"{title}: ");
                 } else {
-                    AnsiErrorConsole.Markup($"[purple]{MarkupSafeString(title)}[/]");
+                    AnsiErrorConsole.Markup($"[purple]{MarkupSafeString(title)}:[/] ");
                 }
             }
             if (x != null && x is string str) {
@@ -1032,7 +1032,17 @@ public class EasyObject :
     public static object? ObjectToObject(object? x, bool asDynamicObject = false) {
         return FromObject(x).ToObject(asDynamicObject: asDynamicObject);
     }
+    public static string ToClickableUri(string pathOrUrl) {
+        Debug(pathOrUrl, "pathOrUrl");
+        if (pathOrUrl.StartsWith("http:") || pathOrUrl.StartsWith("https:") || pathOrUrl.StartsWith("file:")) {
+            return pathOrUrl;
+        }
+        string filePath = pathOrUrl;
+        filePath = Path.GetFullPath(filePath);
+        return new Uri(filePath).AbsoluteUri;
+    }
     public static void LogWebLink(string title, string url) {
+        url = ToClickableUri(url);
 #if USE_SPECTRE_CONSOLE
         if (UseAnsiConsole) {
             EasyObject.Log($"⁅markup⁆[green][link={url}]{EasyObject.MarkupSafeString(title)}[/][/] => [blue]{EasyObject.MarkupSafeString(url)}[/]");
@@ -1044,6 +1054,7 @@ public class EasyObject :
 #endif
     }
     public static void EchoWebLink(string title, string url) {
+        url = ToClickableUri(url);
 #if USE_SPECTRE_CONSOLE
         if (UseAnsiConsole) {
             EasyObject.Echo($"⁅markup⁆[green][link={url}]{EasyObject.MarkupSafeString(title)}[/][/] => [blue]{EasyObject.MarkupSafeString(url)}[/]");
@@ -1063,6 +1074,32 @@ public class EasyObject :
         }
         return lines[lines.Count - 1].Trim();
     }
+    public static string ReplacePathsWithUrls(string stackTrace) { // https://shorturl.ly/FToES C# search through string like stack trace for source code path and replace all of them to a "file:" urls - Google
+        // This regex looks for common file path patterns, especially those with drive letters (C:\) 
+        // or starting with a slash (/) often followed by common extensions like .cs, .vb, etc., within the context of a stack trace line.
+        // The pattern aims to capture the full file path including extension and line number info if present.
+        // Group 1 captures the path part for replacement.
+        var filePathRegex = new Regex(@"(?:場所\s+)(?<path>[a-zA-Z]:\\(?:[^<>:""/\\|?*]+\\)*[^<>:""/\\|?*]+|/(?:[^/]+\s?)+(?<enging>:行\s+\d+)$)", RegexOptions.Multiline | RegexOptions.IgnoreCase);
+        // Use a MatchEvaluator delegate for the replacement to apply the Uri conversion logic to each match.
+        string result = filePathRegex.Replace(stackTrace, match =>
+        {
+            string filePath = match.Groups["path"].Value;
+            Log(filePath, "filePath");
+            string ending = match.Groups["ending"].Value;
+            Log(ending, "ending");
+            try {
+                // The System.Uri constructor handles the specific formatting requirements for file URIs, 
+                // including correct handling of slashes and special characters like spaces.
+                var fileUri = new Uri(filePath);
+                // We use AbsoluteUri which correctly formats the scheme (file://) and path for a URL.
+                return $"in {fileUri.AbsoluteUri}{ending}";
+            } catch (UriFormatException) {
+                // Fallback for paths that the Uri class might not handle correctly (e.g., highly unusual formats)
+                return match.Value;
+            }
+        });
+        return result;
+    }
     public static void Crash(object? message = null, int exitCode = 1) {
         ShowDetail = false;
         ShowLineNumbers = false;
@@ -1072,13 +1109,24 @@ public class EasyObject :
             Log(message, "MESSAGE");
         }
         if (message is Exception e) {
-            Console.Error.WriteLine(e.ToString());
+            string exTrace = e.ToString();
+            Log(exTrace, "(1)");
+            try {
+                exTrace = ReplacePathsWithUrls(exTrace);
+            } catch (Exception ex) {
+                Console.Error.WriteLine(ex);
+            }
+            Log(exTrace, "(2)");
+            Console.Error.WriteLine(
+                exTrace
+                );
             return;
         }
         string trace = Environment.StackTrace;
         List<string> lines = EasySystem.TextToLines(trace);
         lines = lines.Skip(3).ToList();
         trace = "\n" + string.Join("\n", lines);
+        trace = ReplacePathsWithUrls(trace);
         Log(trace, "STACK TRACE");
         Log($"[!! ABORTING...WITH EXIT CODE {exitCode} !!]");
         Environment.Exit(exitCode);

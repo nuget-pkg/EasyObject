@@ -458,6 +458,27 @@ class Program {
             Log(UniversalTransformer.SafeFileName(fname, replaceSurrogate: ""), "⁅markup⁆[green]adjusted file name (keeping surrogate pairs)[/]");
             Log(UniversalTransformer.SafeFileName(fname, replaceSurrogate: "@"), "⁅markup⁆[purple]adjusted file name (spicifying surrogate pairs' replacement)[/]");
 
+            //Log("This is unicode(echo): ⭕️ ☢ ☃☃☃ ☮");
+            //Log("This is unicode(log): ⭕️ ☢ ☃☃☃ ☮");
+            //DebugOutput = false;
+            //Debug("This is unicode(debug1): ⭕️ ☢ ☃☃☃ ☮"); // now shown because DegutOutput is false here
+            //DebugOutput = true;
+            //Debug("This is unicode(debug2): ⭕️ ☢ ☃☃☃ ☮");
+
+            //ForceAscii = true;
+            //Log("This is unicode(echo): ⭕️ ☢ ☃☃☃ ☮");
+            //Log("This is unicode(log): ⭕️ ☢ ☃☃☃ ☮");
+            //DebugOutput = false;
+            //Debug("This is unicode(debug1): ⭕️ ☢ ☃☃☃ ☮"); // now shown because DegutOutput is false here
+            //DebugOutput = true;
+            //Debug("This is unicode(debug2): ⭕️ ☢ ☃☃☃ ☮");
+
+            ForceAscii = false; Echo("⁅markup⁆[green]This is unicode(before END): ⭕️ ☢ ☃☃☃ ☮[/]", title: "⁅markup⁆[cyan]Echo() does not emit SOURCE CODE LOCATION![/]");
+
+            DebugOutput = true;
+            ShowLineNumbers = false; ForceAscii = false; Log("⭕️🈂️❝END❞🈂️", "ShowLineNumbers = false");
+            ShowLineNumbers = false; ForceAscii = false; Debug("⭕️🈂️❝END❞🈂️", "Debug() shows line info even if `ShowLineNumbers == false`");
+
             void LinkTest(string title, string url) {
                 //LogWebLink(title, url);
                 EchoWebLink(title, url);
@@ -487,33 +508,17 @@ class Program {
                 "https://www.youtube.com/watch?v=qrW3yK7AWjE&list=PLTvSv0jkjbk-8ABf2TXzCXWk7zn10Ute7"
               );
 
-            //Log("This is unicode(echo): ⭕️ ☢ ☃☃☃ ☮");
-            //Log("This is unicode(log): ⭕️ ☢ ☃☃☃ ☮");
-            //DebugOutput = false;
-            //Debug("This is unicode(debug1): ⭕️ ☢ ☃☃☃ ☮"); // now shown because DegutOutput is false here
-            //DebugOutput = true;
-            //Debug("This is unicode(debug2): ⭕️ ☢ ☃☃☃ ☮");
-
-            //ForceAscii = true;
-            //Log("This is unicode(echo): ⭕️ ☢ ☃☃☃ ☮");
-            //Log("This is unicode(log): ⭕️ ☢ ☃☃☃ ☮");
-            //DebugOutput = false;
-            //Debug("This is unicode(debug1): ⭕️ ☢ ☃☃☃ ☮"); // now shown because DegutOutput is false here
-            //DebugOutput = true;
-            //Debug("This is unicode(debug2): ⭕️ ☢ ☃☃☃ ☮");
-
-            ForceAscii = false; Echo("⁅markup⁆[green]This is unicode(before END): ⭕️ ☢ ☃☃☃ ☮[/]", title: "⁅markup⁆[cyan]Echo() does not emit SOURCE CODE LOCATION![/]");
-
             DebugOutput = true;
-            ShowLineNumbers = false; ForceAscii = false; Log("⭕️🈂️❝END❞🈂️", "ShowLineNumbers = false");
-            ShowLineNumbers = false; ForceAscii = false; Debug("⭕️🈂️❝END❞🈂️", "Debug() shows line info even if `ShowLineNumbers == false`");
-#if false
+            string versionTextPath = GitProjectFile(GetCwd(), "version.txt")!;
+            EchoWebLink("version.txt", versionTextPath);
+
+#if true
             throw new NotImplementedException();
 #else
-            Crash();
+            EasyObject.Crash();
 #endif
         } catch (Exception ex) {
-            Crash(ex);
+            EasyObject.Crash(ex);
         }
     }
 }
