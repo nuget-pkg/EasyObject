@@ -507,7 +507,11 @@ class Program {
             DebugOutput = true;
             ShowLineNumbers = false; ForceAscii = false; Log("⭕️🈂️❝END❞🈂️", "ShowLineNumbers = false");
             ShowLineNumbers = false; ForceAscii = false; Debug("⭕️🈂️❝END❞🈂️", "Debug() shows line info even if `ShowLineNumbers == false`");
+#if false
             throw new NotImplementedException();
+#else
+            Crash();
+#endif
         } catch (Exception ex) {
             Crash(ex);
         }
