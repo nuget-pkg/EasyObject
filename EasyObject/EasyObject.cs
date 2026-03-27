@@ -1087,21 +1087,21 @@ public class EasyObject :
         string result = filePathRegex.Replace(stackTrace, match =>
         {
             string filePath = match.Groups["path"].Value;
-            Console.WriteLine($"filePath={filePath}");
+            //Console.WriteLine($"filePath={filePath}");
             string line_num = match.Groups["line_num"].Value;
-            Console.WriteLine($"line_num(1)={line_num}");
-            //Message(line_num, "line_num(1)");
+            //Console.WriteLine($"line_num(1)={line_num}");
             line_num = line_num.Replace(":line ", "");
-            Console.WriteLine($"line_num(2)={line_num}");
-            //Message(line_num, "line_num(1)");
+            //Console.WriteLine($"line_num(2)={line_num}");
             try {
                 // The System.Uri constructor handles the specific formatting requirements for file URIs, 
                 // including correct handling of slashes and special characters like spaces.
                 var fileUri = new Uri(filePath);
                 // We use AbsoluteUri which correctly formats the scheme (file://) and path for a URL.
-                Console.WriteLine($"line_num(3)={line_num}");
-                string result = $"in {fileUri.AbsoluteUri}#L{line_num.Replace("line:", "")}";
-                Console.WriteLine($"result={result}");
+                //Console.WriteLine($"line_num(3)={line_num}");
+                //string result = $"in {fileUri.AbsoluteUri}#L{line_num.Replace("line:", "")}";
+                //string result = $"in {fileUri.AbsoluteUri}#L{line_num}";
+                string result = $"in {fileUri.AbsoluteUri} : line {line_num}";
+                //Console.WriteLine($"result={result}");
                 return result;
             } catch (UriFormatException) {
                 // Fallback for paths that the Uri class might not handle correctly (e.g., highly unusual formats)
