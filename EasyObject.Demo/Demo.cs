@@ -5,7 +5,7 @@ using System.Linq;
 using System.Xml.Linq;
 using Global;
 using NUnit.Framework;
-using Razorvine.Pickle;
+//using Razorvine.Pickle;
 using Spectre.Console;
 using static Global.EasyObject;
 using static Global.EasySystem;
@@ -183,15 +183,15 @@ class Program {
             WriteLine($"　{ts.Hours}時間 {ts.Minutes}分 {ts.Seconds}秒 {ts.Milliseconds}ミリ秒");
             WriteLine($"　{sw.ElapsedMilliseconds}ミリ秒");
             //var list01_txt = File.ReadAllText("assets/list01.txt");
-            var list01_txt = File.ReadAllText("assets/mydict.txt");
-            Log(list01_txt);
-            var list01_bytes = Convert.FromBase64String(list01_txt);
-            var unpickler = new Unpickler();
-            object result = unpickler.loads(list01_bytes);
-            Log(result, "result");
+            //var list01_txt = File.ReadAllText("assets/mydict.txt");
+            //Log(list01_txt);
+            //var list01_bytes = Convert.FromBase64String(list01_txt);
+            //var unpickler = new Unpickler();
+            //object result = unpickler.loads(list01_bytes);
+            //Log(result, "result");
             //var o = new PlainObjectConverter(forceAscii: false).Parse(result);
             //Log(o, "o");
-            var pickler = new Pickler();
+            //var pickler = new Pickler();
             //var bytes = pickler.dumps(o);
             //var ox = unpickler.loads(bytes);
             //Log(ox, "ox");
@@ -512,6 +512,8 @@ class Program {
             string versionTextPath = GitProjectFile(GetCwd(), "version.txt")!;
             EchoWebLink("version.txt", versionTextPath);
 
+            DebugOutput = true;
+            //Assert_IsTrue(11 == 22);
 #if true
             throw new NotImplementedException();
 #else

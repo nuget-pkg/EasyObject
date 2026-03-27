@@ -7,7 +7,6 @@ using Spectre.Console.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Dynamic;
 using System.IO;
 using System.Linq;
@@ -15,6 +14,8 @@ using System.Net;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
+using NUnit.Framework;
+
 public enum EasyObjectType {
     @string,
     @number,
@@ -520,7 +521,7 @@ public class EasyObject :
         }
         if (str.StartsWith("⁅markup⁆")) {
             str = str.Replace("⁅markup⁆", "");
-            AnsiConsole.MarkupLine($"[purple]{str}[/]");
+            AnsiConsole.MarkupLine(str);
         } else {
             AnsiConsole.Write(str);
         }
@@ -535,18 +536,19 @@ public class EasyObject :
         string str,
         string? title = null
         ) {
+        ////Debug(title, "title");
 #if USE_SPECTRE_CONSOLE
         if (title != null) {
             if (title.StartsWith("⁅markup⁆")) {
                 title = title.Replace("⁅markup⁆", "");
-                AnsiConsole.MarkupLine($"{title}: ");
+                AnsiConsole.Markup($"{title}: ");
             } else {
                 AnsiConsole.Write($"{title}: ");
             }
         }
         if (str.StartsWith("⁅markup⁆")) {
             str = str.Replace("⁅markup⁆", "");
-            AnsiConsole.MarkupLine($"[purple]{str}[/]");
+            AnsiConsole.MarkupLine(str);
         } else {
             AnsiConsole.WriteLine(str);
         }
@@ -677,37 +679,18 @@ public class EasyObject :
         if (UseAnsiConsole) {
             AnsiErrorConsole.Markup("[purple][[Debug]][/] ");
             if (title != null) {
-                if (title.StartsWith("⁅markup⁆")) {
-                    title = title.Replace("⁅markup⁆", "");
-                    AnsiErrorConsole.Markup($"{title}: ");
-                } else {
-                    AnsiErrorConsole.Markup($"[purple]{MarkupSafeString(title)}:[/] ");
-                }
-            }
-            if (x != null && x is string str) {
-                if (str.StartsWith("⁅markup⁆")) {
-                    str = str.Replace("⁅markup⁆", "");
-                    AnsiErrorConsole.MarkupLine($"[purple]{str}[/]");
-                    //if (ShowLineNumbers) {
-                    AnsiErrorConsole.MarkupLine($"        [purple]{MarkupSafeString(CurrentSourceCodeLine())}[/]");
-                    //}
-                    return;
-                }
+                AnsiErrorConsole.Markup($"[purple]{MarkupSafeString(title)}:[/] ");
             }
             string s2 = ToPrintable(x, title: null, compact: compact, maxDepth: maxDepth, removeSurrogatePair: removeSurrogatePair);
             string s3 = MarkupSafeString(s2);
             AnsiErrorConsole.MarkupLine($"[purple]{s3}[/]");
-            //if (ShowLineNumbers) {
             AnsiErrorConsole.MarkupLine($"        [purple]{MarkupSafeString(CurrentSourceCodeLine())}[/]");
-            //}
             return;
         }
 #endif
         string s = ToPrintable(x, title, compact: compact, maxDepth: maxDepth, removeSurrogatePair: removeSurrogatePair);
         Console.Error.WriteLine("[Debug] " + s);
-        //if (ShowLineNumbers) {
         Console.Error.WriteLine($"  {CurrentSourceCodeLine()}");
-        //}
     }
     public static void Message(
         object? x,
@@ -1034,7 +1017,7 @@ public class EasyObject :
         return FromObject(x).ToObject(asDynamicObject: asDynamicObject);
     }
     public static string ToClickableUri(string pathOrUrl) {
-        Debug(pathOrUrl, "pathOrUrl");
+        ////Debug(pathOrUrl, "pathOrUrl");
         if (pathOrUrl.StartsWith("http:") || pathOrUrl.StartsWith("https:") || pathOrUrl.StartsWith("file:")) {
             return pathOrUrl;
         }
@@ -1113,32 +1096,68 @@ public class EasyObject :
     public static void Crash(object? message = null, int exitCode = 1) {
         ShowDetail = false;
         ShowLineNumbers = false;
+        UseAnsiConsole = true;
+        Log("⁅markup⁆[red][[!! PROGRAM CRASHED !!]][/]");
         UseAnsiConsole = false;
-        Log("[!! PROGRAM CRASHED !!]");
         if (message != null && !(message is Exception)) {
             Log(message, "MESSAGE");
         }
         if (message is Exception e) {
             string exTrace = e.ToString();
-            //Log(exTrace, "(1)");
             try {
                 exTrace = ReplacePathsWithUrls(exTrace);
             } catch (Exception ex) {
                 Console.Error.WriteLine(ex);
             }
-            //Log(exTrace, "(2)");
             Console.Error.WriteLine(
                 exTrace
                 );
-            return;
+            UseAnsiConsole = true;
+            Log($"⁅markup⁆[red][[!! ABORTING...WITH EXIT CODE {exitCode} !!]][/]");
+            Environment.Exit(exitCode);
         }
         string trace = Environment.StackTrace;
         List<string> lines = EasySystem.TextToLines(trace);
-        lines = lines.Skip(3).ToList();
+        lines = lines.Skip(2).ToList();
         trace = "\n" + string.Join("\n", lines);
         trace = ReplacePathsWithUrls(trace);
         Log(trace, "STACK TRACE");
-        Log($"[!! ABORTING...WITH EXIT CODE {exitCode} !!]");
+        UseAnsiConsole = true;
+        Log($"⁅markup⁆[red][[!! ABORTING...WITH EXIT CODE {exitCode} !!]][/]");
         Environment.Exit(exitCode);
+    }
+    public static void Assert_IsTrue(bool b, object? message = null, int exitCode = 1) {
+        try {
+            Assert.IsTrue(b);
+        } catch (Exception ex1) {
+            ShowDetail = false;
+            ShowLineNumbers = false;
+            UseAnsiConsole = true;
+            Log("⁅markup⁆[red][[!! ASSERTION FAILED !!]][/]");
+            Log($"⁅markup⁆[red]{MarkupSafeString(CurrentSourceCodeLine())}[/]");
+            WriteLine(
+                $"⁅markup⁆[blue]{MarkupSafeString(ReplacePathsWithUrls(ex1.ToString()))}[/]",
+                title: "⁅markup⁆[blue]EXCEPTION[/]");
+            UseAnsiConsole = false;
+            if (message != null && !(message is Exception)) {
+                Log(message, "MESSAGE");
+            }
+            if (message is Exception e) {
+                string exTrace = e.ToString();
+                try {
+                    exTrace = ReplacePathsWithUrls(exTrace);
+                } catch (Exception ex2) {
+                    Console.Error.WriteLine(ex2);
+                }
+                UseAnsiConsole = true;
+                AnsiErrorConsole.MarkupLine(
+                    $"[green]{MarkupSafeString(exTrace)}[/]"
+                    );
+                UseAnsiConsole = false;
+            }
+            UseAnsiConsole = true;
+            Log($"⁅markup⁆[red][[!! ABORTING...WITH EXIT CODE {exitCode} !!]][/]");
+            Environment.Exit(exitCode);
+        }
     }
 }
