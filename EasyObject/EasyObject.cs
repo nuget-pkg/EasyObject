@@ -1087,15 +1087,15 @@ public class EasyObject :
         string result = filePathRegex.Replace(stackTrace, match =>
         {
             string filePath = match.Groups["path"].Value;
-            Log(filePath, "filePath");
+            Console.Error.WriteLine($"filePath={filePath}");
             string line_num = match.Groups["line_num"].Value;
-            Log(line_num, "line_num");
+            Console.Error.WriteLine($"line_num={line_num}");
             try {
                 // The System.Uri constructor handles the specific formatting requirements for file URIs, 
                 // including correct handling of slashes and special characters like spaces.
                 var fileUri = new Uri(filePath);
                 // We use AbsoluteUri which correctly formats the scheme (file://) and path for a URL.
-                return $"in {fileUri.AbsoluteUri} {ending}";
+                return $"in {fileUri.AbsoluteUri} line_num={line_num}";
             } catch (UriFormatException) {
                 // Fallback for paths that the Uri class might not handle correctly (e.g., highly unusual formats)
                 return match.Value;
