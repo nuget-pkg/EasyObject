@@ -426,22 +426,8 @@ public class EasyObject :
         string json = EasyTextEmbedder.ExtractEmbeddedText(pathOrUrl) ?? "null";
         return FromJson(json, ignoreErrors: ignoreErrors);
     }
-    public static List<string>? MatchForPatterns(string s, params string[] patterns) {
-        foreach (var pattern in patterns) {
-            var r = new Regex(pattern);
-            var m = r.Match(s);
-            if (m.Success) {
-                var groups = new List<string>();
-                for (int i = 0; i < m.Groups.Count; i++) {
-                    groups.Add(m.Groups[i].Value);
-                }
-                return groups;
-            }
-        }
-        return null;
-    }
     public static EasyObject FromUrl(string url, bool ignoreErrors = false) {
-        var m = MatchForPatterns(
+        var m = EasySystem.FindFirstMatch(
             url,
             @"^(https://github[.]com/[^/]+/[^/]+/)blob(/.+)$",
             @"^(https://gitlab[.]com/nuget-tools/nuget-assets/-/)blob(/.+)$"
@@ -1076,5 +1062,24 @@ public class EasyObject :
             return "[!! UNKNOWN SOURCE CODE LINE !!]";
         }
         return lines[lines.Count - 1].Trim();
+    }
+    public static void Crash(object? message = null, int exitCode = 1) {
+        ShowDetail = false;
+        ShowLineNumbers = false;
+        UseAnsiConsole = false;
+        Log("[!! PROGRAM CRASHED !!]");
+        if (message != null && !(message is Exception)) {
+            Log(message, "MESSAGE");
+        }
+        if (message is Exception e) {
+            Console.Error.WriteLine(e.ToString());
+            return;
+        }
+        string trace = Environment.StackTrace;
+        List<string> lines = EasySystem.TextToLines(trace);
+        trace = "\n" + string.Join("\n", lines);
+        Log(trace, "STACK TRACE");
+        Log($"[!! ABORTING...WITH EXIT CODE {exitCode} !!]");
+        Environment.Exit(exitCode);
     }
 }
