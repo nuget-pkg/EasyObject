@@ -1100,7 +1100,7 @@ public class EasyObject :
                 var fileUri = new Uri(filePath);
                 // We use AbsoluteUri which correctly formats the scheme (file://) and path for a URL.
                 Console.WriteLine($"line_num(3)={line_num}");
-                return $"in {fileUri.AbsoluteUri} line_num=★{line_num}★";
+                return $"in {fileUri.AbsoluteUri}#{line_num} line_num={line_num}";
             } catch (UriFormatException) {
                 // Fallback for paths that the Uri class might not handle correctly (e.g., highly unusual formats)
                 return match.Value;
