@@ -139,10 +139,11 @@ public class EasyObject :
     {
         try
         {
-            if (UseAnsiConsole)
-            {
-                Console.CursorLeft = 0;
-            }
+            //if (UseAnsiConsole)
+            //{
+            //    Console.CursorLeft = 0;
+            //}
+            Console.CursorLeft = 0;
         }
         catch
         {
