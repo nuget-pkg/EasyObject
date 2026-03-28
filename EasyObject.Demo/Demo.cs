@@ -1,64 +1,82 @@
+using Global;
+//using NUnit.Framework;
+//using Razorvine.Pickle;
+using Spectre.Console;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
-using Global;
-using NUnit.Framework;
-//using Razorvine.Pickle;
-using Spectre.Console;
 using static Global.EasyObject;
 using static Global.EasySystem;
 
 // ReSharper disable once CheckNamespace
 namespace Demo;
 
-class Exchangeable1 : IExportToPlainObject {
-    public object ExportToPlainObject() {
+class Exchangeable1 : IExportToPlainObject
+{
+    public object ExportToPlainObject()
+    {
         return 123;
     }
 }
 
-class Exchangeable2 {
-    public object ExportToPlainObject() {
+class Exchangeable2
+{
+    public object ExportToPlainObject()
+    {
         return 456;
     }
 }
 
-class Exchangeable3 : IExportToCommonJson {
-    public string ExportToCommonJson() {
+class Exchangeable3 : IExportToCommonJson
+{
+    public string ExportToCommonJson()
+    {
         return "[11, 22, 33]";
     }
 }
 
-class Exchangeable4 {
-    public string ExportToCommonJson() {
+class Exchangeable4
+{
+    public string ExportToCommonJson()
+    {
         return "[111, 222, 333]";
     }
 }
 
-class MyData : EasyObject {
-    public MyData(int n, string s) {
+class MyData : EasyObject
+{
+    public MyData(int n, string s)
+    {
         ImportFromPlainObject(new { n, s });
     }
-    public MyData(string json) {
+    public MyData(string json)
+    {
         ImportFromCommonJson(json);
     }
-    public int N {
-        get {
+    public int N
+    {
+        get
+        {
             return Dynamic.n;
         }
     }
-    public string S {
-        get {
+    public string S
+    {
+        get
+        {
             return Dynamic.s;
         }
     }
 }
 
-class Program {
-    static void Main(string[] args) {
-        try {
+class Program
+{
+    static void Main(string[] args)
+    {
+        try
+        {
             SetupConsoleEncoding();
             ShowDetail = true;
             UseAnsiConsole = true;
@@ -78,7 +96,7 @@ class Program {
             WriteLine("(3)");
             Log(eo.TypeValue, "eo.TypeValue");
             WriteLine("(4)");
-            Assert.That(eo.TypeValue, Is.EqualTo(@object));
+            AssertEqual(eo.TypeValue, @object);
             WriteLine("(5)");
             EasyObject a = eo["a"];
             WriteLine("(5.1)");
@@ -93,31 +111,32 @@ class Program {
             WriteLine("(5.2)");
             Log(eo["a"]);
             WriteLine("(6)");
-            Assert.That(eo["a"].Cast<int>(), Is.EqualTo(123));
+            AssertEqual(eo["a"].Cast<int>(), 123);
             WriteLine("(7)");
-            Assert.That(eo.Keys, Is.EqualTo(new List<string> { "a" }));
+            AssertEqual(eo.Keys, new List<string> { "a" });
             Log(eo[0], "eo[0]");
-            Assert.That(eo[0].TypeValue, Is.EqualTo(@null));
-            Assert.That(eo[0].IsNull, Is.True);
+            AssertEqual(eo[0].TypeValue, @null);
+            AssertTrue(eo[0].IsNull);
             Log(eo[1], "eo[1]");
-            Assert.That(eo[1].TypeValue, Is.EqualTo(@null));
-            Assert.That(eo[1].IsNull, Is.True);
-            foreach (var pair in eo.Dynamic) {
+            AssertEqual(eo[1].TypeValue, @null);
+            AssertTrue(eo[1].IsNull);
+            foreach (var pair in eo.Dynamic)
+            {
                 Log(pair, "pair");
             }
             eo = EasyObject.FromObject(null);
             Log(eo.TypeValue, "eo.TypeValue");
-            Assert.That(eo.TypeValue, Is.EqualTo(@null));
+            AssertEqual(eo.TypeValue, @null);
             eo["b"] = true;
-            Assert.That(eo["b"].Cast<bool>(), Is.EqualTo(true));
+            AssertEqual(eo["b"].Cast<bool>(), true);
             Log(eo["b"].TypeValue, "eo.b.TypeValue");
-            Assert.That(eo["b"].TypeValue, Is.EqualTo(@boolean));
+            AssertEqual(eo["b"].TypeValue, @boolean);
             eo[3] = 777;
             Log(eo[3].Cast<int>());
             Log(eo.TypeValue, "eo.TypeValue");
-            Assert.That(eo.TypeValue, Is.EqualTo(EasyObject.array));
-            Assert.That(eo.Count, Is.EqualTo(4));
-            Assert.That(eo[0].TypeValue, Is.EqualTo(@null));
+            AssertEqual(eo.TypeValue, EasyObject.array);
+            AssertEqual(eo.Count, 4);
+            AssertEqual(eo[0].TypeValue, @null);
 #if false
         Assert.That(() => { var n = eo[0].Cast<int>(); },
             Throws.TypeOf<System.InvalidCastException>()
@@ -125,8 +144,9 @@ class Program {
             );
 #endif
             //Assert.That((int?)eo[0], Is.EqualTo(null));
-            Assert.That(eo[3].Cast<int>(), Is.EqualTo(777));
-            foreach (var e in eo.Dynamic) {
+            AssertEqual(eo[3].Cast<int>(), 777);
+            foreach (var e in eo.Dynamic)
+            {
                 Log(e, "e");
             }
             var eo2 = EasyObject.FromObject(eo); // UnWrap() test
@@ -136,7 +156,8 @@ class Program {
             Log(eo3, "eo3");
             Log(eo3["b"][1]);
             List<int> list = new List<int>();
-            foreach (var e in eo3["b"].Dynamic) {
+            foreach (var e in eo3["b"].Dynamic)
+            {
                 list.Add((int)e);
             }
 
@@ -155,7 +176,8 @@ class Program {
             var dict = eo3.AsDictionary;
             Log(dict);
             Log(dict["a"].Cast<double>());
-            foreach (var e in i.Dynamic) {
+            foreach (var e in i.Dynamic)
+            {
                 Log(e);
             }
             string bigJson = File.ReadAllText("assets/qiita-9ea0c8fd43b61b01a8da.json");
@@ -163,7 +185,8 @@ class Program {
             var sw = new System.Diagnostics.Stopwatch();
             TimeSpan ts;
             sw.Start();
-            for (int c = 0; c < 5; c++) {
+            for (int c = 0; c < 5; c++)
+            {
                 //var test = FromJson(bigJson);
             }
             sw.Stop();
@@ -173,7 +196,8 @@ class Program {
             WriteLine($"　{ts.Hours}時間 {ts.Minutes}分 {ts.Seconds}秒 {ts.Milliseconds}ミリ秒");
             WriteLine($"　{sw.ElapsedMilliseconds}ミリ秒");
             sw.Start();
-            for (int c = 0; c < 5; c++) {
+            for (int c = 0; c < 5; c++)
+            {
                 //JObject jsonObject = JObject.Parse(bigJson);
             }
             sw.Stop();
@@ -479,7 +503,8 @@ class Program {
             ShowLineNumbers = false; ForceAscii = false; Log("⭕️🈂️❝END❞🈂️", "ShowLineNumbers = false");
             ShowLineNumbers = false; ForceAscii = false; Debug("⭕️🈂️❝END❞🈂️", "Debug() shows line info even if `ShowLineNumbers == false`");
 
-            void LinkTest(string title, string url) {
+            void LinkTest(string title, string url)
+            {
                 //LogWebLink(title, url);
                 EchoWebLink(title, url);
             }
@@ -513,18 +538,24 @@ class Program {
             EchoWebLink("version.txt", versionTextPath);
 
             DebugOutput = true;
-            //Assert_IsTrue(11 == 22);
+            int A = 11;
+            int B = 22;
+            EasyObject.AssertEqual(A, B, hint: new { A, B }, exitCode: 123);
 #if false
             throw new NotImplementedException();
 #else
-            EasyObject.Panic(new {
+            EasyObject.Panic(new
+            {
                 abc = 123,
-                xyz = new {
+                xyz = new
+                {
                     test1 = new string[] { "A", "B", "C ハロー©" }
                 }
             });
 #endif
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             EasyObject.Panic(ex);
         }
     }
