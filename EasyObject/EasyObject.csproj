@@ -2,7 +2,7 @@
   <PropertyGroup>
     <LangVersion>latest</LangVersion>
     <TargetFrameworks>net462;net8.0</TargetFrameworks>
-    <Version>2026.0328.0835.44</Version>
+    <Version>2026.0328.1503.21</Version>
     <Nullable>enable</Nullable>
     <ImplicitUsings>disable</ImplicitUsings>
     <RootNamespace>EasyObject</RootNamespace>
@@ -55,7 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="NUnit" Version="4.5.1" />
-    <PackageReference Include="OpenSystem" Version="2026.327.2337.38" />
+    <PackageReference Include="OpenSystem" Version="2026.328.1431.8" />
     <PackageReference Include="PlainObjectInterface" Version="2026.122.1836.32" />
     <PackageReference Include="PlainObjectConverter" Version="2026.325.1801.12" />
     <PackageReference Include="JsoncParser" Version="2026.318.150.53" />

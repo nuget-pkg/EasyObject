@@ -1093,7 +1093,7 @@ public class EasyObject :
         });
         return result;
     }
-    public static void Crash(object? message = null, int exitCode = 1) {
+    public static void Panic(object? message = null, int exitCode = 1) {
         ShowDetail = false;
         ShowLineNumbers = false;
         UseAnsiConsole = true;

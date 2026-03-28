@@ -514,13 +514,18 @@ class Program {
 
             DebugOutput = true;
             //Assert_IsTrue(11 == 22);
-#if true
+#if false
             throw new NotImplementedException();
 #else
-            EasyObject.Crash();
+            EasyObject.Panic(new {
+                abc = 123,
+                xyz = new {
+                    test1 = new string[] { "A", "B", "C ハロー©" }
+                }
+            });
 #endif
         } catch (Exception ex) {
-            EasyObject.Crash(ex);
+            EasyObject.Panic(ex);
         }
     }
 }
