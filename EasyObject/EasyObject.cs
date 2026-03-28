@@ -25,6 +25,7 @@ public enum EasyObjectType
     @array,
     @null
 }
+
 internal class EasyObjectConverter : IConvertParsedResult
 {
     public object? ConvertParsedResult(object? x, string origTypeName)
@@ -40,6 +41,7 @@ internal class EasyObjectConverter : IConvertParsedResult
                 eo.RealData = dict[key];
                 result[key] = eo;
             }
+
             return result;
         }
         else if (x is List<object>)
@@ -52,11 +54,14 @@ internal class EasyObjectConverter : IConvertParsedResult
                 eo.RealData = e;
                 result.Add(eo);
             }
+
             return result;
         }
+
         return x;
     }
 }
+
 public class EasyObject :
     DynamicObject,
     IExposeInternalObject,
@@ -76,6 +81,7 @@ public class EasyObject :
     public static IAnsiConsole AnsiErrorConsole;
 #endif
     public static bool ShowLineNumbers = true; /* Introduced @ 2026-03-26 17:02 */
+
     static EasyObject()
     {
         EasyObject.ClearSettings();
@@ -86,6 +92,7 @@ public class EasyObject :
         });
 #endif
     }
+
     public static void ClearSettings()
     {
         EasyObject.JsonParser = DefaultJsonParser;
@@ -95,12 +102,14 @@ public class EasyObject :
         EasyObject.UseAnsiConsole = false;
         EasyObject.ShowLineNumbers = true;
     }
+
     public static void SetupConsoleEncoding(Encoding? encoding = null)
     {
         if (encoding == null)
         {
             encoding = Encoding.UTF8;
         }
+
         try
         {
             Console.OutputEncoding = encoding;
@@ -125,6 +134,7 @@ public class EasyObject :
             // Ignore exceptions related to console encoding
         }
     }
+
     private static void _EnsureCursorLeft()
     {
         try
@@ -138,27 +148,54 @@ public class EasyObject :
         {
         }
     }
+
     public EasyObject()
     {
         RealData = null;
     }
+
     public EasyObject(object? x)
     {
-        RealData = new PlainObjectConverter(jsonParser: JsonParser, forceAscii: false, iConvertParsedResult: new EasyObjectConverter()).Parse(x, numberAsDecimal: true);
+        RealData = new PlainObjectConverter(jsonParser: JsonParser, forceAscii: false,
+            iConvertParsedResult: new EasyObjectConverter()).Parse(x, numberAsDecimal: true);
     }
-    public dynamic Dynamic { get { return this; } }
+
+    public dynamic Dynamic
+    {
+        get { return this; }
+    }
+
     public override string ToString()
     {
         return ToPrintable();
     }
+
     public string ToPrintable(bool compact = false, uint maxDepth = 0, bool removeSurrogatePair = false)
     {
-        return EasyObject.ToPrintable(this, compact: compact, maxDepth: maxDepth, removeSurrogatePair: removeSurrogatePair);
+        return EasyObject.ToPrintable(this, compact: compact, maxDepth: maxDepth,
+            removeSurrogatePair: removeSurrogatePair);
     }
-    public static EasyObject Nil { get { return new EasyObject(); } }
-    public static EasyObject Null { get { return new EasyObject(); } }
-    public static EasyObject EmptyArray { get { return new EasyObject(new List<EasyObject>()); } }
-    public static EasyObject EmptyObject { get { return new EasyObject(new Dictionary<string, EasyObject>()); } }
+
+    public static EasyObject Nil
+    {
+        get { return new EasyObject(); }
+    }
+
+    public static EasyObject Null
+    {
+        get { return new EasyObject(); }
+    }
+
+    public static EasyObject EmptyArray
+    {
+        get { return new EasyObject(new List<EasyObject>()); }
+    }
+
+    public static EasyObject EmptyObject
+    {
+        get { return new EasyObject(new Dictionary<string, EasyObject>()); }
+    }
+
     public static EasyObject NewArray(params object?[] args)
     {
         EasyObject result = EmptyArray;
@@ -166,14 +203,17 @@ public class EasyObject :
         {
             result.Add(FromObject(args[i]));
         }
+
         return result;
     }
+
     public static EasyObject NewObject(params object?[] args)
     {
         if ((args.Length % 2) != 0)
         {
             throw new ArgumentException("EasyObject.NewObject() requires even number arguments");
         }
+
         EasyObject result = EmptyObject;
         for (int i = 0; i < args.Length; i += 2)
         {
@@ -181,30 +221,78 @@ public class EasyObject :
             {
                 continue;
             }
+
             result.Add(args[i]!.ToString()!, FromObject(args[i + 1]));
         }
+
         return result;
     }
-    public static EasyObjectType @string { get { return EasyObjectType.@string; } }
-    public static EasyObjectType @boolean { get { return EasyObjectType.@boolean; } }
-    public static EasyObjectType @object { get { return EasyObjectType.@object; } }
-    public static EasyObjectType @array { get { return EasyObjectType.@array; } }
-    public static EasyObjectType @null { get { return EasyObjectType.@null; } }
 
-    public bool IsString { get { return TypeValue == EasyObjectType.@string; } }
-    public bool IsNumber { get { return TypeValue == EasyObjectType.@number; } }
-    public bool IsBoolean { get { return TypeValue == EasyObjectType.@boolean; } }
-    public bool IsObject { get { return TypeValue == EasyObjectType.@object; } }
-    public bool IsArray { get { return TypeValue == EasyObjectType.@array; } }
-    public bool IsNull { get { return TypeValue == EasyObjectType.@null; } }
+    public static EasyObjectType @string
+    {
+        get { return EasyObjectType.@string; }
+    }
+
+    public static EasyObjectType @boolean
+    {
+        get { return EasyObjectType.@boolean; }
+    }
+
+    public static EasyObjectType @object
+    {
+        get { return EasyObjectType.@object; }
+    }
+
+    public static EasyObjectType @array
+    {
+        get { return EasyObjectType.@array; }
+    }
+
+    public static EasyObjectType @null
+    {
+        get { return EasyObjectType.@null; }
+    }
+
+    public bool IsString
+    {
+        get { return TypeValue == EasyObjectType.@string; }
+    }
+
+    public bool IsNumber
+    {
+        get { return TypeValue == EasyObjectType.@number; }
+    }
+
+    public bool IsBoolean
+    {
+        get { return TypeValue == EasyObjectType.@boolean; }
+    }
+
+    public bool IsObject
+    {
+        get { return TypeValue == EasyObjectType.@object; }
+    }
+
+    public bool IsArray
+    {
+        get { return TypeValue == EasyObjectType.@array; }
+    }
+
+    public bool IsNull
+    {
+        get { return TypeValue == EasyObjectType.@null; }
+    }
+
     private static object? ExposeInternalObjectHelper(object? x)
     {
         while (x is EasyObject)
         {
             x = ((EasyObject)x).RealData;
         }
+
         return x;
     }
+
     private static EasyObject WrapInternal(object? x)
     {
         if (x is EasyObject)
@@ -214,10 +302,12 @@ public class EasyObject :
 
         return new EasyObject(x);
     }
+
     public object? ExposeInternalObject()
     {
         return EasyObject.ExposeInternalObjectHelper(this);
     }
+
     public EasyObjectType TypeValue
     {
         get
@@ -227,6 +317,7 @@ public class EasyObject :
             {
                 return EasyObjectType.@null;
             }
+
             switch (Type.GetTypeCode(obj.GetType()))
             {
                 case TypeCode.Boolean:
@@ -256,25 +347,27 @@ public class EasyObject :
                     {
                         return EasyObject.@string;
                     }
+
                     return EasyObjectType.@null;
             }
         }
     }
+
     public string TypeName
     {
-        get
-        {
-            return TypeValue.ToString();
-        }
+        get { return TypeValue.ToString(); }
     }
+
     internal List<EasyObject>? list
     {
         get { return RealData as List<EasyObject>; }
     }
+
     internal Dictionary<string, EasyObject>? dictionary
     {
         get { return RealData as Dictionary<string, EasyObject>; }
     }
+
     public int Count
     {
         get
@@ -283,13 +376,16 @@ public class EasyObject :
             {
                 return list.Count;
             }
+
             if (dictionary != null)
             {
                 return dictionary.Count;
             }
+
             return 0;
         }
     }
+
     public List<string> Keys
     {
         get
@@ -299,41 +395,50 @@ public class EasyObject :
             {
                 return keys;
             }
+
             foreach (var key in dictionary.Keys)
             {
                 keys.Add(key);
             }
+
             return keys;
         }
     }
+
     public bool ContainsKey(string name)
     {
         if (dictionary == null)
         {
             return false;
         }
+
         return dictionary.ContainsKey(name);
     }
+
     public EasyObject Add(object? x)
     {
         if (list == null)
         {
             RealData = new List<EasyObject>();
         }
+
         EasyObject eo = x is EasyObject ? (x as EasyObject)! : new EasyObject(x);
         list!.Add(eo);
         return this;
     }
+
     public EasyObject Add(string key, object? x)
     {
         if (dictionary == null)
         {
             RealData = new Dictionary<string, EasyObject>();
         }
+
         EasyObject eo = x is EasyObject ? (x as EasyObject)! : new EasyObject(x);
         dictionary!.Add(key, eo);
         return this;
     }
+
     public override bool TryGetMember(
         GetMemberBinder binder, out object result)
     {
@@ -344,19 +449,23 @@ public class EasyObject :
             var assoc = TryAssoc(name);
             result = assoc;
         }
+
         if (dictionary == null)
         {
             return true;
         }
+
         EasyObject? eo;
         dictionary.TryGetValue(name, out eo);
         if (eo == null)
         {
             eo = Null;
         }
+
         result = eo;
         return true;
     }
+
     public override bool TrySetMember(
         SetMemberBinder binder, object? value)
     {
@@ -365,10 +474,12 @@ public class EasyObject :
         {
             RealData = new Dictionary<string, EasyObject>();
         }
+
         string name = binder.Name;
         dictionary![name] = WrapInternal(value);
         return true;
     }
+
     public override bool TryGetIndex(GetIndexBinder binder, object[] indexes, out object result)
     {
         result = Null;
@@ -381,39 +492,47 @@ public class EasyObject :
                 result = WrapInternal(null);
                 return true;
             }
+
             if (list.Count < (pos + 1))
             {
                 result = WrapInternal(null);
                 return true;
             }
+
             result = WrapInternal(list[pos]);
             return true;
         }
+
         if (list != null)
         {
             var assoc = TryAssoc((string)idx);
             result = assoc;
         }
+
         if (dictionary == null)
         {
             result = Null;
             return true;
         }
+
         EasyObject? eo /*= Null*/;
         dictionary.TryGetValue((string)idx, out eo);
         if (eo == null)
         {
             eo = Null;
         }
+
         result = eo;
         return true;
     }
+
     public override bool TrySetIndex(SetIndexBinder binder, object[] indexes, object? value)
     {
         if (value is EasyObject)
         {
             value = ((EasyObject)value).RealData;
         }
+
         var idx = indexes[0];
         if (idx is int)
         {
@@ -422,25 +541,31 @@ public class EasyObject :
             {
                 throw new ArgumentException("index is below 0");
             }
+
             if (list == null)
             {
                 RealData = new List<EasyObject>();
             }
+
             while (list!.Count < (pos + 1))
             {
                 list.Add(Null);
             }
+
             list[pos] = WrapInternal(value);
             return true;
         }
+
         if (dictionary == null)
         {
             RealData = new Dictionary<string, EasyObject>();
         }
+
         string name = (string)indexes[0];
         dictionary![name] = WrapInternal(value);
         return true;
     }
+
     public override bool TryConvert(ConvertBinder binder, out object? result)
     {
         if (binder.Type == typeof(IEnumerable))
@@ -451,12 +576,14 @@ public class EasyObject :
                 result = ie1;
                 return true;
             }
+
             if (dictionary != null)
             {
                 var ie2 = dictionary.Select(x => x);
                 result = ie2;
                 return true;
             }
+
             result = new List<EasyObject>().Select(x => x);
             return true;
         }
@@ -466,12 +593,14 @@ public class EasyObject :
             return true;
         }
     }
+
     public static EasyObject FromObject(object? obj, bool ignoreErrors = false)
     {
         if (!ignoreErrors)
         {
             return new EasyObject(obj);
         }
+
         try
         {
             return new EasyObject(obj);
@@ -481,16 +610,19 @@ public class EasyObject :
             return new EasyObject(null);
         }
     }
+
     public static EasyObject FromJson(string? json, bool ignoreErrors = false)
     {
         if (json == null)
         {
             return Null;
         }
+
         if (!ignoreErrors)
         {
             return new EasyObject(JsonParser!.ParseJson(json));
         }
+
         try
         {
             return new EasyObject(JsonParser!.ParseJson(json));
@@ -500,10 +632,12 @@ public class EasyObject :
             return new EasyObject(null);
         }
     }
+
     public static EasyObject FromFile(string path, bool ignoreErrors = false)
     {
         return FromJson(File.ReadAllText(path), ignoreErrors: ignoreErrors);
     }
+
     public static string Utf8StringFromUrl(string url)
     {
 #pragma warning disable SYSLIB0014
@@ -516,38 +650,43 @@ public class EasyObject :
             return reader.ReadToEnd();
         }
     }
+
     public void InjectToFile(
         string path,
         bool indent = false,
         bool sortKeys = false,
         bool keyAsSymbol = false,
         bool removeSurrogatePair = false
-        )
+    )
     {
         string json = ToJson(indent: indent, sortKeys: sortKeys, keyAsSymbol: keyAsSymbol);
         EasyTextEmbedder.InjectEmbeddedText(path, json);
     }
+
     public static EasyObject ExtractFromFile(string pathOrUrl, bool ignoreErrors = false)
     {
         string json = EasyTextEmbedder.ExtractEmbeddedText(pathOrUrl) ?? "null";
         return FromJson(json, ignoreErrors: ignoreErrors);
     }
+
     public static EasyObject FromUrl(string url, bool ignoreErrors = false)
     {
         var m = EasySystem.FindFirstMatch(
             url,
             @"^(https://github[.]com/[^/]+/[^/]+/)blob(/.+)$",
             @"^(https://gitlab[.]com/nuget-tools/nuget-assets/-/)blob(/.+)$"
-            );
+        );
         if (m != null)
         {
             url = m[1] + "raw" + m[2];
         }
+
         if (!ignoreErrors)
         {
             string json = Utf8StringFromUrl(url);
             return FromJson(json, ignoreErrors: ignoreErrors);
         }
+
         try
         {
             string json = Utf8StringFromUrl(url);
@@ -558,6 +697,7 @@ public class EasyObject :
             return new EasyObject(null);
         }
     }
+
     public dynamic? ToObject(bool asDynamicObject = false)
     {
         if (asDynamicObject)
@@ -569,10 +709,13 @@ public class EasyObject :
             return ExportToPlainObject();
         }
     }
-    public string ToJson(bool indent = false, bool sortKeys = false, bool keyAsSymbol = false, bool removeSurrogatePair = false)
+
+    public string ToJson(bool indent = false, bool sortKeys = false, bool keyAsSymbol = false,
+        bool removeSurrogatePair = false)
     {
         PlainObjectConverter poc = new PlainObjectConverter(jsonParser: JsonParser, forceAscii: ForceAscii);
-        return poc.Stringify(RealData, indent, sortKeys, keyAsSymbol: keyAsSymbol, removeSurrogatePair: removeSurrogatePair);
+        return poc.Stringify(RealData, indent, sortKeys, keyAsSymbol: keyAsSymbol,
+            removeSurrogatePair: removeSurrogatePair);
     }
 #if USE_WINCONSOLE
     public static bool HasConsole()
@@ -606,16 +749,20 @@ public class EasyObject :
         AllocConsole();
     }
 #endif
-    public static string ToPrintable(object? x, string? title = null, bool compact = false, uint maxDepth = 0, bool removeSurrogatePair = false)
+    public static string ToPrintable(object? x, string? title = null, bool compact = false, uint maxDepth = 0,
+        bool removeSurrogatePair = false)
     {
         PlainObjectConverter poc = new PlainObjectConverter(jsonParser: JsonParser, forceAscii: ForceAscii);
         if (maxDepth != 0)
         {
             x = FromObject(x).Clone(maxDepth: maxDepth, always: false);
         }
-        string printable = poc.ToPrintable(ShowDetail, x, title, compact: compact, removeSurrogatePair: removeSurrogatePair);
+
+        string printable = poc.ToPrintable(ShowDetail, x, title, compact: compact,
+            removeSurrogatePair: removeSurrogatePair);
         return printable;
     }
+
     public static string MarkupSafeString(string str)
     {
 #if USE_SPECTRE_CONSOLE
@@ -624,10 +771,11 @@ public class EasyObject :
         return str;
 #endif
     }
+
     public static void Write(
         string str,
         string? title = null
-        )
+    )
     {
 #if USE_SPECTRE_CONSOLE
         if (title != null)
@@ -642,6 +790,7 @@ public class EasyObject :
                 AnsiConsole.Write($"{title}: ");
             }
         }
+
         if (str.StartsWith("⁅markup⁆"))
         {
             str = str.Replace("⁅markup⁆", "");
@@ -658,10 +807,11 @@ public class EasyObject :
         Console.Write(str);
 #endif
     }
+
     public static void WriteLine(
         string str,
         string? title = null
-        )
+    )
     {
         ////Debug(title, "title");
 #if USE_SPECTRE_CONSOLE
@@ -677,6 +827,7 @@ public class EasyObject :
                 AnsiConsole.Write($"{title}: ");
             }
         }
+
         if (str.StartsWith("⁅markup⁆"))
         {
             str = str.Replace("⁅markup⁆", "");
@@ -693,6 +844,7 @@ public class EasyObject :
         Console.WriteLine(str);
 #endif
     }
+
     public static void Echo(
         object? x,
         string? title = null,
@@ -700,7 +852,7 @@ public class EasyObject :
         uint maxDepth = 0,
         List<string>? hideKeys = null,
         bool removeSurrogatePair = false
-        )
+    )
     {
         _EnsureCursorLeft();
         hideKeys ??= new List<string>();
@@ -727,6 +879,7 @@ public class EasyObject :
                     AnsiConsole.Write($"{title}: ");
                 }
             }
+
             if (x != null && x is string str)
             {
                 if (str.StartsWith("⁅markup⁆"))
@@ -736,15 +889,19 @@ public class EasyObject :
                     return;
                 }
             }
-            string s2 = ToPrintable(x, title: null, compact: compact, maxDepth: maxDepth, removeSurrogatePair: removeSurrogatePair);
+
+            string s2 = ToPrintable(x, title: null, compact: compact, maxDepth: maxDepth,
+                removeSurrogatePair: removeSurrogatePair);
             string s3 = MarkupSafeString(s2);
             AnsiConsole.MarkupLine(s3);
             return;
         }
 #endif
-        string s = ToPrintable(x, title, compact: compact, maxDepth: maxDepth, removeSurrogatePair: removeSurrogatePair);
+        string s = ToPrintable(x, title, compact: compact, maxDepth: maxDepth,
+            removeSurrogatePair: removeSurrogatePair);
         Console.WriteLine(s);
     }
+
     public static void Log(
         object? x,
         string? title = null,
@@ -752,7 +909,7 @@ public class EasyObject :
         uint maxDepth = 0,
         List<string>? hideKeys = null,
         bool removeSurrogatePair = false
-        )
+    )
     {
         _EnsureCursorLeft();
         hideKeys ??= new List<string>();
@@ -780,6 +937,7 @@ public class EasyObject :
                     AnsiErrorConsole.Write($"{title}: ");
                 }
             }
+
             if (x != null && x is string str)
             {
                 if (str.StartsWith("⁅markup⁆"))
@@ -790,26 +948,32 @@ public class EasyObject :
                     {
                         AnsiErrorConsole.MarkupLine($"      [blue]{MarkupSafeString(CurrentSourceCodeLine())}[/]");
                     }
+
                     return;
                 }
             }
-            string s2 = ToPrintable(x, title: null, compact: compact, maxDepth: maxDepth, removeSurrogatePair: removeSurrogatePair);
+
+            string s2 = ToPrintable(x, title: null, compact: compact, maxDepth: maxDepth,
+                removeSurrogatePair: removeSurrogatePair);
             string s3 = MarkupSafeString(s2);
             AnsiErrorConsole.MarkupLine(s3);
             if (ShowLineNumbers)
             {
                 AnsiErrorConsole.MarkupLine($"      [blue]{MarkupSafeString(CurrentSourceCodeLine())}[/]");
             }
+
             return;
         }
 #endif
-        string s = ToPrintable(x, title, compact: compact, maxDepth: maxDepth, removeSurrogatePair: removeSurrogatePair);
+        string s = ToPrintable(x, title, compact: compact, maxDepth: maxDepth,
+            removeSurrogatePair: removeSurrogatePair);
         Console.Error.WriteLine("[Log] " + s);
         if (ShowLineNumbers)
         {
             Console.Error.WriteLine($"      {CurrentSourceCodeLine()}");
         }
     }
+
     public static void Debug(
         object? x,
         string? title = null,
@@ -817,12 +981,13 @@ public class EasyObject :
         uint maxDepth = 0,
         List<string>? hideKeys = null,
         bool removeSurrogatePair = false
-        )
+    )
     {
         if (!DebugOutput)
         {
             return;
         }
+
         _EnsureCursorLeft();
         hideKeys ??= new List<string>();
         if (maxDepth > 0 || hideKeys.Count > 0)
@@ -841,29 +1006,34 @@ public class EasyObject :
             {
                 AnsiErrorConsole.Markup($"[purple]{MarkupSafeString(title)}:[/] ");
             }
-            string s2 = ToPrintable(x, title: null, compact: compact, maxDepth: maxDepth, removeSurrogatePair: removeSurrogatePair);
+
+            string s2 = ToPrintable(x, title: null, compact: compact, maxDepth: maxDepth,
+                removeSurrogatePair: removeSurrogatePair);
             string s3 = MarkupSafeString(s2);
             AnsiErrorConsole.MarkupLine($"[purple]{s3}[/]");
             AnsiErrorConsole.MarkupLine($"        [purple]{MarkupSafeString(CurrentSourceCodeLine())}[/]");
             return;
         }
 #endif
-        string s = ToPrintable(x, title, compact: compact, maxDepth: maxDepth, removeSurrogatePair: removeSurrogatePair);
+        string s = ToPrintable(x, title, compact: compact, maxDepth: maxDepth,
+            removeSurrogatePair: removeSurrogatePair);
         Console.Error.WriteLine("[Debug] " + s);
         Console.Error.WriteLine($"  {CurrentSourceCodeLine()}");
     }
+
     public static void Message(
         object? x,
         string? title = null,
         bool compact = false,
         uint maxDepth = 0,
         List<string>? hideKeys = null
-        )
+    )
     {
         if (title == null)
         {
             title = "Message";
         }
+
         hideKeys ??= new List<string>();
         if (maxDepth > 0 || hideKeys.Count > 0)
         {
@@ -873,9 +1043,11 @@ public class EasyObject :
                 hideKeys: hideKeys,
                 always: false);
         }
+
         string s = ToPrintable(x, title: null, compact: compact);
         NativeMethods.MessageBoxW(IntPtr.Zero, s, title, 0);
     }
+
     public static void DumpObject(
         object? x,
         string? title = null,
@@ -883,7 +1055,7 @@ public class EasyObject :
         uint maxDepth = 0,
         List<string>? hideKeys = null,
         bool removeSurrogatePair = false
-        )
+    )
     {
         _EnsureCursorLeft();
 #if USE_SPECTRE_CONSOLE
@@ -902,6 +1074,7 @@ public class EasyObject :
                 AnsiConsole.Write($"{title}: ");
             }
         }
+
         AnsiConsole.Write(jsonText);
         AnsiConsole.WriteLine();
 #else
@@ -915,22 +1088,26 @@ public class EasyObject :
             );
 #endif
     }
+
     public void Dump(
         string? title = null,
         bool compact = false,
         uint maxDepth = 0,
         List<string>? hideKeys = null,
         bool removeSurrogatePair = false
-        )
+    )
     {
-        DumpObject(this, title: title, compact: compact, maxDepth: maxDepth, hideKeys: hideKeys, removeSurrogatePair: removeSurrogatePair);
+        DumpObject(this, title: title, compact: compact, maxDepth: maxDepth, hideKeys: hideKeys,
+            removeSurrogatePair: removeSurrogatePair);
     }
+
     private static class NativeMethods
     {
         [DllImport("user32.dll", CharSet = CharSet.Unicode)]
         internal static extern int MessageBoxW(
             IntPtr hWnd, string lpText, string lpCaption, uint uType);
     }
+
     private EasyObject TryAssoc(string name)
     {
         try
@@ -939,6 +1116,7 @@ public class EasyObject :
             {
                 return Null;
             }
+
             for (int i = 0; i < list.Count; i++)
             {
                 var pair = list[i].AsList!;
@@ -947,6 +1125,7 @@ public class EasyObject :
                     return pair[1];
                 }
             }
+
             return Null;
         }
         catch (Exception /*e*/)
@@ -954,6 +1133,7 @@ public class EasyObject :
             return Null;
         }
     }
+
     public EasyObject this[string name]
     {
         get
@@ -962,16 +1142,19 @@ public class EasyObject :
             {
                 return TryAssoc(name);
             }
+
             if (dictionary == null)
             {
                 return Null;
             }
+
             EasyObject? eo;
             dictionary.TryGetValue(name, out eo);
             if (eo == null)
             {
                 return Null;
             }
+
             return eo;
         }
         set
@@ -980,9 +1163,11 @@ public class EasyObject :
             {
                 RealData = new Dictionary<string, EasyObject>();
             }
+
             dictionary![name] = value;
         }
     }
+
     public EasyObject this[int pos]
     {
         get
@@ -991,10 +1176,12 @@ public class EasyObject :
             {
                 return WrapInternal(null);
             }
+
             if (list.Count < (pos + 1))
             {
                 return WrapInternal(null);
             }
+
             return WrapInternal(list[pos]);
         }
         set
@@ -1003,17 +1190,21 @@ public class EasyObject :
             {
                 throw new ArgumentException("index below 0");
             }
+
             if (list == null)
             {
                 RealData = new List<EasyObject>();
             }
+
             while (list!.Count < (pos + 1))
             {
                 list.Add(Null);
             }
+
             list[pos] = value;
         }
     }
+
     public T Cast<T>()
     {
         if (RealData is DateTime dt)
@@ -1031,87 +1222,163 @@ public class EasyObject :
                     s = dt.ToString("o").Replace("Z", "");
                     break;
             }
+
             return (T)Convert.ChangeType(s, typeof(T))!;
         }
+
         return (T)Convert.ChangeType(RealData, typeof(T))!;
     }
+
     public List<EasyObject>? AsList
     {
-        get
-        {
-            return list;
-        }
+        get { return list; }
     }
+
     public Dictionary<string, EasyObject>? AsDictionary
     {
-        get
-        {
-            return dictionary;
-        }
+        get { return dictionary; }
     }
+
     public static string FullName(dynamic? x)
     {
         if (x is null)
         {
             return "null";
         }
+
         string fullName = ((object)x).GetType().FullName!;
         if (fullName.StartsWith("<>f__AnonymousType"))
         {
             return "AnonymousType";
         }
+
         return fullName!.Split('`')[0];
     }
-    public static implicit operator EasyObject(bool x) { return new EasyObject(x); }
-    public static implicit operator EasyObject(string x) { return new EasyObject(x); }
-    public static implicit operator EasyObject(char x) { return new EasyObject(x); }
-    public static implicit operator EasyObject(short x) { return new EasyObject(x); }
-    public static implicit operator EasyObject(int x) { return new EasyObject(x); }
-    public static implicit operator EasyObject(long x) { return new EasyObject(x); }
-    public static implicit operator EasyObject(ushort x) { return new EasyObject(x); }
-    public static implicit operator EasyObject(uint x) { return new EasyObject(x); }
-    public static implicit operator EasyObject(ulong x) { return new EasyObject(x); }
-    public static implicit operator EasyObject(float x) { return new EasyObject(x); }
-    public static implicit operator EasyObject(double x) { return new EasyObject(x); }
-    public static implicit operator EasyObject(decimal x) { return new EasyObject(x); }
-    public static implicit operator EasyObject(sbyte x) { return new EasyObject(x); }
-    public static implicit operator EasyObject(byte x) { return new EasyObject(x); }
-    public static implicit operator EasyObject(DateTime x) { return new EasyObject(x); }
-    public static implicit operator EasyObject(TimeSpan x) { return new EasyObject(x); }
-    public static implicit operator EasyObject(Guid x) { return new EasyObject(x); }
+
+    public static implicit operator EasyObject(bool x)
+    {
+        return new EasyObject(x);
+    }
+
+    public static implicit operator EasyObject(string x)
+    {
+        return new EasyObject(x);
+    }
+
+    public static implicit operator EasyObject(char x)
+    {
+        return new EasyObject(x);
+    }
+
+    public static implicit operator EasyObject(short x)
+    {
+        return new EasyObject(x);
+    }
+
+    public static implicit operator EasyObject(int x)
+    {
+        return new EasyObject(x);
+    }
+
+    public static implicit operator EasyObject(long x)
+    {
+        return new EasyObject(x);
+    }
+
+    public static implicit operator EasyObject(ushort x)
+    {
+        return new EasyObject(x);
+    }
+
+    public static implicit operator EasyObject(uint x)
+    {
+        return new EasyObject(x);
+    }
+
+    public static implicit operator EasyObject(ulong x)
+    {
+        return new EasyObject(x);
+    }
+
+    public static implicit operator EasyObject(float x)
+    {
+        return new EasyObject(x);
+    }
+
+    public static implicit operator EasyObject(double x)
+    {
+        return new EasyObject(x);
+    }
+
+    public static implicit operator EasyObject(decimal x)
+    {
+        return new EasyObject(x);
+    }
+
+    public static implicit operator EasyObject(sbyte x)
+    {
+        return new EasyObject(x);
+    }
+
+    public static implicit operator EasyObject(byte x)
+    {
+        return new EasyObject(x);
+    }
+
+    public static implicit operator EasyObject(DateTime x)
+    {
+        return new EasyObject(x);
+    }
+
+    public static implicit operator EasyObject(TimeSpan x)
+    {
+        return new EasyObject(x);
+    }
+
+    public static implicit operator EasyObject(Guid x)
+    {
+        return new EasyObject(x);
+    }
+
     public void Nullify()
     {
         RealData = null;
     }
+
     public void Trim(
-            uint maxDepth = 0,
-            List<string>? hideKeys = null
-        )
+        uint maxDepth = 0,
+        List<string>? hideKeys = null
+    )
     {
         EasyObjectEditor.Trim(this, maxDepth, hideKeys);
     }
+
     public EasyObject Clone(
         uint maxDepth = 0,
         List<string>? hideKeys = null,
         bool always = true
-        )
+    )
     {
         return EasyObjectEditor.Clone(this, maxDepth, hideKeys, always);
     }
+
     public EasyObject? Shift()
     {
         if (list == null)
         {
             return null;
         }
+
         if (list.Count == 0)
         {
             return null;
         }
+
         EasyObject result = list[0];
         list.RemoveAt(0);
         return result;
     }
+
     public EasyObject Shuffle()
     {
         if (list != null)
@@ -1119,6 +1386,7 @@ public class EasyObject :
             var list2 = list!.Select(i => i).OrderBy(i => Guid.NewGuid()).ToList();
             return FromObject(list2);
         }
+
         if (dictionary != null)
         {
             var keys = dictionary.Keys!.Select(i => i).OrderBy(i => Guid.NewGuid()).ToList();
@@ -1127,10 +1395,13 @@ public class EasyObject :
             {
                 result[key] = dictionary[key];
             }
+
             return result;
         }
+
         return Clone();
     }
+
     public EasyObject Reverse()
     {
         if (list != null)
@@ -1138,6 +1409,7 @@ public class EasyObject :
             var list2 = list!.AsEnumerable().Reverse().Take(5).ToList();
             return FromObject(list2);
         }
+
         if (dictionary != null)
         {
             var keys = dictionary.Keys!.AsEnumerable().Reverse().Take(5).ToList();
@@ -1146,10 +1418,13 @@ public class EasyObject :
             {
                 result[key] = dictionary[key];
             }
+
             return result;
         }
+
         return Clone();
     }
+
     public EasyObject Skip(int n)
     {
         if (list != null)
@@ -1157,6 +1432,7 @@ public class EasyObject :
             var list2 = list!.Select(i => i).Skip(n).ToList();
             return FromObject(list2);
         }
+
         if (dictionary != null)
         {
             var keys = dictionary.Keys!.Select(i => i).Skip(n).ToList();
@@ -1165,10 +1441,13 @@ public class EasyObject :
             {
                 result[key] = dictionary[key];
             }
+
             return result;
         }
+
         return Clone();
     }
+
     public EasyObject Take(int n)
     {
         if (list != null)
@@ -1176,6 +1455,7 @@ public class EasyObject :
             var list2 = list!.Select(i => i).Take(n).ToList();
             return FromObject(list2);
         }
+
         if (dictionary != null)
         {
             var keys = dictionary.Keys!.Select(i => i).Take(n).ToList();
@@ -1184,10 +1464,13 @@ public class EasyObject :
             {
                 result[key] = dictionary[key];
             }
+
             return result;
         }
+
         return Clone();
     }
+
     public string[] AsStringArray
     {
         get
@@ -1196,32 +1479,31 @@ public class EasyObject :
             {
                 return
                     list!
-                    .Select(
-                        i =>
-                        i.IsString ?
-                        i.Cast<string>() :
-                        i.ToJson(keyAsSymbol: true, indent: false))
-                    .ToArray();
+                        .Select(i =>
+                            i.IsString ? i.Cast<string>() : i.ToJson(keyAsSymbol: true, indent: false))
+                        .ToArray();
             }
+
             if (dictionary != null)
             {
                 return dictionary.Keys!.Select(i => i).ToArray();
             }
+
             return [];
         }
     }
+
     public List<string> AsStringList
     {
-        get
-        {
-            return AsStringArray.ToList();
-        }
+        get { return AsStringArray.ToList(); }
     }
+
     public void ImportFromPlainObject(object? x)
     {
         var eo = FromObject(x);
         RealData = eo.RealData;
     }
+
     public void ImportFromCommonJson(string x)
     {
         var eo = FromJson(x);
@@ -1229,49 +1511,58 @@ public class EasyObject :
         {
             eo = Null;
         }
+
         RealData = eo!.RealData;
     }
+
     public string ExportToCommonJson()
     {
         return ToJson(
             indent: true,
             sortKeys: false
-            );
+        );
     }
+
     public object? ExportToPlainObject()
     {
         return new PlainObjectConverter(jsonParser: null, forceAscii: ForceAscii).Parse(RealData);
     }
+
     public dynamic? ExportToDynamicObject()
     {
         return EasyObjectEditor.ExportToExpandoObject(this);
     }
+
     public static string ObjectToJson(object? x, bool indent = false)
     {
         return FromObject(x).ToJson(indent: indent);
     }
+
     public static object? ObjectToObject(object? x, bool asDynamicObject = false)
     {
         return FromObject(x).ToObject(asDynamicObject: asDynamicObject);
     }
+
     public static string ToClickableUri(string pathOrUrl)
     {
-        ////Debug(pathOrUrl, "pathOrUrl");
         if (pathOrUrl.StartsWith("http:") || pathOrUrl.StartsWith("https:") || pathOrUrl.StartsWith("file:"))
         {
             return pathOrUrl;
         }
+
         string filePath = pathOrUrl;
         filePath = Path.GetFullPath(filePath);
         return new Uri(filePath).AbsoluteUri;
     }
+
     public static void LogWebLink(string title, string url)
     {
         url = ToClickableUri(url);
 #if USE_SPECTRE_CONSOLE
         if (UseAnsiConsole)
         {
-            EasyObject.Log($"⁅markup⁆[green][link={url}]{EasyObject.MarkupSafeString(title)}[/][/] => [blue]{EasyObject.MarkupSafeString(url)}[/]");
+            EasyObject.Log(
+                $"⁅markup⁆[green][link={url}]{EasyObject.MarkupSafeString(title)}[/][/] => [blue]{EasyObject.MarkupSafeString(url)}[/]");
         }
         else
         {
@@ -1281,23 +1572,25 @@ public class EasyObject :
         EasyObject.Log($"{title} => {url}");
 #endif
     }
+
     public static void EchoWebLink(string title, string url)
     {
         url = ToClickableUri(url);
 #if USE_SPECTRE_CONSOLE
         if (UseAnsiConsole)
         {
-            EasyObject.Echo($"⁅markup⁆[green][link={url}]{EasyObject.MarkupSafeString(title)}[/][/] => [blue]{EasyObject.MarkupSafeString(url)}[/]");
+            EasyObject.Echo(
+                $"⁅markup⁆[green][link={url}]{EasyObject.MarkupSafeString(title)}[/][/] => [blue]{EasyObject.MarkupSafeString(url)}[/]");
         }
         else
         {
             EasyObject.Echo($"{EasyObject.MarkupSafeString(title)} => {EasyObject.MarkupSafeString(url)}");
-
         }
 #else
         EasyObject.Echo($"{title} => {url}");
 #endif
     }
+
     public static string CurrentSourceCodeLine()
     {
         string trace = Environment.StackTrace;
@@ -1306,17 +1599,22 @@ public class EasyObject :
         {
             return "[!! UNKNOWN SOURCE CODE LINE !!]";
         }
+
         return ReplacePathsWithUrls(lines[lines.Count - 1].Trim());
     }
+
     public static string ReplacePathsWithUrls(string stackTrace)
-    { // https://shorturl.ly/FToES C# search through string like stack trace for source code path and replace all of them to a "file:" urls - Google
+    {
+        // https://shorturl.ly/FToES C# search through string like stack trace for source code path and replace all of them to a "file:" urls - Google
         stackTrace = stackTrace.Replace("場所 ", "in ");
         stackTrace = stackTrace.Replace(":行 ", ":line ");
         // This regex looks for common file path patterns, especially those with drive letters (C:\) 
         // or starting with a slash (/) often followed by common extensions like .cs, .vb, etc., within the context of a stack trace line.
         // The pattern aims to capture the full file path including extension and line number info if present.
         // Group 1 captures the path part for replacement.
-        var filePathRegex = new Regex(@"(?:in\s+)(?<path>[a-zA-Z]:\\(?:[^<>:""/\\|?*]+\\)*[^<>:""/\\|?*]+):line\s+(?<line_num>\d+)$", RegexOptions.Multiline | RegexOptions.IgnoreCase);
+        var filePathRegex =
+            new Regex(@"(?:in\s+)(?<path>[a-zA-Z]:\\(?:[^<>:""/\\|?*]+\\)*[^<>:""/\\|?*]+):line\s+(?<line_num>\d+)$",
+                RegexOptions.Multiline | RegexOptions.IgnoreCase);
         // Use a MatchEvaluator delegate for the replacement to apply the Uri conversion logic to each match.
         string result = filePathRegex.Replace(stackTrace, match =>
         {
@@ -1333,8 +1631,6 @@ public class EasyObject :
                 var fileUri = new Uri(filePath);
                 // We use AbsoluteUri which correctly formats the scheme (file://) and path for a URL.
                 //Console.WriteLine($"line_num(3)={line_num}");
-                //string result = $"in {fileUri.AbsoluteUri}#L{line_num.Replace("line:", "")}";
-                //string result = $"in {fileUri.AbsoluteUri}#L{line_num}";
                 string result = $"in {fileUri.AbsoluteUri} : line {line_num}";
                 //Console.WriteLine($"result={result}");
                 return result;
@@ -1347,17 +1643,19 @@ public class EasyObject :
         });
         return result;
     }
-    public static void Panic(object? message = null, int exitCode = 1)
+
+    public static void Abort(object? message = null, int exitCode = 1)
     {
         ShowDetail = false;
         ShowLineNumbers = false;
         UseAnsiConsole = true;
-        Log("⁅markup⁆[red][[!! PROGRAM CRASHED !!]][/]");
+        Log("⁅markup⁆[red][[!! ABORTING PROGRAM !!]][/]");
         UseAnsiConsole = false;
         if (message != null && !(message is Exception))
         {
-            Log(message, "MESSAGE");
+            Log(message, "MESSAGE (FOR ABORTING PROGRAM)");
         }
+
         if (message is Exception e)
         {
             string exTrace = e.ToString();
@@ -1369,13 +1667,15 @@ public class EasyObject :
             {
                 Console.Error.WriteLine(ex);
             }
+
             Console.Error.WriteLine(
                 exTrace
-                );
+            );
             UseAnsiConsole = true;
             Log($"⁅markup⁆[red][[!! ABORTING...WITH EXIT CODE {exitCode} !!]][/]");
             Environment.Exit(exitCode);
         }
+
         string trace = Environment.StackTrace;
         List<string> lines = EasySystem.TextToLines(trace);
         lines = lines.Skip(2).ToList();
@@ -1386,7 +1686,8 @@ public class EasyObject :
         Log($"⁅markup⁆[red][[!! ABORTING...WITH EXIT CODE {exitCode} !!]][/]");
         Environment.Exit(exitCode);
     }
-    private static void _PanicOnAssertionFailure(Exception ex, object? hint, int exitCode)
+
+    private static void _AbortOnAssertionFailure(Exception ex, object? hint, int exitCode)
     {
         ShowDetail = false;
         ShowLineNumbers = false;
@@ -1398,6 +1699,7 @@ public class EasyObject :
         {
             Log(hint, "HINT MESSAGE (FOR THIS ASSERTION)");
         }
+
         UseAnsiConsole = true;
         WriteLine(
             $"⁅markup⁆[blue]{MarkupSafeString(ReplacePathsWithUrls(ex.ToString()))}[/]",
@@ -1405,6 +1707,7 @@ public class EasyObject :
         Log($"⁅markup⁆[red][[!! ABORTING...WITH EXIT CODE {exitCode} !!]][/]");
         Environment.Exit(exitCode);
     }
+
     public static void AssertTrue(bool condition, object? hint = null, int exitCode = 1)
     {
         try
@@ -1413,9 +1716,10 @@ public class EasyObject :
         }
         catch (Exception ex)
         {
-            _PanicOnAssertionFailure(ex, hint, exitCode);
+            _AbortOnAssertionFailure(ex, hint, exitCode);
         }
     }
+
     public static void AssertEqual(object? expected, object? actual, object? hint = null, int exitCode = 1)
     {
         try
@@ -1424,9 +1728,10 @@ public class EasyObject :
         }
         catch (Exception ex)
         {
-            _PanicOnAssertionFailure(ex, hint, exitCode);
+            _AbortOnAssertionFailure(ex, hint, exitCode);
         }
     }
+
     public static void AssertNotEqual(object? expected, object? actual, object? hint = null, int exitCode = 1)
     {
         try
@@ -1435,7 +1740,7 @@ public class EasyObject :
         }
         catch (Exception ex)
         {
-            _PanicOnAssertionFailure(ex, hint, exitCode);
+            _AbortOnAssertionFailure(ex, hint, exitCode);
         }
     }
 }
