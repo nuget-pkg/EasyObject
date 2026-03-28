@@ -11,6 +11,7 @@ using static Global.EasySystem;
 try
 {
     SetupConsoleEncoding();
+    ShowLineNumbers = false;
     ShowDetail = true;
     UseAnsiConsole = true;
     DebugOutput = true;
@@ -447,13 +448,13 @@ try
     Echo("⁅markup⁆[green]This is unicode(before END): ⭕️ ☢ ☃☃☃ ☮[/]",
         title: "⁅markup⁆[cyan]Echo() does not emit SOURCE CODE LOCATION![/]");
 
-    DebugOutput = true;
-    ShowLineNumbers = false;
-    ForceAscii = false;
-    Log("⭕️🈂️❝END❞🈂️", "ShowLineNumbers = false");
-    ShowLineNumbers = false;
-    ForceAscii = false;
-    Debug("⭕️🈂️❝END❞🈂️", "Debug() shows line info even if `ShowLineNumbers == false`");
+    //DebugOutput = true;
+    //ShowLineNumbers = false;
+    //ForceAscii = false;
+    //Log("⭕️🈂️❝END❞🈂️", "ShowLineNumbers = false");
+    //ShowLineNumbers = false;
+    //ForceAscii = false;
+    //Debug("⭕️🈂️❝END❞🈂️", "Debug() shows line info even if `ShowLineNumbers == false`");
 
     void LinkTest(string title, string url)
     {
