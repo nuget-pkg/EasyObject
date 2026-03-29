@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
+    <IsPackable>false</IsPackable>
     <StartupObject>Misc.Misc01</StartupObject>
     <LangVersion>latest</LangVersion>
     <TargetFrameworks>net462;net10.0</TargetFrameworks>
@@ -28,11 +29,11 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\EasyObject\EasyObject.csproj"/>
-    <ProjectReference Include="..\MiniEasyObject\MiniEasyObject.csproj"/>
+    <ProjectReference Include="..\EasyObject\EasyObject.csproj" />
+    <ProjectReference Include="..\MiniEasyObject\MiniEasyObject.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="EasyObjectClassic" Version="*" />
+    <PackageReference Include="EasyObjectClassic" Version="2026.330.525.17" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="assets\**">

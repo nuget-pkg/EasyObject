@@ -1,14 +1,12 @@
 ﻿// ReSharper disable RedundantUsingDirective
+using System.Collections.Generic;
+using Newtonsoft.Json.Linq;
 namespace Misc;
-
 using Global;
 using static Global.EasyObject;
 using static Global.EasySystem;
-
-public class Misc01
-{
-    public static void Main(string[] args)
-    {
+public class Misc01 {
+    public static void Main(string[] args) {
         SetupConsoleEncoding();
         ShowLineNumbers = false;
         ShowDetail = true;
@@ -16,5 +14,8 @@ public class Misc01
         DebugOutput = true;
         Log("⭕️ハロー©⭕️");
         EasySystem.RunToConsole("bash", ["-c", "ls -ltr"]);
+        var newton = NewtonsoftUtil.DeserializeFromJson("[11,null,33.15,[44,55], {'a': 123}]");
+        Log(newton, title: "newton");
+        Log(FromObject(newton));
     }
 }
