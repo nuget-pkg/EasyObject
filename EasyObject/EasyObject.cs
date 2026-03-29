@@ -719,7 +719,7 @@ public partial class
     }
 
     public static void WriteLine(
-        string str,
+        string str = "",
         string? title = null
     )
     {

@@ -556,6 +556,7 @@ try
         }
     }
 
+    WriteLine();
     Echo(
         "⁅markup⁆[red]!! PLEASE SET[/] [green]⁅ORERA BROWSER⁆[/] [red]ON PC AS DEFAULT[/]...[purple]IT AUTOMATICALLY STARTS PLAYING VIDEOS EVEN WHEN OPENED FROM LINK ON[/] [green]WINDOWS-TERMINAL ETC[/] [red]!![/]");
 
