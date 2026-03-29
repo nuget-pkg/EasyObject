@@ -1,10 +1,11 @@
-using Global;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Xml.Linq;
+using Demo;
+using Global;
 using static Global.EasyObject;
 using static Global.EasySystem;
 
@@ -17,22 +18,22 @@ try
     DebugOutput = true;
     Log("⭕️ハロー©⭕️");
     if (false) Abort();
-    if (false) Abort(message: new { time = DateTime.Now });
+    if (false) Abort(new { time = DateTime.Now });
     WriteLine("(1)");
-    EasyObject eoNull = Null;
+    var eoNull = Null;
     Log(eoNull.ToJson());
     Log(eoNull.ToPrintable());
     Log(eoNull);
     Log(Null);
     WriteLine("(2)");
-    var eo = EasyObject.FromObject(new { a = 123 });
+    var eo = FromObject(new { a = 123 });
     Log(eo);
     WriteLine("(3)");
     Log(eo.TypeValue, "eo.TypeValue");
     WriteLine("(4)");
     AssertEqual(eo.TypeValue, @object);
     WriteLine("(5)");
-    EasyObject a = eo["a"];
+    var a = eo["a"];
     WriteLine("(5.1)");
     Log(FullName(a));
     Log(a.GetType() == typeof(double));
@@ -54,18 +55,15 @@ try
     Log(eo[1], "eo[1]");
     AssertEqual(eo[1].TypeValue, @null);
     AssertTrue(eo[1].IsNull);
-    foreach (var pair in eo.Dynamic)
-    {
-        Log(pair, "pair");
-    }
+    foreach (var pair in eo.Dynamic) Log(pair, "pair");
 
-    eo = EasyObject.FromObject(null);
+    eo = FromObject(null);
     Log(eo.TypeValue, "eo.TypeValue");
     AssertEqual(eo.TypeValue, @null);
     eo["b"] = true;
     AssertEqual(eo["b"].Cast<bool>(), true);
     Log(eo["b"].TypeValue, "eo.b.TypeValue");
-    AssertEqual(eo["b"].TypeValue, @boolean);
+    AssertEqual(eo["b"].TypeValue, boolean);
     eo[3] = 777;
     Log(eo[3].Cast<int>());
     Log(eo.TypeValue, "eo.TypeValue");
@@ -80,22 +78,16 @@ try
 #endif
     //Assert.That((int?)eo[0], Is.EqualTo(null));
     AssertEqual(eo[3].Cast<int>(), 777);
-    foreach (var e in eo.Dynamic)
-    {
-        Log(e, "e");
-    }
+    foreach (var e in eo.Dynamic) Log(e, "e");
 
-    var eo2 = EasyObject.FromObject(eo); // UnWrap() test
-    EasyObject eo3 = EasyObject.FromJson("""
-                                         { a: 123, b: [11, 22, 33] }
-                                         """);
+    var eo2 = FromObject(eo); // UnWrap() test
+    var eo3 = FromJson("""
+                       { a: 123, b: [11, 22, 33] }
+                       """);
     Log(eo3, "eo3");
     Log(eo3["b"][1]);
-    List<int> list = new List<int>();
-    foreach (var e in eo3["b"].Dynamic)
-    {
-        list.Add((int)e);
-    }
+    var list = new List<int>();
+    foreach (var e in eo3["b"].Dynamic) list.Add((int)e);
 
     Log(list, "list");
     Log(eo3["b"].TypeName);
@@ -112,17 +104,14 @@ try
     var dict = eo3.AsDictionary;
     Log(dict);
     Log(dict["a"].Cast<double>());
-    foreach (var e in i.Dynamic)
-    {
-        Log(e);
-    }
+    foreach (var e in i.Dynamic) Log(e);
 
-    string bigJson = File.ReadAllText("assets/qiita-9ea0c8fd43b61b01a8da.json");
+    var bigJson = File.ReadAllText("assets/qiita-9ea0c8fd43b61b01a8da.json");
     //Log(bigJson);
-    var sw = new System.Diagnostics.Stopwatch();
+    var sw = new Stopwatch();
     TimeSpan ts;
     sw.Start();
-    for (int c = 0; c < 5; c++)
+    for (var c = 0; c < 5; c++)
     {
         //var test = FromJson(bigJson);
     }
@@ -134,7 +123,7 @@ try
     WriteLine($"　{ts.Hours}時間 {ts.Minutes}分 {ts.Seconds}秒 {ts.Milliseconds}ミリ秒");
     WriteLine($"　{sw.ElapsedMilliseconds}ミリ秒");
     sw.Start();
-    for (int c = 0; c < 5; c++)
+    for (var c = 0; c < 5; c++)
     {
         //JObject jsonObject = JObject.Parse(bigJson);
     }
@@ -163,20 +152,20 @@ try
     //Log(eo_ox.ToJson(true, true), "eo_ox.ToJson(true, true)");
     Log(DateTime.Now);
 
-    string progJson = """
-                      #! /usr/bin/env program
-                      [11, null, "abc"]
-                      """;
-    Log(EasyObject.FromJson(progJson));
-    Log(EasyObject.FromJson(null));
-    var array = EasyObject.NewArray(1, null, "abc", EasyObject.FromJson(progJson));
+    var progJson = """
+                   #! /usr/bin/env program
+                   [11, null, "abc"]
+                   """;
+    Log(FromJson(progJson));
+    Log(FromJson(null));
+    var array = NewArray(1, null, "abc", FromJson(progJson));
     Log(array, "array");
-    var obj = EasyObject.NewObject("a", 111, "b", EasyObject.FromJson(progJson));
+    var obj = NewObject("a", 111, "b", FromJson(progJson));
     Log(obj, "obj");
     // Test newLisp expression
-    EasyObject assocList = EasyObject.FromJson("""
-                                               ( ("a" 123) ("b" true) ("c" false) ("d" nil) )
-                                               """);
+    var assocList = FromJson("""
+                             ( ("a" 123) ("b" true) ("c" false) ("d" nil) )
+                             """);
     Log(assocList, "assocList");
     var member = assocList["a"];
     Log(member, "member");
@@ -216,37 +205,37 @@ try
     Log(new { abc = 123, xyz = "abc" });
     Log(FullName(new { abc = 123, xyz = "abc" }));
 
-    string trimmedJson = """
-                         {
-                           "x a": [
-                             1,
-                             2,
-                             3,
-                             [
-                               "a",
-                               "b",
-                               "c",
-                               [ 11, 22, 33]
-                             ]
-                           ],
-                           y: {
-                             a: 1111, b: 2222
-                           },
-                           _z123ABC: {
-                             a: 1111, b: 2222
-                           }
-                                     }
-                         """;
+    var trimmedJson = """
+                      {
+                        "x a": [
+                          1,
+                          2,
+                          3,
+                          [
+                            "a",
+                            "b",
+                            "c",
+                            [ 11, 22, 33]
+                          ]
+                        ],
+                        y: {
+                          a: 1111, b: 2222
+                        },
+                        _z123ABC: {
+                          a: 1111, b: 2222
+                        }
+                                  }
+                      """;
     EasyObject trimTest;
 
     trimTest = FromJson(trimmedJson);
     Log(trimTest, maxDepth: 1);
-    trimTest.Trim(maxDepth: 1);
+    trimTest.Trim(1);
     Log(trimTest, "(1)");
 
     trimTest = FromJson(trimmedJson);
     Log(trimTest, maxDepth: 2);
-    trimTest.Trim(maxDepth: 2);
+    trimTest.Trim(2);
     Log(trimTest, "(2)");
 
     trimTest = FromJson(trimmedJson);
@@ -256,10 +245,10 @@ try
 
     Log(trimTest.ToJson(keyAsSymbol: true));
 
-    var parser = new EasyLanguageParser(numberAsDecimal: true, removeSurrogatePair: true);
+    var parser = new EasyLanguageParser(true, true);
     var result1 = parser.ParseJson("'🔥引火★★帝国🔥'");
     Log(result1, "result1");
-    var parser2 = new EasyLanguageParser(numberAsDecimal: true, removeSurrogatePair: false);
+    var parser2 = new EasyLanguageParser(true, false);
     var result2 = parser2.ParseJson("'🔥引火★★帝国🔥'");
     Log(result2, "result2");
 
@@ -273,9 +262,9 @@ try
     Log(containSurrogate, removeSurrogatePair: true);
     Log(containSurrogate, removeSurrogatePair: false);
 
-    var jsonNoSurrogete = containSurrogate.ToJson(indent: true, removeSurrogatePair: true);
+    var jsonNoSurrogete = containSurrogate.ToJson(true, removeSurrogatePair: true);
     Log(jsonNoSurrogete, "jsonNoSurrogete");
-    var jsonWithSurrogete = containSurrogate.ToJson(indent: true, removeSurrogatePair: false);
+    var jsonWithSurrogete = containSurrogate.ToJson(true, removeSurrogatePair: false);
     Log(jsonWithSurrogete, "jsonWithSurrogete");
 
     ShowDetail = false;
@@ -309,40 +298,40 @@ try
     WriteLine("[stdout] This is unicode: ⭕️ ☢ ☃☃☃ ☮");
     Console.Error.WriteLine("[stderr] This is unicode: ⭕️ ☢ ☃☃☃ ☮");
 
-    string progJson2 = """
-                       #! /usr/bin/env program
-                       (defvar $list [11, null, "abc"])
-                       """;
+    var progJson2 = """
+                    #! /usr/bin/env program
+                    (defvar $list [11, null, "abc"])
+                    """;
 
     UseAnsiConsole = true;
 
     var prog2 = FromJson(progJson2);
     //Log(prog2, "prog2");
-    prog2.Dump(title: "prog2");
+    prog2.Dump("prog2");
 
-    var parsere3 = new CSharpEasyLanguageHandler(numberAsDecimal: true, removeSurrogatePair: false);
+    var parsere3 = new CSharpEasyLanguageHandler(true);
 
-    string cljureCode01 = File.ReadAllText("assets/cljure_code01.clj");
+    var cljureCode01 = File.ReadAllText("assets/cljure_code01.clj");
     Log(cljureCode01, "cljureCode01");
     DumpObject(parsere3.ParseJsonSequence(cljureCode01), "cljureCode01(parsed)");
 
-    string cljureCode02 = File.ReadAllText("assets/cljure_code02.clj");
+    var cljureCode02 = File.ReadAllText("assets/cljure_code02.clj");
     Log(cljureCode02, "cljureCode02");
     DumpObject(parsere3.ParseJsonSequence(cljureCode02), "cljureCode02(parsed)");
 
     WriteLine(
         """[universal]THIS is unicode(log): [252ee4f0-d951-4ea4-bd3f-95e9af976141]2B55[252ee4f0-d951-4ea4-bd3f-95e9af976141]uuFE0F [252ee4f0-d951-4ea4-bd3f-95e9af976141]u2622 [252ee4f0-d951-4ea4-bd3f-95e9af976141]u2603[252ee4f0-d951-4ea4-bd3f-95e9af976141]uu2603[252ee4f0-d951-4ea4-bd3f-95e9af976141]uu2603 [252ee4f0-d951-4ea4-bd3f-95e9af976141]u262E[/universal]""");
 
-    string xmlString = "<Root><Child>Content</Child></Root>";
-    XDocument doc = XDocument.Parse(xmlString);
+    var xmlString = "<Root><Child>Content</Child></Root>";
+    var doc = XDocument.Parse(xmlString);
     Log(doc.Root?.ToString());
 
     ForceAscii = false;
     var printed = FromJson(trimmedJson);
     DumpObject(printed, "⁅markup⁆[blue]printed[/]");
     printed.Dump("⁅markup⁆[red]printed[/]");
-    Log("⁅markup⁆[blue]printed[/]", title: "⁅markup⁆[red](?°□°)?[/] [blue]┻━┻[/]");
-    Log("⁅markup⁆[blue]printed[/]", title: "⁅markup⁆[red](?°□°)?[/] [blue]┻━┻[/]");
+    Log("⁅markup⁆[blue]printed[/]", "⁅markup⁆[red](?°□°)?[/] [blue]┻━┻[/]");
+    Log("⁅markup⁆[blue]printed[/]", "⁅markup⁆[red](?°□°)?[/] [blue]┻━┻[/]");
 
     FromObject(parsere3.ParseJsonSequence(cljureCode02)).Dump(hideKeys: ["!"]);
 
@@ -352,31 +341,31 @@ try
     DebugOutput = true;
     Debug(new { a = 123, b = "xyz" },
         "⁅markup⁆[green]Debug[/] with [blue][link=https://en.wikipedia.org/wiki/ANSI_escape_code]Ansi Color(Ctrl-Click Me!)[/][/]");
-    string messageToEscape = """[this is not markup tag...so print this message with square brackets]""";
-    string safeMessage = MarkupSafeString(messageToEscape);
+    var messageToEscape = """[this is not markup tag...so print this message with square brackets]""";
+    var safeMessage = MarkupSafeString(messageToEscape);
     Log(safeMessage, "safeMessage");
     Log($"⁅markup⁆[green]{safeMessage}[/]");
 
     WriteLine("⁅markup⁆[blue][link=https://www.youtube.com/]Ctrl+Click this link to visit YouTube[/][/]!",
-        title: "⁅markup⁆[red](?°□°)?[/] [blue]┻━┻[/]");
+        "⁅markup⁆[red](?°□°)?[/] [blue]┻━┻[/]");
 
     EasyObject ast;
 
-    ast = FromJson(Demo.BabelOutput.AstJson);
+    ast = FromJson(BabelOutput.AstJson);
     var xo = ast.ExportToDynamicObject();
     Log(xo, "xo");
 
 
-    ast = FromJson(Demo.BabelOutput.AstJson);
+    ast = FromJson(BabelOutput.AstJson);
     ast.Trim(hideKeys: ["loc", "start", "end"], maxDepth: 3);
     Log(ast, "ast(1)");
 
-    ast = FromJson(Demo.BabelOutput.AstJson);
+    ast = FromJson(BabelOutput.AstJson);
     ast.Trim(hideKeys: ["loc", "start", "end"] /*, maxDepth: 2*/);
     Log(ast, "ast(2)", maxDepth: 2);
 
     //Crash();
-    string embeddedJsonUrl =
+    var embeddedJsonUrl =
         "https://github.com/nuget-pkg/Global.Sys/blob/2026.0311.1056.12/Global.Sys.Demo/assets/text-embed-text-02.json";
     var embeddedEO = FromUrl(embeddedJsonUrl);
     Log(embeddedEO, "embeddedEO(github)");
@@ -393,7 +382,7 @@ try
     Log(embeddedEO, "embeddedEO(nuget-assets::my-ls.exe)");
     //Crash();
 
-    var noError = FromJson("\n", ignoreErrors: true);
+    var noError = FromJson("\n", true);
     Log(noError, "noError");
 
     Echo("⁅markup⁆[green]This is green.[/]");
@@ -402,7 +391,7 @@ try
     Log("⁅markup⁆[green]This is green.[/]");
     Log(new { args }, "⁅markup⁆[green]args[/]");
 
-    string code =
+    var code =
         """
         //!?"'#%&^~\|`;:()[]{}<>, + - * / = ❝　❞←全角スペース
         namespace HelloWorldApp
@@ -416,12 +405,12 @@ try
             }
         }
         """;
-    Debug(FromJson(Demo.BabelOutput.AstJson), "ast", compact: true, maxDepth: 2, hideKeys: ["start", "end", "loc"]);
-    Debug(FromJson(Demo.BabelOutput.AstJson), "⁅markup⁆[green]ast[/]", compact: true, maxDepth: 2,
-        hideKeys: ["start", "end", "loc"]);
+    Debug(FromJson(BabelOutput.AstJson), "ast", true, 2, ["start", "end", "loc"]);
+    Debug(FromJson(BabelOutput.AstJson), "⁅markup⁆[green]ast[/]", true, 2,
+        ["start", "end", "loc"]);
 
     Log(UniversalTransformer.SafeSourceCode(code));
-    string fname =
+    var fname =
         """[1080p] ✅ 👀 🫧 💻 🌐 🎵 <xml>aaa</xml> ; {Title}!? x=11+22-33; ,(🔥引火帝国🔥):"name1" 'name2'?.txt""";
     Log(UniversalTransformer.SafeFileName(fname), "⁅markup⁆[blue]adjusted file name[/]");
     Log(UniversalTransformer.SafeFileName(fname, replaceSurrogate: ""),
@@ -446,7 +435,7 @@ try
 
     ForceAscii = false;
     Echo("⁅markup⁆[green]This is unicode(before END): ⭕️ ☢ ☃☃☃ ☮[/]",
-        title: "⁅markup⁆[cyan]Echo() does not emit SOURCE CODE LOCATION![/]");
+        "⁅markup⁆[cyan]Echo() does not emit SOURCE CODE LOCATION![/]");
 
     //DebugOutput = true;
     //ShowLineNumbers = false;
@@ -488,32 +477,35 @@ try
     );
 
     DebugOutput = true;
-    string versionTextPath = GitProjectFile(GetCwd(), "version.txt")!;
+    var versionTextPath = GitProjectFile(GetCwd(), "version.txt")!;
     EchoWebLink("version.txt", versionTextPath);
 
+    AssertTrue(11 + 22 == 33);
+    AssertFalse(11 + 22 == 333);
+
     DebugOutput = true;
-    int A = 11;
-    int B = 22;
-    EasyObject.AssertEqual(A, B, hint: new { A, B }, exitCode: 123);
+    var A = 11;
+    var B = 22;
+    AssertEqual(A, B, new { A, B }, 123);
 #if false
             throw new NotImplementedException();
 #else
-    EasyObject.Abort(new
+    Abort(new
     {
         abc = 123,
         xyz = new
         {
-            test1 = new string[] { "A", "B", "C ハロー©" }
+            test1 = new[] { "A", "B", "C ハロー©" }
         }
     });
 #endif
 }
 catch (Exception ex)
 {
-    EasyObject.Abort(ex);
+    Abort(ex);
 }
 
-class Exchangeable1 : IExportToPlainObject
+internal class Exchangeable1 : IExportToPlainObject
 {
     public object ExportToPlainObject()
     {
@@ -521,7 +513,7 @@ class Exchangeable1 : IExportToPlainObject
     }
 }
 
-class Exchangeable2
+internal class Exchangeable2
 {
     public object ExportToPlainObject()
     {
@@ -529,7 +521,7 @@ class Exchangeable2
     }
 }
 
-class Exchangeable3 : IExportToCommonJson
+internal class Exchangeable3 : IExportToCommonJson
 {
     public string ExportToCommonJson()
     {
@@ -537,7 +529,7 @@ class Exchangeable3 : IExportToCommonJson
     }
 }
 
-class Exchangeable4
+internal class Exchangeable4
 {
     public string ExportToCommonJson()
     {
@@ -545,7 +537,7 @@ class Exchangeable4
     }
 }
 
-class MyData : EasyObject
+internal class MyData : EasyObject
 {
     public MyData(int n, string s)
     {
@@ -557,13 +549,7 @@ class MyData : EasyObject
         ImportFromCommonJson(json);
     }
 
-    public int N
-    {
-        get { return Dynamic.n; }
-    }
+    public int N => Dynamic.n;
 
-    public string S
-    {
-        get { return Dynamic.s; }
-    }
+    public string S => Dynamic.s;
 }
