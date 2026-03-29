@@ -91,7 +91,8 @@ namespace Global {
         public static EasyObject DeserializeFromXml(string xml) {
             XElement statusElement = XElement.Parse(xml); // Use XElement.Parse()
             XmlDocument doc = new XmlDocument();
-            XmlNode xmlNode = doc.ReadNode(statusElement.CreateReader());
+            XmlNode? xmlNode = doc.ReadNode(statusElement.CreateReader());
+            if (xmlNode == null) return EasyObject.Null;
             string json = JsonConvert.SerializeXmlNode(xmlNode, Formatting.Indented);
             return EasyObject.FromJson(json);
         }
