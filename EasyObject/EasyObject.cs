@@ -1255,24 +1255,17 @@ public partial class
     public EasyObject Pick(int n)
     {
         var result = NewArray();
-        var done = new List<int>();
         if (list != null)
         {
+            var cloneList = this.AsList!.Select(i => i).ToList(); // !! SHALLOW COPY...IN ORDER TO RETURN ORIGINAL ELEMTNS AS PICKS !!
             if (n > list.Count) n = list.Count;
             for (int i = 0; i < n; i++)
             {
-                var pick = PickRandomItem(list);
-                if (done.Contains(pick))
-                {
-                    i--; // retry picking.
-                    continue;
-                }
-
-                done.Add(pick);
-                result.Add(list[pick]);
+                var pick = PickRandomItem(cloneList);
+                result.Add(cloneList[pick]);
+                cloneList.RemoveAt(pick);
             }
         }
-
         if (dictionary != null)
         {
             var keys = this.Keys;
@@ -1280,14 +1273,8 @@ public partial class
             for (int i = 0; i < n; i++)
             {
                 var pick = PickRandomItem(keys);
-                if (done.Contains(pick))
-                {
-                    i--; // retry picking.
-                    continue;
-                }
-
-                done.Add(pick);
                 result.Add(keys[pick]);
+                keys.RemoveAt(pick);
             }
         }
 
