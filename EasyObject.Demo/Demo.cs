@@ -2,6 +2,13 @@
 using EasyObject = Global.MiniEasyObject;
 #endif
 
+//using Spectre.Console;
+
+#if TEST_MINI
+using static Global.MiniEasyObject;
+#else
+using static Global.EasyObject;
+#endif
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -10,13 +17,6 @@ using System.Linq;
 using System.Xml.Linq;
 using Demo;
 using Global;
-//using Spectre.Console;
-
-#if TEST_MINI
-using static Global.MiniEasyObject;
-#else
-using static Global.EasyObject;
-#endif
 using static Global.EasySystem;
 
 // ReSharper disable HeuristicUnreachableCode
@@ -29,8 +29,8 @@ try
     UseAnsiConsole = true;
     DebugOutput = true;
     Log("⭕️ハロー©⭕️");
-    //StdOut.MarkupLine("[yellow]Initializing warp drive[/]...");
 
+    //Abort();
 
     if (false) Abort();
     if (false) Abort(new { time = DateTime.Now });
@@ -167,28 +167,32 @@ try
     //Log(eo_ox.ToJson(true, true), "eo_ox.ToJson(true, true)");
     Log(DateTime.Now);
 
-    var progJson = """
+    if (true)
+    {
+        var progJson = """
                    #! /usr/bin/env program
                    [11, null, "abc"]
                    """;
-    Log(FromJson(progJson));
-    Log(FromJson(null));
-    var array = NewArray(1, null, "abc", FromJson(progJson));
-    Log(array, "array");
-    var obj = NewObject("a", 111, "b", FromJson(progJson));
-    Log(obj, "obj");
-    // Test newLisp expression
-    var assocList = FromJson("""
+        Log(FromJson(progJson));
+        Log(FromJson(null));
+        var array = NewArray(1, null, "abc", FromJson(progJson));
+        Log(array, "array");
+        var obj = NewObject("a", 111, "b", FromJson(progJson));
+        Log(obj, "obj");
+        // Test newLisp expression
+        var assocList = FromJson("""
                              ( ("a" 123) ("b" true) ("c" false) ("d" nil) )
                              """);
-    Log(assocList, "assocList");
-    var member = assocList["a"];
-    Log(member, "member");
-    dynamic assocDyn = assocList;
-    var member2 = assocDyn["a"];
-    Log(member2, "member2");
-    var member3 = assocDyn.a;
-    Log(member3, "member3");
+        Log(assocList, "assocList");
+        var member = assocList["a"];
+        Log(member, "member");
+        dynamic assocDyn = assocList;
+        var member2 = assocDyn["a"];
+        Log(member2, "member2");
+        var member3 = assocDyn.a;
+        Log(member3, "member3");
+    }
+
     var exc1 = new Exchangeable1();
     Log(exc1, "exc1");
     var exc2 = new Exchangeable2();
@@ -499,32 +503,32 @@ try
 
     // !! NEW FEATURE: YOU CAN PICK n ELEMENTS RANDOMELY !!
     var pickCandidates = NewArray(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
-    for (int p = 0; p < 5; p++)
+    for (var p = 0; p < 5; p++)
     {
         var picked = pickCandidates.Pick(3);
-        Echo(picked, $"piccked[{p}]", compact: true);
+        Echo(picked, $"piccked[{p}]", true);
     }
 
     var overLimit = pickCandidates.Pick(9999);
-    Echo(overLimit, "overLimit", compact: true);
+    Echo(overLimit, "overLimit", true);
 
     AssertTrue(11 + 22 == 33);
 
     pickCandidates = NewObject("a", 11, "b", NewArray(1.1, 1.2, 1.3), "c", null, "d", 777);
     DebugOutput = true;
-    for (int p = 0; p < 5; p++)
+    for (var p = 0; p < 5; p++)
     {
         var picked = pickCandidates.Pick(3);
-        Echo(picked, $"piccked[{p}]", compact: true);
+        Echo(picked, $"piccked[{p}]", true);
     }
 
     overLimit = pickCandidates.Pick(9999);
-    Echo(overLimit, "overLimit", compact: true);
+    Echo(overLimit, "overLimit", true);
 
     var youtubePlaylists = FromFile(GitProjectFile(GetCwd(), "EasyObject.Demo", "assets", "youtube-playlists.json")!);
     //youtubePlaylists.Dump(maxDepth: 2);
     var playlistIds = youtubePlaylists.Pick(5).AsStringList;
-    for (int p = 0; p < playlistIds.Count; p++)
+    for (var p = 0; p < playlistIds.Count; p++)
     {
         var playlistId = playlistIds[p];
         var playlistObject = youtubePlaylists[playlistId];
@@ -546,17 +550,17 @@ try
                     (string /* !! explicit cast is necessary when accessing through EasyObject.Dynamic !! */)
                     video0.Dynamic.title
             }, compact: false);
-            string
+            var
                 videoId = video0["id"]
                     .Cast<string>(); // !! THIS IS HOW TO ACCESS OBJECT (DICTIONARY)'s PROPERTY DIRECTLY !!
-            string
+            var
                 videoTitle =
                     video0["title"]
                         .Cast<string>(); // !! THIS IS HOW TO ACCESS OBJECT (DICTIONARY)'s PROPERTY DIRECTLY !!
             Log(new { videoId, videoTitle }, compact: true);
-            string watchUrl = $"https://www.youtube.com/watch?v={videoId}&list={playlistId}";
+            var watchUrl = $"https://www.youtube.com/watch?v={videoId}&list={playlistId}";
             EchoWebLink(
-                $"≪PLAYLIST≫ ➠▶ {EasySystem.LimitStringLength(playlistTitle, limit: 35, ellipsis: "▶!!!🈂TITLE-TOO-LONG🈂!!!▶")}({videoCount} VIDEOs) - ❝ ≪FIRST-VIDEO≫ ➠▶ {videoTitle} ❞",
+                $"≪PLAYLIST≫ ➠▶ {LimitStringLength(playlistTitle, 35, "▶!!!🈂TITLE-TOO-LONG🈂!!!▶")}({videoCount} VIDEOs) - ❝ ≪FIRST-VIDEO≫ ➠▶ {videoTitle} ❞",
                 watchUrl);
         }
     }
@@ -576,7 +580,6 @@ try
     }
 
     if (false)
-    {
         // !! YOUR CAN EXIT (ABORT) PROGRAM ... WITH INTELLIGENT HINTING !!
         Abort(new
         {
@@ -586,12 +589,8 @@ try
                 test1 = new[] { "A", "B", "C ハロー©" }
             }
         });
-    }
 
-    if (false)
-    {
-        throw new NotImplementedException();
-    }
+    if (false) throw new NotImplementedException();
 }
 catch (Exception ex)
 {

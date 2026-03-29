@@ -2,7 +2,7 @@
 	<PropertyGroup>
 		<LangVersion>latest</LangVersion>
 		<TargetFrameworks>net462;net8.0</TargetFrameworks>
-		<Version>2026.0329.2017.02</Version>
+		<Version>2026.0329.2338.16</Version>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>disable</ImplicitUsings>
 		<RootNamespace>MiniEasyObject</RootNamespace>
@@ -58,9 +58,7 @@
 		<PackageReference Include="OpenSystem" Version="2026.329.1200.36" />
 		<PackageReference Include="PlainObjectInterface" Version="2026.122.1836.32" />
 		<PackageReference Include="PlainObjectConverter" Version="2026.325.1801.12" />
-		<!--<PackageReference Include="JsoncParser" Version="2026.318.150.53" />-->
-		<PackageReference Include="JsoncParserClassic" Version="2026.329.744.49" />
-		<!--<PackageReference Include="Spectre.Console.Json" Version="0.54.0" />-->
+		<PackageReference Include="JsoncParser" Version="2026.318.150.53" />
 	</ItemGroup>
 	<ItemGroup>
 	  <Compile Include="..\EasyObject\EasyObject.cs">

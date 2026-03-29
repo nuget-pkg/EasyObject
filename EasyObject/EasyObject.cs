@@ -5,7 +5,6 @@ using System.Dynamic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -14,7 +13,6 @@ using NUnit.Framework;
 using Spectre.Console;
 using Spectre.Console.Json;
 using Spectre.Console.Rendering;
-using static System.Net.WebRequestMethods;
 #endif
 
 // ReSharper disable InconsistentNaming
@@ -23,76 +21,98 @@ using static System.Net.WebRequestMethods;
 namespace Global;
 
 #if MINIMAL
-using EasyObjectType = Global.MiniEasyObjectType;
-using EasyObjectConverter = Global.MiniEasyObjectConverter;
-using EasyObject = Global.MiniEasyObject;
-using EasyObjectEditor = Global.MiniEasyObjectEditor;
+using EasyObjectType = MiniEasyObjectType;
+using EasyObjectConverter = MiniEasyObjectConverter;
+using EasyObject = MiniEasyObject;
+using EasyObjectEditor = MiniEasyObjectEditor;
 #endif
 
 #if !MINIMAL
-public class EasyConsole: IAnsiConsole
+public class EasyConsole //: IAnsiConsole
 {
-    private TextWriter _writer {  get; set; }
-    private IAnsiConsole _ansiConsole { get; set; }
     public EasyConsole(TextWriter writer)
     {
-        this._writer = writer;
-        this._ansiConsole = AnsiConsole.Create(new AnsiConsoleSettings
+        _writer = writer;
+        _ansiConsole = AnsiConsole.Create(new AnsiConsoleSettings
         {
             Out = new AnsiConsoleOutput(writer)
         });
     }
-    public Profile Profile => this._ansiConsole.Profile;
-    public IAnsiConsoleCursor Cursor => this._ansiConsole.Cursor;
 
-    public IAnsiConsoleInput Input => this._ansiConsole.Input;
-    public IExclusivityMode ExclusivityMode => this._ansiConsole.ExclusivityMode;
+    public TextWriter _writer { get; set; }
+    public IAnsiConsole _ansiConsole { get; }
 
-    public RenderPipeline Pipeline => this._ansiConsole.Pipeline;
-    public void Clear(bool home)
+    public static string MarkupSafeString(string str)
     {
-        this._ansiConsole.Clear(home);
+#if USE_SPECTRE_CONSOLE
+        return Markup.Escape(str);
+#else
+        return str;
+#endif
     }
 
+    // public void Clear(bool home)
+    // {
+    //     _ansiConsole.Clear(home);
+    // }
+    //
     public void Write(IRenderable renderable)
     {
-        this._ansiConsole.Write(renderable);
+        _ansiConsole.Write(renderable);
     }
-    public void AutoMarkup(string s)
+
+    // public void WriteLine(IRenderable renderable)
+    // {
+    //     _ansiConsole.WriteLine(renderable);
+    // }
+
+    public void Render(string s)
     {
 #if !USE_SPECTRE_CONSOLE
         this._writer.WriteLine(s);
 #else
         if (!s.StartsWith("⁅markup⁆"))
         {
-            this._ansiConsole.Write(s);
+            _ansiConsole.Write(s);
         }
         else
         {
             s = s.Replace("⁅markup⁆", "");
-            this._ansiConsole.Markup(s);
+            _ansiConsole.Markup(s);
         }
 #endif
     }
-    public void AutoMarkupLine(string s)
+
+    public void RenderLine(string s = "")
     {
 #if !USE_SPECTRE_CONSOLE
         this._writer.Write(s);
 #else
         if (!s.StartsWith("⁅markup⁆"))
         {
-            this._ansiConsole.WriteLine(s);
+            _ansiConsole.WriteLine(s);
         }
         else
         {
             s = s.Replace("⁅markup⁆", "");
-            this._ansiConsole.MarkupLine(s);
+            _ansiConsole.MarkupLine(s);
         }
 #endif
     }
+
     public bool IsMarkupString(string str)
     {
         return str.StartsWith("⁅markup⁆");
+    }
+
+    public void Write(string s)
+    {
+        _writer.Write(s);
+    }
+
+    public void WriteLine(string s)
+    {
+        _writer.WriteLine(s);
     }
 }
 #endif
@@ -153,9 +173,9 @@ internal class EasyObjectConverter : IConvertParsedResult
 }
 
 #if MINIMAL
-public partial class MiniEasyObject :
+public class MiniEasyObject :
 #else
-public partial class
+public class
     EasyObject : // !! NOW THAT Global.EasyObject is `partial`; YOU CAN DEFINE EXTENDED METHODs LOCALLY !! (Since 2026/03/29 17:40 +09:00)
 #endif
     DynamicObject,
@@ -166,22 +186,17 @@ public partial class
     IImportFromCommonJson
 {
     public object? RealData /*= null*/;
-#if MINIMAL
-    public static readonly IParseJson DefaultJsonParser = new CSharpJsonHandlerClassic(numberAsDecimal: true);
-#else
-    public static readonly IParseJson DefaultJsonParser = new CSharpEasyLanguageHandler(numberAsDecimal: true);
-#endif
+    public static readonly IParseJson DefaultJsonParser = new CSharpEasyLanguageHandler(true);
     public static IParseJson? JsonParser /*= null*/;
     public static bool DebugOutput /*= false*/;
     public static bool ShowDetail /*= false*/;
     public static bool ForceAscii /*= false*/;
     public static bool UseAnsiConsole /*= false*/;
 #if USE_SPECTRE_CONSOLE
-    public static EasyConsole StdOut;
-    public static EasyConsole StdErr;
+    public static EasyConsole AnsiOutput;
+    public static EasyConsole AnsiError;
 #endif
     public static bool ShowLineNumbers = true; /* Introduced @ 2026-03-26 17:02 */
-
 #if MINIMAL
     static MiniEasyObject()
 #else
@@ -190,8 +205,8 @@ public partial class
     {
         ClearSettings();
 #if USE_SPECTRE_CONSOLE
-        StdOut = new EasyConsole(Console.Out);
-        StdErr = new EasyConsole(Console.Error);
+        AnsiOutput = new EasyConsole(Console.Out);
+        AnsiError = new EasyConsole(Console.Error);
 #endif
     }
 
@@ -220,8 +235,8 @@ public partial class
                     AutoFlush = true
                 });
 #if USE_SPECTRE_CONSOLE
-            StdOut = new EasyConsole(Console.Out);
-            StdErr = new EasyConsole(Console.Error);
+            AnsiOutput = new EasyConsole(Console.Out);
+            AnsiError = new EasyConsole(Console.Error);
 #endif
         }
         catch (Exception)
@@ -599,7 +614,7 @@ public partial class
 
     public static EasyObject FromFile(string path, bool ignoreErrors = false)
     {
-        return FromJson(System.IO.File.ReadAllText(path), ignoreErrors);
+        return FromJson(File.ReadAllText(path), ignoreErrors);
     }
 
     public static string? Utf8StringFromUrl(string url)
@@ -637,17 +652,14 @@ public partial class
 
     private static List<string>? _FindFirstMatch(string s, params string[] patterns)
     {
-        foreach (string pattern in patterns)
+        foreach (var pattern in patterns)
         {
-            Regex r = new Regex(pattern);
-            Match m = r.Match(s);
+            var r = new Regex(pattern);
+            var m = r.Match(s);
             if (m.Success)
             {
                 List<string> groups = [];
-                for (int i = 0; i < m.Groups.Count; i++)
-                {
-                    groups.Add(m.Groups[i].Value);
-                }
+                for (var i = 0; i < m.Groups.Count; i++) groups.Add(m.Groups[i].Value);
 
                 return groups;
             }
@@ -754,17 +766,12 @@ public partial class
     )
     {
 #if USE_SPECTRE_CONSOLE
-        if (title != null)
-        {
-            StdOut.AutoMarkup($"{title}: ");
-        }
+        if (title != null) AnsiOutput.Render($"{title}: ");
 
-        StdOut.AutoMarkup(str);
+        AnsiOutput.Render(str);
 #else
-        if (title != null)
-        {
-            Console.Write($"{title}: ");
-        }
+        if (title != null) Console.Write($"{title}: ");
+
         Console.Write(str);
 #endif
     }
@@ -775,16 +782,12 @@ public partial class
     )
     {
 #if USE_SPECTRE_CONSOLE
-        if (title != null)
-        {
-            StdOut.AutoMarkup($"{title}: ");
-        }
-        StdOut.AutoMarkupLine(str);
+        if (title != null) AnsiOutput.Render($"{title}: ");
+
+        AnsiOutput.RenderLine(str);
 #else
-        if (title != null)
-        {
-            Console.Write($"{title}: ");
-        }
+        if (title != null) Console.Write($"{title}: ");
+
         Console.WriteLine(str);
 #endif
     }
@@ -811,22 +814,18 @@ public partial class
 #if USE_SPECTRE_CONSOLE
         if (UseAnsiConsole)
         {
-            if (title != null)
-            {
-                StdOut.AutoMarkup($"{title}: ");
-            }
+            if (title != null) AnsiOutput.Render($"{title}: ");
 
             if (x != null && x is string str)
-                if (StdOut.IsMarkupString(str))
+                if (AnsiOutput.IsMarkupString(str))
                 {
-                    StdOut.AutoMarkupLine(str);
+                    AnsiOutput.RenderLine(str);
                     return;
                 }
 
             var s2 = ToPrintable(x, null, compact, maxDepth,
                 removeSurrogatePair);
-            var s3 = MarkupSafeString(s2);
-            StdOut.AutoMarkupLine(s3);
+            AnsiOutput.WriteLine(s2);
             return;
         }
 #endif
@@ -857,27 +856,24 @@ public partial class
 #if USE_SPECTRE_CONSOLE
         if (UseAnsiConsole)
         {
-            StdErr.AutoMarkup("⁅markup⁆[cyan][[Log]][/] ");
-            if (title != null)
-            {
-                StdErr.AutoMarkup($"{title}: ");
-            }
+            AnsiError.Render("⁅markup⁆[cyan][[Log]][/] ");
+            if (title != null) AnsiError.Render($"{title}: ");
 
             if (x != null && x is string str)
-                if (StdErr.IsMarkupString(str))
+                if (AnsiError.IsMarkupString(str))
                 {
-                    StdErr.AutoMarkupLine(str);
+                    AnsiError.RenderLine(str);
                     if (ShowLineNumbers)
-                        StdErr.AutoMarkupLine($"      [blue]{MarkupSafeString(CurrentSourceCodeLine())}[/]");
+                        AnsiError.RenderLine($"      [blue]{MarkupSafeString(CurrentSourceCodeLine())}[/]");
                     return;
                 }
 
             var s2 = ToPrintable(x, null, compact, maxDepth,
                 removeSurrogatePair);
-            var s3 = MarkupSafeString(s2);
-            StdErr.AutoMarkupLine(s3);
+            //var s3 = MarkupSafeString(s2);
+            AnsiError.WriteLine(s2);
             if (ShowLineNumbers)
-                StdErr.AutoMarkupLine($"      [blue]{MarkupSafeString(CurrentSourceCodeLine())}[/]");
+                AnsiError.RenderLine($"⁅markup⁆      [blue]{MarkupSafeString(CurrentSourceCodeLine())}[/]");
 
             return;
         }
@@ -912,13 +908,13 @@ public partial class
 #if USE_SPECTRE_CONSOLE
         if (UseAnsiConsole)
         {
-            StdErr.AutoMarkup("⁅markup⁆[purple][[Debug]][/] ");
-            if (title != null) StdErr.AutoMarkup($"⁅markup⁆[purple]{MarkupSafeString(title)}:[/] ");
+            AnsiError.Render("⁅markup⁆[purple][[Debug]][/] ");
+            if (title != null) AnsiError.Render($"⁅markup⁆[purple]{MarkupSafeString(title)}:[/] ");
             var s2 = ToPrintable(x, null, compact, maxDepth,
                 removeSurrogatePair);
             var s3 = MarkupSafeString(s2);
-            StdErr.AutoMarkupLine($"[purple]{s3}[/]");
-            StdErr.AutoMarkupLine($"        [purple]{MarkupSafeString(CurrentSourceCodeLine())}[/]");
+            AnsiError.RenderLine($"⁅markup⁆[purple]{s3}[/]");
+            AnsiError.RenderLine($"⁅markup⁆        [purple]{MarkupSafeString(CurrentSourceCodeLine())}[/]");
             return;
         }
 #endif
@@ -962,26 +958,14 @@ public partial class
     )
     {
         _EnsureCursorLeft();
-#if USE_SPECTRE_CONSOLE
-        var printable = FromObject(x).Clone(maxDepth, hideKeys, false);
-        var json = printable.ToJson(!compact, removeSurrogatePair: removeSurrogatePair);
-        var jsonText = new JsonText(json);
-        if (title != null)
-        {
-            StdOut.AutoMarkup($"{title}: ");
-        }
-        StdOut.Write(jsonText);
-        StdOut.WriteLine();
-#else
         Echo(
             x,
-            title: title,
-            compact: compact,
-            maxDepth: maxDepth,
-            hideKeys: hideKeys,
-            removeSurrogatePair: removeSurrogatePair
+            title,
+            compact,
+            maxDepth,
+            hideKeys,
+            removeSurrogatePair
         );
-#endif
     }
 
     public void Dump(
@@ -1243,16 +1227,13 @@ public partial class
         return Clone();
     }
 
-    private static readonly Random Rnd = new Random();
+    private static readonly Random Rnd = new();
 
     public static int PickRandomItem<T>(List<T> list)
     {
-        if (list.Count == 0)
-        {
-            return -1;
-        }
+        if (list.Count == 0) return -1;
 
-        int index = Rnd.Next(list.Count);
+        var index = Rnd.Next(list.Count);
         return index;
     }
 
@@ -1261,20 +1242,23 @@ public partial class
         var result = NewArray();
         if (list != null)
         {
-            var cloneList = this.AsList!.Select(i => i).ToList(); // !! SHALLOW COPY...IN ORDER TO RETURN ORIGINAL ELEMTNS AS PICKS !!
+            var cloneList =
+                AsList!.Select(i => i)
+                    .ToList(); // !! SHALLOW COPY...IN ORDER TO RETURN ORIGINAL ELEMTNS AS PICKS !!
             if (n > list.Count) n = list.Count;
-            for (int i = 0; i < n; i++)
+            for (var i = 0; i < n; i++)
             {
                 var pick = PickRandomItem(cloneList);
                 result.Add(cloneList[pick]);
                 cloneList.RemoveAt(pick);
             }
         }
+
         if (dictionary != null)
         {
-            var keys = this.Keys;
+            var keys = Keys;
             if (n > keys.Count) n = keys.Count;
-            for (int i = 0; i < n; i++)
+            for (var i = 0; i < n; i++)
             {
                 var pick = PickRandomItem(keys);
                 result.Add(keys[pick]);
@@ -1423,7 +1407,7 @@ public partial class
         else
             Log($"{MarkupSafeString(title)} => {MarkupSafeString(url)}");
 #else
-        EasyObject.Log($"{title} => {url}");
+        Log($"{title} => {url}");
 #endif
     }
 
@@ -1437,20 +1421,17 @@ public partial class
         else
             Echo($"{MarkupSafeString(title)} => {MarkupSafeString(url)}");
 #else
-        EasyObject.Echo($"{title} => {url}");
+        Echo($"{title} => {url}");
 #endif
     }
 
     private static List<string> TextToLines(string text)
     {
         List<string> lines = [];
-        using (StringReader sr = new StringReader(text))
+        using (var sr = new StringReader(text))
         {
             string? line;
-            while ((line = sr.ReadLine()) != null)
-            {
-                lines.Add(line);
-            }
+            while ((line = sr.ReadLine()) != null) lines.Add(line);
         }
 
         return lines;
