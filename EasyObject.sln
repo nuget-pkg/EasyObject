@@ -10,7 +10,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyObject.Test", "EasyObje
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MediaPlayer", "MediaPlayer\MediaPlayer.csproj", "{B69B466E-F7EC-D693-2F13-04F1F08FCF49}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniEasyObject", "Classic\MiniEasyObject.csproj", "{9834C074-F77F-A4D7-8D85-12D736433F7E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniEasyObject", "MiniEasyObject\MiniEasyObject.csproj", "{9834C074-F77F-A4D7-8D85-12D736433F7E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

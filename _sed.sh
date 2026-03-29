@@ -1,5 +1,5 @@
 #! /usr/bin/env bash
-#set -uvx
+set -uvx
 set -e
 cd "$(dirname "$0")"
 cwd=`pwd`
@@ -13,5 +13,10 @@ echo $name
 
 cd $cwd/$name
 sed -i -e "s/<Version>.*<\/Version>/<Version>${version}<\/Version>/g" $name.csproj
+
+cd $cwd/Mini$name
+sed -i -e "s/<Version>.*<\/Version>/<Version>${version}<\/Version>/g" Mini$name.csproj
+echo Mini$name
+
 cd $cwd/
 echo ${version}>version.txt

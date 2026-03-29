@@ -107,4 +107,7 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\EasyObject\EasyObject.csproj" />
 	</ItemGroup>
+	<PropertyGroup>
+		<IsPackable>false</IsPackable>
+	</PropertyGroup>
 </Project>
