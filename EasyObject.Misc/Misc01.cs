@@ -16,12 +16,12 @@ public class Misc01 {
             DebugOutput = true;
             Log("⭕️ハロー©⭕️");
             EasySystem.RunToConsole("bash", ["-c", "ls -ltr"]);
-            var newton = NewtonsoftUtil.DeserializeFromJson("[11,null,33.15,[44,55], {'a': 123}]");
+            var newton = NewtonsoftJsonUtil.DeserializeFromJson("[11,null,33.15,[44,55], {'a': 123}]");
             Log(newton, title: "newton");
             Log(FromObject(newton));
-            var xml01 = NewtonsoftUtil.SerializeToToXml(new { a = new { x = 1, y = "xyz" } });
+            var xml01 = NewtonsoftJsonUtil.SerializeToToXml(new { a = new { x = 1, y = "xyz" } });
             Log(xml01);
-            var xml01Eo = NewtonsoftUtil.DeserializeFromXml(xml01);
+            var xml01Eo = NewtonsoftJsonUtil.DeserializeFromXml(xml01);
             Log(xml01Eo);
         }
         catch (Exception ex) {

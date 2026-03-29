@@ -6,10 +6,10 @@ using System.Xml;
 using System.Xml.Linq;
 public static class EasyExtensions {
     public static dynamic? FromJson(this string x) {
-        return NewtonsoftUtil.DeserializeFromJson(x);
+        return NewtonsoftJsonUtil.DeserializeFromJson(x);
     }
     public static T? FromJson<T>(this string x, T? fallback = default(T)) {
-        return NewtonsoftUtil.DeserializeFromJson<T>(x, fallback);
+        return NewtonsoftJsonUtil.DeserializeFromJson<T>(x, fallback);
     }
     public static XmlDocument ToXmlDocument(this XDocument xDocument) {
         var xmlDocument = new XmlDocument();
