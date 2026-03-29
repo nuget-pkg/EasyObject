@@ -5,6 +5,7 @@ using System.Dynamic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -12,6 +13,8 @@ using NUnit.Framework;
 #if USE_SPECTRE_CONSOLE
 using Spectre.Console;
 using Spectre.Console.Json;
+using Spectre.Console.Rendering;
+using static System.Net.WebRequestMethods;
 #endif
 
 // ReSharper disable InconsistentNaming
@@ -24,6 +27,74 @@ using EasyObjectType = Global.MiniEasyObjectType;
 using EasyObjectConverter = Global.MiniEasyObjectConverter;
 using EasyObject = Global.MiniEasyObject;
 using EasyObjectEditor = Global.MiniEasyObjectEditor;
+#endif
+
+#if !MINIMAL
+public class EasyConsole: IAnsiConsole
+{
+    private TextWriter _writer {  get; set; }
+    private IAnsiConsole _ansiConsole { get; set; }
+    public EasyConsole(TextWriter writer)
+    {
+        this._writer = writer;
+        this._ansiConsole = AnsiConsole.Create(new AnsiConsoleSettings
+        {
+            Out = new AnsiConsoleOutput(writer)
+        });
+    }
+    public Profile Profile => this._ansiConsole.Profile;
+    public IAnsiConsoleCursor Cursor => this._ansiConsole.Cursor;
+
+    public IAnsiConsoleInput Input => this._ansiConsole.Input;
+    public IExclusivityMode ExclusivityMode => this._ansiConsole.ExclusivityMode;
+
+    public RenderPipeline Pipeline => this._ansiConsole.Pipeline;
+    public void Clear(bool home)
+    {
+        this._ansiConsole.Clear(home);
+    }
+
+    public void Write(IRenderable renderable)
+    {
+        this._ansiConsole.Write(renderable);
+    }
+    public void AutoMarkup(string s)
+    {
+#if !USE_SPECTRE_CONSOLE
+        this._writer.WriteLine(s);
+#else
+        if (!s.StartsWith("⁅markup⁆"))
+        {
+            this._ansiConsole.Write(s);
+        }
+        else
+        {
+            s = s.Replace("⁅markup⁆", "");
+            this._ansiConsole.Markup(s);
+        }
+#endif
+    }
+    public void AutoMarkupLine(string s)
+    {
+#if !USE_SPECTRE_CONSOLE
+        this._writer.Write(s);
+#else
+        if (!s.StartsWith("⁅markup⁆"))
+        {
+            this._ansiConsole.WriteLine(s);
+        }
+        else
+        {
+            s = s.Replace("⁅markup⁆", "");
+            this._ansiConsole.MarkupLine(s);
+        }
+#endif
+    }
+    public bool IsMarkupString(string str)
+    {
+        return str.StartsWith("⁅markup⁆");
+    }
+}
 #endif
 
 #if MINIMAL
@@ -106,7 +177,8 @@ public partial class
     public static bool ForceAscii /*= false*/;
     public static bool UseAnsiConsole /*= false*/;
 #if USE_SPECTRE_CONSOLE
-    public static IAnsiConsole AnsiErrorConsole;
+    public static EasyConsole StdOut;
+    public static EasyConsole StdErr;
 #endif
     public static bool ShowLineNumbers = true; /* Introduced @ 2026-03-26 17:02 */
 
@@ -118,10 +190,8 @@ public partial class
     {
         ClearSettings();
 #if USE_SPECTRE_CONSOLE
-        AnsiErrorConsole = AnsiConsole.Create(new AnsiConsoleSettings
-        {
-            Out = new AnsiConsoleOutput(Console.Error)
-        });
+        StdOut = new EasyConsole(Console.Out);
+        StdErr = new EasyConsole(Console.Error);
 #endif
     }
 
@@ -150,10 +220,8 @@ public partial class
                     AutoFlush = true
                 });
 #if USE_SPECTRE_CONSOLE
-            AnsiErrorConsole = AnsiConsole.Create(new AnsiConsoleSettings
-            {
-                Out = new AnsiConsoleOutput(Console.Error)
-            });
+            StdOut = new EasyConsole(Console.Out);
+            StdErr = new EasyConsole(Console.Error);
 #endif
         }
         catch (Exception)
@@ -531,7 +599,7 @@ public partial class
 
     public static EasyObject FromFile(string path, bool ignoreErrors = false)
     {
-        return FromJson(File.ReadAllText(path), ignoreErrors);
+        return FromJson(System.IO.File.ReadAllText(path), ignoreErrors);
     }
 
     public static string? Utf8StringFromUrl(string url)
@@ -688,32 +756,15 @@ public partial class
 #if USE_SPECTRE_CONSOLE
         if (title != null)
         {
-            if (title.StartsWith("⁅markup⁆"))
-            {
-                title = title.Replace("⁅markup⁆", "");
-                AnsiConsole.Markup($"{title}: ");
-            }
-            else
-            {
-                AnsiConsole.Write($"{title}: ");
-            }
+            StdOut.AutoMarkup($"{title}: ");
         }
 
-        if (str.StartsWith("⁅markup⁆"))
-        {
-            str = str.Replace("⁅markup⁆", "");
-            AnsiConsole.MarkupLine(str);
-        }
-        else
-        {
-            AnsiConsole.Write(str);
-        }
+        StdOut.AutoMarkup(str);
 #else
         if (title != null)
         {
             Console.Write($"{title}: ");
         }
-
         Console.Write(str);
 #endif
     }
@@ -726,32 +777,14 @@ public partial class
 #if USE_SPECTRE_CONSOLE
         if (title != null)
         {
-            if (title.StartsWith("⁅markup⁆"))
-            {
-                title = title.Replace("⁅markup⁆", "");
-                AnsiConsole.Markup($"{title}: ");
-            }
-            else
-            {
-                AnsiConsole.Write($"{title}: ");
-            }
+            StdOut.AutoMarkup($"{title}: ");
         }
-
-        if (str.StartsWith("⁅markup⁆"))
-        {
-            str = str.Replace("⁅markup⁆", "");
-            AnsiConsole.MarkupLine(str);
-        }
-        else
-        {
-            AnsiConsole.WriteLine(str);
-        }
+        StdOut.AutoMarkupLine(str);
 #else
         if (title != null)
         {
             Console.Write($"{title}: ");
         }
-
         Console.WriteLine(str);
 #endif
     }
@@ -780,29 +813,20 @@ public partial class
         {
             if (title != null)
             {
-                if (title.StartsWith("⁅markup⁆"))
-                {
-                    title = title.Replace("⁅markup⁆", "");
-                    AnsiConsole.Markup($"{title}: ");
-                }
-                else
-                {
-                    AnsiConsole.Write($"{title}: ");
-                }
+                StdOut.AutoMarkup($"{title}: ");
             }
 
             if (x != null && x is string str)
-                if (str.StartsWith("⁅markup⁆"))
+                if (StdOut.IsMarkupString(str))
                 {
-                    str = str.Replace("⁅markup⁆", "");
-                    AnsiConsole.MarkupLine(str);
+                    StdOut.AutoMarkupLine(str);
                     return;
                 }
 
             var s2 = ToPrintable(x, null, compact, maxDepth,
                 removeSurrogatePair);
             var s3 = MarkupSafeString(s2);
-            AnsiConsole.MarkupLine(s3);
+            StdOut.AutoMarkupLine(s3);
             return;
         }
 #endif
@@ -833,37 +857,27 @@ public partial class
 #if USE_SPECTRE_CONSOLE
         if (UseAnsiConsole)
         {
-            AnsiErrorConsole.Markup("[cyan][[Log]][/] ");
+            StdErr.AutoMarkup("⁅markup⁆[cyan][[Log]][/] ");
             if (title != null)
             {
-                if (title.StartsWith("⁅markup⁆"))
-                {
-                    title = title.Replace("⁅markup⁆", "");
-                    AnsiErrorConsole.Markup($"{title}: ");
-                }
-                else
-                {
-                    AnsiErrorConsole.Write($"{title}: ");
-                }
+                StdErr.AutoMarkup($"{title}: ");
             }
 
             if (x != null && x is string str)
-                if (str.StartsWith("⁅markup⁆"))
+                if (StdErr.IsMarkupString(str))
                 {
-                    str = str.Replace("⁅markup⁆", "");
-                    AnsiErrorConsole.MarkupLine(str);
+                    StdErr.AutoMarkupLine(str);
                     if (ShowLineNumbers)
-                        AnsiErrorConsole.MarkupLine($"      [blue]{MarkupSafeString(CurrentSourceCodeLine())}[/]");
-
+                        StdErr.AutoMarkupLine($"      [blue]{MarkupSafeString(CurrentSourceCodeLine())}[/]");
                     return;
                 }
 
             var s2 = ToPrintable(x, null, compact, maxDepth,
                 removeSurrogatePair);
             var s3 = MarkupSafeString(s2);
-            AnsiErrorConsole.MarkupLine(s3);
+            StdErr.AutoMarkupLine(s3);
             if (ShowLineNumbers)
-                AnsiErrorConsole.MarkupLine($"      [blue]{MarkupSafeString(CurrentSourceCodeLine())}[/]");
+                StdErr.AutoMarkupLine($"      [blue]{MarkupSafeString(CurrentSourceCodeLine())}[/]");
 
             return;
         }
@@ -898,14 +912,13 @@ public partial class
 #if USE_SPECTRE_CONSOLE
         if (UseAnsiConsole)
         {
-            AnsiErrorConsole.Markup("[purple][[Debug]][/] ");
-            if (title != null) AnsiErrorConsole.Markup($"[purple]{MarkupSafeString(title)}:[/] ");
-
+            StdErr.AutoMarkup("⁅markup⁆[purple][[Debug]][/] ");
+            if (title != null) StdErr.AutoMarkup($"⁅markup⁆[purple]{MarkupSafeString(title)}:[/] ");
             var s2 = ToPrintable(x, null, compact, maxDepth,
                 removeSurrogatePair);
             var s3 = MarkupSafeString(s2);
-            AnsiErrorConsole.MarkupLine($"[purple]{s3}[/]");
-            AnsiErrorConsole.MarkupLine($"        [purple]{MarkupSafeString(CurrentSourceCodeLine())}[/]");
+            StdErr.AutoMarkupLine($"[purple]{s3}[/]");
+            StdErr.AutoMarkupLine($"        [purple]{MarkupSafeString(CurrentSourceCodeLine())}[/]");
             return;
         }
 #endif
@@ -955,19 +968,10 @@ public partial class
         var jsonText = new JsonText(json);
         if (title != null)
         {
-            if (title.StartsWith("⁅markup⁆"))
-            {
-                title = title.Replace("⁅markup⁆", "");
-                AnsiConsole.Markup($"{title}: ");
-            }
-            else
-            {
-                AnsiConsole.Write($"{title}: ");
-            }
+            StdOut.AutoMarkup($"{title}: ");
         }
-
-        AnsiConsole.Write(jsonText);
-        AnsiConsole.WriteLine();
+        StdOut.Write(jsonText);
+        StdOut.WriteLine();
 #else
         Echo(
             x,

@@ -10,6 +10,8 @@ using System.Linq;
 using System.Xml.Linq;
 using Demo;
 using Global;
+//using Spectre.Console;
+
 #if TEST_MINI
 using static Global.MiniEasyObject;
 #else
@@ -27,6 +29,9 @@ try
     UseAnsiConsole = true;
     DebugOutput = true;
     Log("⭕️ハロー©⭕️");
+    //StdOut.MarkupLine("[yellow]Initializing warp drive[/]...");
+
+
     if (false) Abort();
     if (false) Abort(new { time = DateTime.Now });
     WriteLine("(1)");
