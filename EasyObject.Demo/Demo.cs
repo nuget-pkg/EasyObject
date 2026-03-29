@@ -1,4 +1,3 @@
-
 #if TEST_MINI
 using EasyObject = Global.MiniEasyObject;
 #endif
@@ -17,6 +16,8 @@ using static Global.MiniEasyObject;
 using static Global.EasyObject;
 #endif
 using static Global.EasySystem;
+
+// ReSharper disable HeuristicUnreachableCode
 
 try
 {
@@ -491,29 +492,61 @@ try
     var versionTextPath = GitProjectFile(GetCwd(), "version.txt")!;
     EchoWebLink("version.txt", versionTextPath);
 
-    AssertTrue(11 + 22 == 33);
-    AssertFalse(11 + 22 == 333);
-
-    DebugOutput = true;
-    var A = 11;
-    var B = 22;
-    AssertEqual(A, B, new { A, B }, 123);
-#if false
-            throw new NotImplementedException();
-#else
-    Abort(new
+    // !! NEW FEATURE: YOU CAN PICK n ELEMENTS RANDOMELY !!
+    var pickCandidates = NewArray(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+    for (int p = 0; p < 5; p++)
     {
-        abc = 123,
-        xyz = new
+        var picked = pickCandidates.Pick(3);
+        Echo(picked, $"piccked[{p}]", compact: true);
+    }
+
+    var overLimit = pickCandidates.Pick(9999);
+    Echo(overLimit, "overLimit", compact: true);
+
+    AssertTrue(11 + 22 == 33);
+
+    pickCandidates = NewObject("a", 11, "b", NewArray(1.1, 1.2, 1.3), "c", null, "d", 777);
+    DebugOutput = true;
+    for (int p = 0; p < 5; p++)
+    {
+        var picked = pickCandidates.Pick(3);
+        Echo(picked, $"piccked[{p}]", compact: true);
+    }
+
+    overLimit = pickCandidates.Pick(9999);
+    Echo(overLimit, "overLimit", compact: true);
+
+    if (false) AssertFalse(11 + 22 == 333); // !! THIS FAILS !!
+
+    if (false)
+    {
+        // !! THIS FAILS (WITH INTELLIGENT HINT...) !!
+        var A = 11;
+        var B = 22;
+        AssertEqual(A, B, new { A, B }, 123);
+    }
+
+    if (false)
+    {
+        // !! YOUR CAN EXIT (ABORT) PROGRAM ... WITH INTELLIGENT HINTING !!
+        Abort(new
         {
-            test1 = new[] { "A", "B", "C ハロー©" }
-        }
-    });
-#endif
+            abc = 123,
+            xyz = new
+            {
+                test1 = new[] { "A", "B", "C ハロー©" }
+            }
+        });
+    }
+
+    if (false)
+    {
+        throw new NotImplementedException();
+    }
 }
 catch (Exception ex)
 {
-    Abort(ex);
+    Abort(ex); // !! throw new NotImplementedException(); GOES HERE !!
 }
 
 internal class Exchangeable1 : IExportToPlainObject

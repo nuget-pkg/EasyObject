@@ -82,9 +82,10 @@ internal class EasyObjectConverter : IConvertParsedResult
 }
 
 #if MINIMAL
-public class MiniEasyObject :
+public partial class MiniEasyObject :
 #else
-public class EasyObject :
+public partial class
+    EasyObject : // !! NOW THAT Global.EasyObject is `partial`; YOU CAN DEFINE EXTENDED METHODs LOCALLY !! (Since 2026/03/29 17:40 +09:00)
 #endif
     DynamicObject,
     IExposeInternalObject,
@@ -548,7 +549,6 @@ public class EasyObject :
         }
     }
 
-#if true //!MINIMAL
     public void InjectToFile(
         string path,
         bool indent = false,
@@ -566,7 +566,6 @@ public class EasyObject :
         var json = EasyTextEmbedder.ExtractEmbeddedText(pathOrUrl) ?? "null";
         return FromJson(json, ignoreErrors);
     }
-#endif
 
     private static List<string>? _FindFirstMatch(string s, params string[] patterns)
     {
@@ -588,6 +587,7 @@ public class EasyObject :
 
         return null;
     }
+
     public static EasyObject FromUrl(string url, bool ignoreErrors = false)
     {
         var m = _FindFirstMatch(
@@ -1237,6 +1237,61 @@ public class EasyObject :
         }
 
         return Clone();
+    }
+
+    private static readonly Random Rnd = new Random();
+
+    public static int PickRandomItem<T>(List<T> list)
+    {
+        if (list.Count == 0)
+        {
+            return -1;
+        }
+
+        int index = Rnd.Next(list.Count);
+        return index;
+    }
+
+    public EasyObject Pick(int n)
+    {
+        var result = NewArray();
+        var done = new List<int>();
+        if (list != null)
+        {
+            if (n > list.Count) n = list.Count;
+            for (int i = 0; i < n; i++)
+            {
+                var pick = PickRandomItem(list);
+                if (done.Contains(pick))
+                {
+                    i--; // retry picking.
+                    continue;
+                }
+
+                done.Add(pick);
+                result.Add(list[pick]);
+            }
+        }
+
+        if (dictionary != null)
+        {
+            var keys = this.Keys;
+            if (n > keys.Count) n = keys.Count;
+            for (int i = 0; i < n; i++)
+            {
+                var pick = PickRandomItem(keys);
+                if (done.Contains(pick))
+                {
+                    i--; // retry picking.
+                    continue;
+                }
+
+                done.Add(pick);
+                result.Add(keys[pick]);
+            }
+        }
+
+        return FromObject(result);
     }
 
     public EasyObject Reverse()
