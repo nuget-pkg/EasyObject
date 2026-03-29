@@ -516,6 +516,49 @@ try
     overLimit = pickCandidates.Pick(9999);
     Echo(overLimit, "overLimit", compact: true);
 
+    var youtubePlaylists = FromFile(GitProjectFile(GetCwd(), "EasyObject.Demo", "assets", "youtube-playlists.json")!);
+    //youtubePlaylists.Dump(maxDepth: 2);
+    var playlistIds = youtubePlaylists.Pick(5).AsStringList;
+    for (int p = 0; p < playlistIds.Count; p++)
+    {
+        var playlistId = playlistIds[p];
+        var playlistObject = youtubePlaylists[playlistId];
+        playlistObject[playlistId].Dump(maxDepth: 1);
+        string playlistTitle = playlistObject.Dynamic.title;
+        int videoCount = playlistObject.Dynamic.videos.Count;
+        Log(new { id = playlistId, title = playlistTitle, videoCount }, compact: true);
+        if (videoCount > 0)
+        {
+            var videos = playlistObject["videos"];
+            var video0 = videos[0];
+            Log(new
+            {
+                id = playlistId,
+                title = playlistTitle, videoCount,
+                firstVideoId = (string /* !! explicit cast is necessary when accessing through EasyObject.Dynamic !! */)
+                    video0.Dynamic.id,
+                firstVideoTitle =
+                    (string /* !! explicit cast is necessary when accessing through EasyObject.Dynamic !! */)
+                    video0.Dynamic.title
+            }, compact: false);
+            string
+                videoId = video0["id"]
+                    .Cast<string>(); // !! THIS IS HOW TO ACCESS OBJECT (DICTIONARY)'s PROPERTY DIRECTLY !!
+            string
+                videoTitle =
+                    video0["title"]
+                        .Cast<string>(); // !! THIS IS HOW TO ACCESS OBJECT (DICTIONARY)'s PROPERTY DIRECTLY !!
+            Log(new { videoId, videoTitle }, compact: true);
+            string watchUrl = $"https://www.youtube.com/watch?v={videoId}&list={playlistId}";
+            EchoWebLink(
+                $"≪PLAYLIST≫ ➠▶ {EasySystem.LimitStringLength(playlistTitle, limit: 35, ellipsis: "▶!!!🈂TITLE-TOO-LONG🈂!!!▶")}({videoCount} VIDEOs) - ❝ ≪FIRST-VIDEO≫ ➠▶ {videoTitle} ❞",
+                watchUrl);
+        }
+    }
+
+    Echo(
+        "⁅markup⁆[red]!! PLEASE SET[/] [green]⁅ORERA BROWSER⁆[/] [red]ON PC AS DEFAULT[/]...[purple]IT AUTOMATICALLY STARTS PLAYING VIDEOS EVEN WHEN OPENED FROM LINK ON[/] [green]WINDOWS-TERMINAL ETC[/] [red]!![/]");
+
     if (false) AssertFalse(11 + 22 == 333); // !! THIS FAILS !!
 
     if (false)
