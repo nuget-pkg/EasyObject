@@ -2,7 +2,7 @@
 	<PropertyGroup>
 		<LangVersion>latest</LangVersion>
 		<TargetFrameworks>net462;net8.0</TargetFrameworks>
-		<Version>2026.0329.2338.16</Version>
+		<Version>2026.0330.0834.31</Version>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>disable</ImplicitUsings>
 		<RootNamespace>MiniEasyObject</RootNamespace>
