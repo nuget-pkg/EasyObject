@@ -9,19 +9,28 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using NUnit.Framework;
+#if USE_SPECTRE_CONSOLE
 using Spectre.Console;
 using Spectre.Console.Json;
+#endif
 
 // ReSharper disable InconsistentNaming
 // ReSharper disable EmptyGeneralCatchClause
-
 // ReSharper disable once CheckNamespace
 namespace Global;
 
-#if USE_SPECTRE_CONSOLE
+#if MINIMAL
+using EasyObjectType = Global.MiniEasyObjectType;
+using EasyObjectConverter = Global.MiniEasyObjectConverter;
+using EasyObject = Global.MiniEasyObject;
+using EasyObjectEditor = Global.MiniEasyObjectEditor;
 #endif
 
+#if MINIMAL
+public enum MiniEasyObjectType
+#else
 public enum EasyObjectType
+#endif
 {
     @string,
     number,
@@ -31,7 +40,11 @@ public enum EasyObjectType
     @null
 }
 
+#if MINIMAL
+internal class MiniEasyObjectConverter : IConvertParsedResult
+#else
 internal class EasyObjectConverter : IConvertParsedResult
+#endif
 {
     public object? ConvertParsedResult(object? x, string origTypeName)
     {
@@ -68,7 +81,11 @@ internal class EasyObjectConverter : IConvertParsedResult
     }
 }
 
+#if MINIMAL
+public class MiniEasyObject :
+#else
 public class EasyObject :
+#endif
     DynamicObject,
     IExposeInternalObject,
     IExportToPlainObject,
@@ -77,7 +94,11 @@ public class EasyObject :
     IImportFromCommonJson
 {
     public object? RealData /*= null*/;
-    public static readonly IParseJson DefaultJsonParser = new CSharpEasyLanguageHandler(true);
+#if MINIMAL
+    public static readonly IParseJson DefaultJsonParser = new CSharpJsonHandlerClassic(numberAsDecimal: true);
+#else
+    public static readonly IParseJson DefaultJsonParser = new CSharpEasyLanguageHandler(numberAsDecimal: true);
+#endif
     public static IParseJson? JsonParser /*= null*/;
     public static bool DebugOutput /*= false*/;
     public static bool ShowDetail /*= false*/;
@@ -88,7 +109,11 @@ public class EasyObject :
 #endif
     public static bool ShowLineNumbers = true; /* Introduced @ 2026-03-26 17:02 */
 
+#if MINIMAL
+    static MiniEasyObject()
+#else
     static EasyObject()
+#endif
     {
         ClearSettings();
 #if USE_SPECTRE_CONSOLE
@@ -147,12 +172,20 @@ public class EasyObject :
         }
     }
 
+#if MINIMAL
+    public MiniEasyObject()
+#else
     public EasyObject()
+#endif
     {
         RealData = null;
     }
 
+#if MINIMAL
+    public MiniEasyObject(object? x)
+#else
     public EasyObject(object? x)
+#endif
     {
         RealData = new PlainObjectConverter(JsonParser, false,
             new EasyObjectConverter()).Parse(x, true);
@@ -515,6 +548,7 @@ public class EasyObject :
         }
     }
 
+#if true //!MINIMAL
     public void InjectToFile(
         string path,
         bool indent = false,
@@ -532,10 +566,31 @@ public class EasyObject :
         var json = EasyTextEmbedder.ExtractEmbeddedText(pathOrUrl) ?? "null";
         return FromJson(json, ignoreErrors);
     }
+#endif
 
+    private static List<string>? _FindFirstMatch(string s, params string[] patterns)
+    {
+        foreach (string pattern in patterns)
+        {
+            Regex r = new Regex(pattern);
+            Match m = r.Match(s);
+            if (m.Success)
+            {
+                List<string> groups = [];
+                for (int i = 0; i < m.Groups.Count; i++)
+                {
+                    groups.Add(m.Groups[i].Value);
+                }
+
+                return groups;
+            }
+        }
+
+        return null;
+    }
     public static EasyObject FromUrl(string url, bool ignoreErrors = false)
     {
-        var m = EasySystem.FindFirstMatch(
+        var m = _FindFirstMatch(
             url,
             @"^(https://github[.]com/[^/]+/[^/]+/)blob(/.+)$",
             @"^(https://gitlab[.]com/nuget-tools/nuget-assets/-/)blob(/.+)$"
@@ -654,9 +709,11 @@ public class EasyObject :
             AnsiConsole.Write(str);
         }
 #else
-        if (title != null) {
+        if (title != null)
+        {
             Console.Write($"{title}: ");
         }
+
         Console.Write(str);
 #endif
     }
@@ -690,9 +747,11 @@ public class EasyObject :
             AnsiConsole.WriteLine(str);
         }
 #else
-        if (title != null) {
+        if (title != null)
+        {
             Console.Write($"{title}: ");
         }
+
         Console.WriteLine(str);
 #endif
     }
@@ -917,7 +976,7 @@ public class EasyObject :
             maxDepth: maxDepth,
             hideKeys: hideKeys,
             removeSurrogatePair: removeSurrogatePair
-            );
+        );
 #endif
     }
 
@@ -1336,12 +1395,26 @@ public class EasyObject :
 #endif
     }
 
+    private static List<string> TextToLines(string text)
+    {
+        List<string> lines = [];
+        using (StringReader sr = new StringReader(text))
+        {
+            string? line;
+            while ((line = sr.ReadLine()) != null)
+            {
+                lines.Add(line);
+            }
+        }
+
+        return lines;
+    }
+
     public static string CurrentSourceCodeLine()
     {
         var trace = Environment.StackTrace;
-        var lines = EasySystem.TextToLines(trace);
+        var lines = TextToLines(trace);
         if (lines.Count == 0) return "[!! UNKNOWN SOURCE CODE LINE !!]";
-
         return ReplacePathsWithUrls(lines[lines.Count - 1].Trim());
     }
 
@@ -1416,7 +1489,7 @@ public class EasyObject :
         }
 
         var trace = Environment.StackTrace;
-        var lines = EasySystem.TextToLines(trace);
+        var lines = TextToLines(trace);
         lines = lines.Skip(2).ToList();
         trace = "\n" + string.Join("\n", lines);
         trace = ReplacePathsWithUrls(trace);

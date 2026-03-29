@@ -8,7 +8,7 @@
     <RootNamespace>EasyObject</RootNamespace>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <WarningsAsErrors>nullable</WarningsAsErrors>
-    <NoWarn></NoWarn>
+    <!--<NoWarn></NoWarn>-->
     <Authors>JavaCommons</Authors>
     <Company>JavaCommons Technologies</Company>
     <Product>EasyObject</Product>

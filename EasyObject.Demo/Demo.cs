@@ -1,3 +1,8 @@
+
+#if TEST_MINI
+using EasyObject = Global.MiniEasyObject;
+#endif
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -6,7 +11,11 @@ using System.Linq;
 using System.Xml.Linq;
 using Demo;
 using Global;
+#if TEST_MINI
+using static Global.MiniEasyObject;
+#else
 using static Global.EasyObject;
+#endif
 using static Global.EasySystem;
 
 try
@@ -226,6 +235,7 @@ try
                         }
                                   }
                       """;
+
     EasyObject trimTest;
 
     trimTest = FromJson(trimmedJson);
@@ -378,9 +388,10 @@ try
     var eo1 = FromJson(text1);
     Log(eo1);
     //Crash();
+#if true //!TEST_MINI
     embeddedEO = ExtractFromFile(embeddedJsonUrl);
     Log(embeddedEO, "embeddedEO(nuget-assets::my-ls.exe)");
-    //Crash();
+#endif
 
     var noError = FromJson("\n", true);
     Log(noError, "noError");

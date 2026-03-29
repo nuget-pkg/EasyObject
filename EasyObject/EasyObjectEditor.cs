@@ -1,15 +1,29 @@
+// ReSharper disable RedundantNameQualifier
+// ReSharper disable ForCanBeConvertedToForeach
 namespace Global {
+#if MINIMAL
+    using EasyObject = Global.MiniEasyObject;
+#endif
     using System.Collections.Generic;
     using System.Dynamic;
+#if MINIMAL
+    using static MiniEasyObject;
+#else
     using static EasyObject;
+#endif
+
+#if MINIMAL
+    internal static class MiniEasyObjectEditor {
+#else
     internal static class EasyObjectEditor {
+#endif
         public static EasyObject Clone(
             EasyObject x,
             uint maxDepth = 0,
             List<string>? hideKeys = null,
             bool always = true
             ) {
-            if (x == null) return Null;
+            //if (x == null) return Null;
             hideKeys = hideKeys ?? new List<string>();
             if (!always) {
                 if (maxDepth == 0 && hideKeys.Count == 0) {
@@ -25,7 +39,7 @@ namespace Global {
             uint maxDepth = 0,
             List<string>? hideKeys = null
             ) {
-            if (x == null) return;
+            //if (x == null) return;
             hideKeys = hideKeys ?? new List<string>();
             TrimHelper(1, x, maxDepth, hideKeys);
         }
@@ -35,7 +49,7 @@ namespace Global {
             uint maxDepth,
             List<string> hideKeys
             ) {
-            if (x == null) return;
+            //if (x == null) return;
             if (maxDepth > 0) {
                 if (depth >= maxDepth) {
                     if (x.IsArray) {
@@ -49,7 +63,6 @@ namespace Global {
                             string key = keys[i];
                             Clear(x.dictionary![key]);
                         }
-                        //return;
                     }
                 }
             }
@@ -70,7 +83,7 @@ namespace Global {
             }
         }
         private static void Clear(EasyObject x) {
-            if (x == null) return;
+            // (x == null) return;
             if (x.IsArray) {
                 x.list!.Clear();
             } else if (x.IsObject) {
@@ -89,7 +102,7 @@ namespace Global {
             } else if (x.IsObject) {
                 var result = new ExpandoObject();
                 var dictionary = x.dictionary!;
-                var keys = dictionary.Keys!;
+                var keys = dictionary.Keys;
                 foreach (var key in keys) {
                     (result as IDictionary<string, object?>)[key] = ExportToExpandoObject(dictionary[key]);
                 }
