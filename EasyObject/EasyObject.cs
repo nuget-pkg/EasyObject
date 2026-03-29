@@ -1415,11 +1415,14 @@ public class EasyObject :
         var trace = Environment.StackTrace;
         var lines = TextToLines(trace);
         if (lines.Count == 0) return "[!! UNKNOWN SOURCE CODE LINE !!]";
-        return ReplacePathsWithUrls(lines[lines.Count - 1].Trim());
+        return ReplacePathsWithUrls(lines[lines.Count - 1]).Trim();
     }
 
     public static string ReplacePathsWithUrls(string stackTrace)
     {
+#if true
+        //return stackTrace;
+#endif
         // https://shorturl.ly/FToES C# search through string like stack trace for source code path and replace all of them to a "file:" urls - Google
         stackTrace = stackTrace.Replace("場所 ", "in ");
         stackTrace = stackTrace.Replace(":行 ", ":line ");
@@ -1456,6 +1459,7 @@ public class EasyObject :
                 return match.Value;
             }
         });
+        result = result.Replace("   in ", "   at ");
         return result;
     }
 

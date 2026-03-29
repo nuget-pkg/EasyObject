@@ -37,7 +37,7 @@
 	</PropertyGroup>
     <ItemGroup>
 		<ProjectReference Include="..\EasyObject\EasyObject.csproj"/>
-		<ProjectReference Include="..\Classic\MiniEasyObject.csproj"/>
+		<ProjectReference Include="..\MiniEasyObject\MiniEasyObject.csproj"/>
 	</ItemGroup>
     <ItemGroup>
         <Content Include="assets\**">
