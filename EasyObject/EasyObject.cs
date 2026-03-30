@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Dynamic;
 using System.IO;
 using System.Linq;
@@ -700,6 +701,10 @@ public class
         uint maxDepth = 0,
         List<string>? hideKeys = null
     ) {
+        if (!EasySystem.IsWindowsPlatform()) {
+            Log(x, title: title, compact: compact, maxDepth: maxDepth, hideKeys: hideKeys);
+            return;
+        }
         if (title == null) title = "Message";
         hideKeys ??= new List<string>();
         if (maxDepth > 0 || hideKeys.Count > 0) {
@@ -1128,7 +1133,17 @@ public class
         _ViewInNotepadPlusPlus(CurrentSourceCodeLine(rawString: true));
         Environment.Exit(exitCode);
     }
-    private static void _ViewInNotepadPlusPlus(string currLine) {
+    public static void Alert(object? x = null, string? title = null) {
+        if (title == null) title = "EasyObject.Alert()";
+        var currLine = CurrentSourceCodeLine(rawString: true);
+        string message = currLine.Trim();
+        if (x != null) {
+            message += "\n" + ToPrintable(x);
+        }
+        Message(message, title: title);
+        _ViewInNotepadPlusPlus(currLine, wait: true);
+    }
+    private static void _ViewInNotepadPlusPlus(string currLine, bool wait = false) {
         if (!EasySystem.IsWindowsPlatform()) return;
         string? _filePath = null;
         string? _lineNumber = null;
@@ -1163,85 +1178,113 @@ public class
             UseAnsiConsole = true;
             ShowDetail = false;
             string? exe = null;
-            // [Emacs Client]
-            exe = EasySystem.FindExePath("emacsclientw.exe");
-            //exe = EasySystem.FindExePath("emacsclient.exe");
-            if (exe != null) {
-                Log(exe, "⁅markup⁆[green]Emacs Client is installed...opening the location with it[/]");
-                if (_lineNumber == null) {
-                    EasySystem.LaunchProcess(exe, ["-r", "-n", "-a", "\"\"", "+1", _filePath]);
-                    //EasySystem.RunToConsole(exe, ["-r", "-n", "-a", "\"\"", "+1", _filePath]);
-                    return;
+            Process? p = null;
+            if (Environment.GetEnvironmentVariable("I_HATE_EMACS") == null) {
+                if (!wait) {
+                    // [Emacs Client]
+                    exe = EasySystem.FindExePath("emacsclientw.exe");
+                    //exe = EasySystem.FindExePath("emacsclient.exe");
+                    if (exe != null) {
+                        Log(exe, "⁅markup⁆[green]Emacs Client is installed...opening the location with it[/]");
+                        if (_lineNumber == null) {
+                            p = EasySystem.LaunchProcess(exe, ["-r", "-n", "-a", "\"\"", "+1", _filePath]);
+                            if (p != null && wait) p.WaitForExit();
+                            //EasySystem.RunToConsole(exe, ["-r", "-n", "-a", "\"\"", "+1", _filePath]);
+                            return;
+                        }
+                        else {
+                            p = EasySystem.LaunchProcess(exe, ["-r", "-n", "-a", "\"\"", $"+{_lineNumber}", _filePath]);
+                            if (p != null && wait) p.WaitForExit();
+                            //EasySystem.RunToConsole(exe, ["-r", "-n", "-a", "\"\"", $"+{_lineNumber}", _filePath]);
+                            return;
+                        }
+                    }
                 }
-                else {
-                    EasySystem.LaunchProcess(exe, ["-r", "-n", "-a", "\"\"", $"+{_lineNumber}", _filePath]);
-                    //EasySystem.RunToConsole(exe, ["-r", "-n", "-a", "\"\"", $"+{_lineNumber}", _filePath]);
-                    return;
-                }
-            }
-            // [Emacs Editor]
-            exe = EasySystem.FindExePath("runemacs.exe");
-            if (exe != null) {
-                Log(exe, "⁅markup⁆[green]Emacs Editor is installed...opening the location with it[/]");
-                if (_lineNumber == null) {
-                    EasySystem.LaunchProcess(exe, ["+1", _filePath]);
-                    return;
-                }
-                else {
-                    EasySystem.LaunchProcess(exe, [$"+{_lineNumber}", _filePath]);
-                    return;
-                }
-            }
-            // [Zed Editor]
-            exe = EasySystem.FindExePath("Zed.exe");
-            if (exe != null) {
-                Log(exe, "⁅markup⁆[green]Zed Editor is installed...opening the location with it[/]");
-                if (_lineNumber == null) {
-                    EasySystem.LaunchProcess(exe, [_filePath]);
-                    return;
-                }
-                else {
-                    EasySystem.LaunchProcess(exe, [$"{_filePath}:{_lineNumber}"]);
-                    return;
-                }
-            }
-            // [Visual Studio Code]
-            exe = EasySystem.FindExePath("code.cmd");
-            if (exe != null) {
-                Log(exe, "⁅markup⁆[green]Visual Studio Code is installed...opening the location with it[/]");
-                if (_lineNumber == null) {
-                    EasySystem.LaunchProcess(exe, [_filePath]);
-                    return;
-                }
-                else {
-                    EasySystem.LaunchProcess(exe, ["-g", $"{_filePath}:{_lineNumber}"]);
-                    return;
+                // [Emacs Editor]
+                if (wait)
+                    exe = EasySystem.FindExePath("emacs.exe");
+                else
+                    exe = EasySystem.FindExePath("runemacs.exe");
+                if (exe != null) {
+                    Log(exe, "⁅markup⁆[green]Emacs Editor is installed...opening the location with it[/]");
+                    if (_lineNumber == null) {
+                        p = EasySystem.LaunchProcess(exe, ["+1", _filePath]);
+                        if (p != null && wait) p.WaitForExit();
+                        return;
+                    }
+                    else {
+                        p = EasySystem.LaunchProcess(exe, [$"+{_lineNumber}", _filePath]);
+                        if (p != null && wait) p.WaitForExit();
+                        return;
+                    }
                 }
             }
-            // [Notepad++]
-            exe = EasySystem.FindExePath("Notepad++.exe");
-            if (exe != null) {
-                Log(exe, "⁅markup⁆[green]Notepad++.exe is installed...opening the location with it[/]");
-                if (_lineNumber == null) {
-                    EasySystem.LaunchProcess(exe, [_filePath, "-n1"]);
-                    return;
-                }
-                else {
-                    EasySystem.LaunchProcess(exe, [_filePath, $"-n{_lineNumber}"]);
-                    return;
+            if (Environment.GetEnvironmentVariable("I_HATE_ZED") == null) {
+                // [Zed Editor]
+                exe = EasySystem.FindExePath("Zed.exe");
+                if (exe != null) {
+                    Log(exe, "⁅markup⁆[green]Zed Editor is installed...opening the location with it[/]");
+                    if (_lineNumber == null) {
+                        p = EasySystem.LaunchProcess(exe, [_filePath]);
+                        if (p != null && wait) p.WaitForExit();
+                        return;
+                    }
+                    else {
+                        p = EasySystem.LaunchProcess(exe, [$"{_filePath}:{_lineNumber}"]);
+                        if (p != null && wait) p.WaitForExit();
+                        return;
+                    }
                 }
             }
-            // [Notepad3.exe]
-            exe = EasySystem.FindExePath("Notepad3.exe");
-            if (exe != null) {
-                Log(exe, "⁅markup⁆[green]Notepad3.exe is installed...opening the location with it[/]");
-                if (_lineNumber == null) {
-                    EasySystem.LaunchProcess(exe, ["/g", "1", _filePath]);
-                    return;
+            if (Environment.GetEnvironmentVariable("I_HATE_VSCODE") == null) {
+                // [Visual Studio Code]
+                exe = EasySystem.FindExePath("code.cmd");
+                if (exe != null) {
+                    Log(exe, "⁅markup⁆[green]Visual Studio Code is installed...opening the location with it[/]");
+                    if (_lineNumber == null) {
+                        p = EasySystem.LaunchProcess(exe, [_filePath]);
+                        if (p != null && wait) p.WaitForExit();
+                        return;
+                    }
+                    else {
+                        p = EasySystem.LaunchProcess(exe, ["-g", $"{_filePath}:{_lineNumber}"]);
+                        if (p != null && wait) p.WaitForExit();
+                        return;
+                    }
                 }
-                else {
-                    EasySystem.LaunchProcess(exe, ["/g", _lineNumber, _filePath]);
-                    return;
+            }
+            if (Environment.GetEnvironmentVariable("I_HATE_NOTEPAD_PLUS_PLUS") == null) {
+                // [Notepad++]
+                exe = EasySystem.FindExePath("Notepad++.exe");
+                if (exe != null) {
+                    Log(exe, "⁅markup⁆[green]Notepad++.exe is installed...opening the location with it[/]");
+                    if (_lineNumber == null) {
+                        p = EasySystem.LaunchProcess(exe, [_filePath, "-n1"]);
+                        if (p != null && wait) p.WaitForExit();
+                        return;
+                    }
+                    else {
+                        p = EasySystem.LaunchProcess(exe, [_filePath, $"-n{_lineNumber}"]);
+                        if (p != null && wait) p.WaitForExit();
+                        return;
+                    }
+                }
+            }
+            if (Environment.GetEnvironmentVariable("I_HATE_NOTEPAD3") == null) {
+                // [Notepad3.exe]
+                exe = EasySystem.FindExePath("Notepad3.exe");
+                if (exe != null) {
+                    Log(exe, "⁅markup⁆[green]Notepad3.exe is installed...opening the location with it[/]");
+                    if (_lineNumber == null) {
+                        p = EasySystem.LaunchProcess(exe, ["/g", "1", _filePath]);
+                        if (p != null && wait) p.WaitForExit();
+                        return;
+                    }
+                    else {
+                        p = EasySystem.LaunchProcess(exe, ["/g", _lineNumber, _filePath]);
+                        if (p != null && wait) p.WaitForExit();
+                        return;
+                    }
                 }
             }
             if (exe == null) {
