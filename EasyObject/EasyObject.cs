@@ -1225,12 +1225,18 @@ public class
                 if (exe != null) {
                     Log(exe, "⁅markup⁆[green]Zed Editor is installed...opening the location with it[/]");
                     if (_lineNumber == null) {
-                        p = EasySystem.LaunchProcess(exe, [_filePath]);
+                        if (wait)
+                            p = EasySystem.LaunchProcess(exe, ["--wait", _filePath]);
+                        else
+                            p = EasySystem.LaunchProcess(exe, [_filePath]);
                         if (p != null && wait) p.WaitForExit();
                         return;
                     }
                     else {
-                        p = EasySystem.LaunchProcess(exe, [$"{_filePath}:{_lineNumber}"]);
+                        if (wait)
+                            p = EasySystem.LaunchProcess(exe, ["--wait", $"{_filePath}:{_lineNumber}"]);
+                        else
+                            p = EasySystem.LaunchProcess(exe, [$"{_filePath}:{_lineNumber}"]);
                         if (p != null && wait) p.WaitForExit();
                         return;
                     }
