@@ -1160,6 +1160,8 @@ public class
             }
         });
         if (_filePath != null && File.Exists(_filePath)) {
+            UseAnsiConsole = true;
+            ShowDetail = false;
             string? exe = null;
             // [Visual Studio Code]
             exe = EasySystem.FindExePath("code.cmd");
