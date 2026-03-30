@@ -1163,18 +1163,28 @@ public class
             UseAnsiConsole = true;
             ShowDetail = false;
             string? exe = null;
-            // [Visual Studio Code]
-            exe = EasySystem.FindExePath("code.cmd");
-            if (exe != null)
-            {
-                Log(exe, "⁅markup⁆[green]Visual Studio Code is installed...opening the location with it[/]");
-                if (_lineNumber == null)
-                {
+            // [Zed Editor]
+            exe = EasySystem.FindExePath("Zed.exe");
+            if (exe != null) {
+                Log(exe, "⁅markup⁆[green]Zed Editor is installed...opening the location with it[/]");
+                if (_lineNumber == null) {
                     EasySystem.LaunchProcess(exe, [_filePath]);
                     return;
                 }
-                else
-                {
+                else {
+                    EasySystem.LaunchProcess(exe, [$"{_filePath}:{_lineNumber}"]);
+                    return;
+                }
+            }
+            // [Visual Studio Code]
+            exe = EasySystem.FindExePath("code.cmd");
+            if (exe != null) {
+                Log(exe, "⁅markup⁆[green]Visual Studio Code is installed...opening the location with it[/]");
+                if (_lineNumber == null) {
+                    EasySystem.LaunchProcess(exe, [_filePath]);
+                    return;
+                }
+                else {
                     EasySystem.LaunchProcess(exe, ["-g", $"{_filePath}:{_lineNumber}"]);
                     return;
                 }
@@ -1192,9 +1202,11 @@ public class
                     return;
                 }
             }
-            if (exe == null)
-            {
-                Log("⁅markup⁆[green]Visual Studio Code (code.cmd) was not found in PATH; automatic source code viewing canelled![/]");
+            if (exe == null) {
+                Log(
+                    "⁅markup⁆[green]Zed Edtor(Zed.exe) was not found in PATH; automatic source code viewing canelled![/]");
+                Log(
+                    "⁅markup⁆[green]Visual Studio Code (code.cmd) was not found in PATH; automatic source code viewing canelled![/]");
                 Log("⁅markup⁆[green]Notepad++.exe was not found in PATH; automatic source code viewing canelled![/]");
             }
         }
