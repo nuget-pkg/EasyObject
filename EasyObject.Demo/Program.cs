@@ -32,7 +32,7 @@ public class Program {
             UseAnsiConsole = true;
             DebugOutput = true;
             Log("⭕️ハロー©⭕️");
-            Alert("after ⭕️ハロー©⭕️");
+            Break("after ⭕️ハロー©⭕️");
             WriteLine("(1)");
             var eoNull = Null;
             Log(eoNull.ToJson());

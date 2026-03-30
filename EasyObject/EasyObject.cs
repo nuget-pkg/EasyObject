@@ -1133,8 +1133,8 @@ public class
         _ViewInNotepadPlusPlus(CurrentSourceCodeLine(rawString: true));
         Environment.Exit(exitCode);
     }
-    public static void Alert(object? x = null, string? title = null) {
-        if (title == null) title = "EasyObject.Alert()";
+    public static void Break(object? x = null, string? title = null) {
+        if (title == null) title = "EasyObject.Break()";
         var currLine = CurrentSourceCodeLine(rawString: true);
         string message = currLine.Trim();
         if (x != null) {
@@ -1179,7 +1179,7 @@ public class
             ShowDetail = false;
             string? exe = null;
             Process? p = null;
-            if (Environment.GetEnvironmentVariable("I_HATE_EMACS") == null) {
+            if (EasySystem.GetEnv("I_HATE_EMACS") != "1") {
                 if (!wait) {
                     // [Emacs Client]
                     exe = EasySystem.FindExePath("emacsclientw.exe");
@@ -1219,7 +1219,7 @@ public class
                     }
                 }
             }
-            if (Environment.GetEnvironmentVariable("I_HATE_ZED") == null) {
+            if (EasySystem.GetEnv("I_HATE_ZED") != "1") {
                 // [Zed Editor]
                 exe = EasySystem.FindExePath("Zed.exe");
                 if (exe != null) {
@@ -1242,7 +1242,7 @@ public class
                     }
                 }
             }
-            if (Environment.GetEnvironmentVariable("I_HATE_VSCODE") == null) {
+            if (EasySystem.GetEnv("I_HATE_VSCODE") != "1") {
                 // [Visual Studio Code]
                 exe = EasySystem.FindExePath("code.cmd");
                 if (exe != null) {
@@ -1267,7 +1267,7 @@ public class
                     }
                 }
             }
-            if (Environment.GetEnvironmentVariable("I_HATE_NOTEPAD_PP") == null) {
+            if (EasySystem.GetEnv("I_HATE_NOTEPAD_PP") != "1") {
                 // [Notepad++]
                 exe = EasySystem.FindExePath("Notepad++.exe");
                 if (exe != null) {
@@ -1284,7 +1284,7 @@ public class
                     }
                 }
             }
-            if (Environment.GetEnvironmentVariable("I_HATE_NOTEPAD_3") == null) {
+            if (EasySystem.GetEnv("I_HATE_NOTEPAD_3") != "1") {
                 // [Notepad3.exe]
                 exe = EasySystem.FindExePath("Notepad3.exe");
                 if (exe != null) {
