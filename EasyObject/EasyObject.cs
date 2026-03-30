@@ -642,7 +642,7 @@ public class
                 if (StandardError.IsMarkupString(str)) {
                     StandardError.RenderLine(str);
                     if (ShowLineNumbers)
-                        StandardError.RenderLine($"      [blue]{MarkupSafeString(CurrentSourceCodeLine())}[/]");
+                        StandardError.RenderLine($"⁅markup⁆      [blue]{MarkupSafeString(CurrentSourceCodeLine())}[/]");
                     return;
                 }
             var s2 = ToPrintable(x, null, compact, maxDepth,
@@ -1267,7 +1267,7 @@ public class
                     }
                 }
             }
-            if (Environment.GetEnvironmentVariable("I_HATE_NOTEPAD_PLUS_PLUS") == null) {
+            if (Environment.GetEnvironmentVariable("I_HATE_NOTEPAD_PP") == null) {
                 // [Notepad++]
                 exe = EasySystem.FindExePath("Notepad++.exe");
                 if (exe != null) {
@@ -1284,7 +1284,7 @@ public class
                     }
                 }
             }
-            if (Environment.GetEnvironmentVariable("I_HATE_NOTEPAD3") == null) {
+            if (Environment.GetEnvironmentVariable("I_HATE_NOTEPAD_3") == null) {
                 // [Notepad3.exe]
                 exe = EasySystem.FindExePath("Notepad3.exe");
                 if (exe != null) {
@@ -1317,6 +1317,11 @@ public class
                 Log(
                     "⁅markup⁆[green]Notepad3.exe was not found in PATH; automatic source code viewing canelled![/]"
                 );
+                if (wait) {
+                    Console.Error.Write("Hit any key to continue...");
+                    Console.Error.Flush();
+                    Console.In.ReadLine();
+                }
             }
         }
     }
