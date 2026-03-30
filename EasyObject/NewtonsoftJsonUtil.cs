@@ -1,10 +1,15 @@
-﻿using Newtonsoft.Json;
+﻿#if MINIMAL
+using EasyObject = Global.MiniEasyObject;
+#endif
+using Newtonsoft.Json;
 using Newtonsoft.Json.Bson;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 using System.Xml.Linq;
+using NUnit.Framework.Internal;
 using Formatting = Newtonsoft.Json.Formatting;
 // ReSharper disable CheckNamespace
 namespace Global;
@@ -17,11 +22,14 @@ public partial class NewtonsoftJsonUtil {
         var result = JsonConvert.DeserializeObject(json, new JsonSerializerSettings {
             DateParseHandling = DateParseHandling.None
         });
-        return EasyObject.FromObject(result);
+        return ParseNewtonsoftJson(result);
     }
     public static T? DeserializeFromJson<T>(string json, T? fallback = default(T)) {
         if (String.IsNullOrEmpty(json)) return fallback;
         return JsonConvert.DeserializeObject<T>(json);
+    }
+    public static EasyObject FromJsonFile(string filePath) {
+        return DeserializeFromJson(File.ReadAllText(filePath));
     }
     public static byte[] SerializeToToBson(dynamic? x) {
         x = EasyObject.FromObject(x).ToObject(asDynamicObject: false);
@@ -82,5 +90,26 @@ public partial class NewtonsoftJsonUtil {
         if (xmlNode == null) return EasyObject.Null;
         string json = JsonConvert.SerializeXmlNode(xmlNode, Formatting.Indented);
         return EasyObject.FromJson(json);
+    }
+    private static EasyObject ParseNewtonsoftJson(dynamic? x) {
+        if (x == null) return EasyObject.Null;
+        if (x is JArray jarray) {
+            List<object> array = jarray.ToObject<List<object>>()!;
+            var result = EasyObject.NewArray();
+            foreach (var item in array) {
+                result.Add(ParseNewtonsoftJson(item));
+            }
+            return result;
+        }
+        if (x is JObject jobject) {
+            Dictionary<string, object> dict = jobject.ToObject<Dictionary<string, object>>()!;
+            var result = EasyObject.NewObject();
+            var keys = dict.Keys;
+            foreach (var key in keys) {
+                result.Add(key, ParseNewtonsoftJson(dict[key]));
+            }
+            return result;
+        }
+        return x;
     }
 }

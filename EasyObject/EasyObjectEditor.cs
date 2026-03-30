@@ -11,7 +11,6 @@ namespace Global {
 #else
     using static EasyObject;
 #endif
-
 #if MINIMAL
     internal static class MiniEasyObjectEditor {
 #else
@@ -22,7 +21,7 @@ namespace Global {
             uint maxDepth = 0,
             List<string>? hideKeys = null,
             bool always = true
-            ) {
+        ) {
             //if (x == null) return Null;
             hideKeys = hideKeys ?? new List<string>();
             if (!always) {
@@ -38,7 +37,7 @@ namespace Global {
             EasyObject x,
             uint maxDepth = 0,
             List<string>? hideKeys = null
-            ) {
+        ) {
             //if (x == null) return;
             hideKeys = hideKeys ?? new List<string>();
             TrimHelper(1, x, maxDepth, hideKeys);
@@ -48,60 +47,64 @@ namespace Global {
             EasyObject x,
             uint maxDepth,
             List<string> hideKeys
-            ) {
+        ) {
             //if (x == null) return;
             if (maxDepth > 0) {
                 if (depth >= maxDepth) {
                     if (x.IsArray) {
                         for (int i = 0; i < x.Count; i++) {
-                            Clear(x.list![i]);
+                            Clear(x.RealList![i]);
                         }
                         //return;
-                    } else if (x.IsObject) {
+                    }
+                    else if (x.IsObject) {
                         var keys = x.Keys;
                         for (int i = 0; i < keys.Count; i++) {
                             string key = keys[i];
-                            Clear(x.dictionary![key]);
+                            Clear(x.RealDictionary![key]);
                         }
                     }
                 }
             }
             if (x.IsArray) {
                 for (int i = 0; i < x.Count; i++) {
-                    TrimHelper(depth + 1, x.list![i], maxDepth, hideKeys);
+                    TrimHelper(depth + 1, x.RealList![i], maxDepth, hideKeys);
                 }
-            } else if (x.IsObject) {
+            }
+            else if (x.IsObject) {
                 var keys = x.Keys;
                 for (int i = 0; i < keys.Count; i++) {
                     string key = keys[i];
                     if (hideKeys.Contains(key)) {
-                        x.dictionary!.Remove(key);
+                        x.RealDictionary!.Remove(key);
                         continue;
                     }
-                    TrimHelper(depth + 1, x.dictionary![key], maxDepth, hideKeys);
+                    TrimHelper(depth + 1, x.RealDictionary![key], maxDepth, hideKeys);
                 }
             }
         }
         private static void Clear(EasyObject x) {
             // (x == null) return;
             if (x.IsArray) {
-                x.list!.Clear();
-            } else if (x.IsObject) {
-                x.dictionary!.Clear();
+                x.RealList!.Clear();
+            }
+            else if (x.IsObject) {
+                x.RealDictionary!.Clear();
             }
         }
         public static dynamic? ExportToExpandoObject(EasyObject x) {
             if (x.IsNull) return null;
             if (x.IsArray) {
                 var result = new List<dynamic?>();
-                var list = x.list!;
+                var list = x.RealList!;
                 foreach (var item in list) {
                     result.Add(ExportToExpandoObject(item));
                 }
                 return result;
-            } else if (x.IsObject) {
+            }
+            else if (x.IsObject) {
                 var result = new ExpandoObject();
-                var dictionary = x.dictionary!;
+                var dictionary = x.RealDictionary!;
                 var keys = dictionary.Keys;
                 foreach (var key in keys) {
                     (result as IDictionary<string, object?>)[key] = ExportToExpandoObject(dictionary[key]);
@@ -110,7 +113,5 @@ namespace Global {
             }
             return x.RealData;
         }
-
     }
 }
-

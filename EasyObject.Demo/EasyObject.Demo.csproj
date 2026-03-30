@@ -29,16 +29,15 @@
         <Reference Include="System.Xml"/>
         <Reference Include="System.Xml.Linq"/>
     </ItemGroup>
-	<PropertyGroup>
-		<IsPackable>false</IsPackable>
-	</PropertyGroup>
-	<PropertyGroup>
-		<DefineConstants>$(DefineConstants);TEST_MINIxxx</DefineConstants>
-	</PropertyGroup>
+    <PropertyGroup>
+        <IsPackable>false</IsPackable>
+    </PropertyGroup>
+    <PropertyGroup>
+        <DefineConstants>$(DefineConstants);TEST_MINIxxx</DefineConstants>
+    </PropertyGroup>
     <ItemGroup>
-		<ProjectReference Include="..\EasyObject\EasyObject.csproj"/>
-		<ProjectReference Include="..\MiniEasyObject\MiniEasyObject.csproj"/>
-	</ItemGroup>
+        <ProjectReference Include="..\EasyObject\EasyObject.csproj"/>
+    </ItemGroup>
     <ItemGroup>
         <Content Include="assets\**">
             <Link>assets\%(RecursiveDir)\%(Filename)%(Extension)</Link>

@@ -1,45 +1,56 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <IsPackable>false</IsPackable>
-    <StartupObject>Misc.Misc01</StartupObject>
-    <LangVersion>latest</LangVersion>
-    <TargetFrameworks>net462;net10.0</TargetFrameworks>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>disable</ImplicitUsings>
-    <RootNamespace>Misc</RootNamespace>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <WarningsAsErrors>nullable</WarningsAsErrors>
-    <!--<NoWarn></NoWarn>-->
-    <Authors>JavaCommons</Authors>
-    <Company>JavaCommons Technologies</Company>
-    <DebugType>full</DebugType>
-  </PropertyGroup>
-  <ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789`))' == 'net'">
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.IO.Compression" />
-    <Reference Include="System.Linq" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Web" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Xml.Linq" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\EasyObject\EasyObject.csproj" />
-    <ProjectReference Include="..\MiniEasyObject\MiniEasyObject.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="EasyObjectClassic" Version="2026.330.525.17" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="assets\**">
-      <Link>assets\%(RecursiveDir)\%(Filename)%(Extension)</Link>
-      <TargetPath>assets\%(RecursiveDir)\%(Filename)%(Extension)</TargetPath>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <IsPackable>false</IsPackable>
+        <StartupObject>Misc.Program</StartupObject>
+        <!--
+        <StartupObject>Misc.Misc01</StartupObject>
+        -->
+        <LangVersion>latest</LangVersion>
+        <TargetFrameworks>net462;net10.0</TargetFrameworks>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>disable</ImplicitUsings>
+        <RootNamespace>Misc</RootNamespace>
+        <PlatformTarget>AnyCPU</PlatformTarget>
+        <WarningsAsErrors>nullable</WarningsAsErrors>
+        <!--<NoWarn></NoWarn>-->
+        <Authors>JavaCommons</Authors>
+        <Company>JavaCommons Technologies</Company>
+        <DebugType>full</DebugType>
+        <DefineConstants>$(DefineConstants);MINIMAL</DefineConstants>
+    </PropertyGroup>
+    <ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789`))' == 'net'">
+        <Reference Include="Microsoft.CSharp"/>
+        <Reference Include="System"/>
+        <Reference Include="System.Core"/>
+        <Reference Include="System.Data"/>
+        <Reference Include="System.Data.DataSetExtensions"/>
+        <Reference Include="System.IO.Compression"/>
+        <Reference Include="System.Linq"/>
+        <Reference Include="System.Net.Http"/>
+        <Reference Include="System.Web"/>
+        <Reference Include="System.Xml"/>
+        <Reference Include="System.Xml.Linq"/>
+    </ItemGroup>
+    <ItemGroup>
+        <!--
+        <ProjectReference Include="..\EasyObject\EasyObject.csproj"/>
+        -->
+        <ProjectReference Include="..\MiniEasyObject\MiniEasyObject.csproj"/>
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="EasyObjectClassic" Version="2026.330.525.17"/>
+    </ItemGroup>
+    <ItemGroup>
+        <Content Include="assets\**">
+            <Link>assets\%(RecursiveDir)\%(Filename)%(Extension)</Link>
+            <TargetPath>assets\%(RecursiveDir)\%(Filename)%(Extension)</TargetPath>
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
+    <ItemGroup>
+        <Compile Include="..\EasyObject.Demo\Program.cs">
+            <Link>Program.cs</Link>
+        </Compile>
+    </ItemGroup>
 </Project>

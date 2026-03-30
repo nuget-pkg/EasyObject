@@ -1,11 +1,7 @@
-﻿// ReSharper disable RedundantUsingDirective
+﻿namespace Misc;
 using System;
-using System.Collections.Generic;
-using Newtonsoft.Json.Linq;
-namespace Misc;
 using Global;
-using static Global.EasyObject;
-using static Global.EasySystem;
+using static Global.MiniEasyObject;
 public class Misc01 {
     public static void Main(string[] args) {
         try {
