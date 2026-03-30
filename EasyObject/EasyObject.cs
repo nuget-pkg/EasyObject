@@ -1163,6 +1163,21 @@ public class
             UseAnsiConsole = true;
             ShowDetail = false;
             string? exe = null;
+            // [Emacs Editor]
+            exe = EasySystem.FindExePath("ec.exe"); // My Special Emacsclient; not released yet.
+            if (exe == null)
+                exe = EasySystem.FindExePath("runemacs.exe");
+            if (exe != null) {
+                Log(exe, "⁅markup⁆[green]Emacs Editor is installed...opening the location with it[/]");
+                if (_lineNumber == null) {
+                    EasySystem.LaunchProcess(exe, ["+1", _filePath]);
+                    return;
+                }
+                else {
+                    EasySystem.LaunchProcess(exe, [$"+{_lineNumber}", _filePath]);
+                    return;
+                }
+            }
             // [Zed Editor]
             exe = EasySystem.FindExePath("Zed.exe");
             if (exe != null) {
@@ -1217,7 +1232,9 @@ public class
             }
             if (exe == null) {
                 Log(
-                    "⁅markup⁆[green]Zed Edtor(Zed.exe) was not found in PATH; automatic source code viewing canelled![/]");
+                    "⁅markup⁆[green]Emacs Edtor was not found in PATH; automatic source code viewing canelled![/]");
+                Log(
+                    "⁅markup⁆[green]Zed Edtor was not found in PATH; automatic source code viewing canelled![/]");
                 Log(
                     "⁅markup⁆[green]Visual Studio Code (code.cmd) was not found in PATH; automatic source code viewing canelled![/]");
                 Log("⁅markup⁆[green]Notepad++.exe was not found in PATH; automatic source code viewing canelled![/]");
