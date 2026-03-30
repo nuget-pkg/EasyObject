@@ -1202,12 +1202,26 @@ public class
                     return;
                 }
             }
+            // [Notepad3.exe]
+            exe = EasySystem.FindExePath("Notepad3.exe");
+            if (exe != null) {
+                Log(exe, "⁅markup⁆[green]Notepad3.exe is installed...opening the location with it[/]");
+                if (_lineNumber == null) {
+                    EasySystem.LaunchProcess(exe, ["/g", "1", _filePath]);
+                    return;
+                }
+                else {
+                    EasySystem.LaunchProcess(exe, ["/g", _lineNumber, _filePath]);
+                    return;
+                }
+            }
             if (exe == null) {
                 Log(
                     "⁅markup⁆[green]Zed Edtor(Zed.exe) was not found in PATH; automatic source code viewing canelled![/]");
                 Log(
                     "⁅markup⁆[green]Visual Studio Code (code.cmd) was not found in PATH; automatic source code viewing canelled![/]");
                 Log("⁅markup⁆[green]Notepad++.exe was not found in PATH; automatic source code viewing canelled![/]");
+                Log("⁅markup⁆[green]Notepad3.exe was not found in PATH; automatic source code viewing canelled![/]");
             }
         }
     }
