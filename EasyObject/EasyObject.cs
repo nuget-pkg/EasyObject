@@ -1160,18 +1160,40 @@ public class
             }
         });
         if (_filePath != null && File.Exists(_filePath)) {
-            var exe = EasySystem.FindExePath("Notepad++.exe");
-            if (exe == null) {
-                Log("⁅markup⁆[green]Notepad++.exe was not found in PATH; automatic source code viewing canelled![/]");
+            string? exe = null;
+            // [Visual Studio Code]
+            exe = EasySystem.FindExePath("code.cmd");
+            if (exe != null)
+            {
+                Log(exe, "⁅markup⁆[green]Visual Studio Code is installed...opening the location with it[/]");
+                if (_lineNumber == null)
+                {
+                    EasySystem.LaunchProcess(exe, [_filePath]);
+                    return;
+                }
+                else
+                {
+                    EasySystem.LaunchProcess(exe, ["-g", $"{_filePath}:{_lineNumber}"]);
+                    return;
+                }
             }
-            else {
+            // [Notepad++]
+            exe = EasySystem.FindExePath("Notepad++.exe");
+            if (exe != null) {
                 Log(exe, "⁅markup⁆[green]Notepad++.exe is installed...opening the location with it[/]");
                 if (_lineNumber == null) {
                     EasySystem.LaunchProcess(exe, [_filePath, "-n1"]);
+                    return;
                 }
                 else {
                     EasySystem.LaunchProcess(exe, [_filePath, $"-n{_lineNumber}"]);
+                    return;
                 }
+            }
+            if (exe == null)
+            {
+                Log("⁅markup⁆[green]Visual Studio Code (code.cmd) was not found in PATH; automatic source code viewing canelled![/]");
+                Log("⁅markup⁆[green]Notepad++.exe was not found in PATH; automatic source code viewing canelled![/]");
             }
         }
     }
