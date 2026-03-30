@@ -43,20 +43,9 @@ public class EasyConsole //: IAnsiConsole
         return str;
 #endif
     }
-
-    // public void Clear(bool home)
-    // {
-    //     _ansiConsole.Clear(home);
-    // }
-    //
     public void Write(IRenderable renderable) {
         _ansiConsole.Write(renderable);
     }
-
-    // public void WriteLine(IRenderable renderable)
-    // {
-    //     _ansiConsole.WriteLine(renderable);
-    // }
     public void Render(string s) {
 #if !USE_SPECTRE_CONSOLE
         this._writer.WriteLine(s);
@@ -151,17 +140,18 @@ public class
     IExportToCommonJson,
     IImportFromCommonJson {
     public object? RealData /*= null*/;
-    public static readonly IParseJson DefaultJsonParser = new CSharpEasyLanguageHandler(true);
+    //public static readonly IParseJson DefaultJsonParser = new CSharpEasyLanguageHandler(true);
+    public static readonly IParseJson DefaultJsonParser = new NewtonsoftJsonHandler();
     public static IParseJson? JsonParser /*= null*/;
     public static bool DebugOutput /*= false*/;
-    public static bool ShowDetail /*= false*/;
+    public static bool ShowDetail = true;
     public static bool ForceAscii /*= false*/;
     public static bool UseAnsiConsole /*= false*/;
 #if USE_SPECTRE_CONSOLE
-    public static EasyConsole AnsiOutput;
-    public static EasyConsole AnsiError;
+    public static EasyConsole StandardOutput;
+    public static EasyConsole StandardError;
 #endif
-    public static bool ShowLineNumbers = true; /* Introduced @ 2026-03-26 17:02 */
+    public static bool ShowLineNumbers = true;
 #if MINIMAL
     static MiniEasyObject()
 #else
@@ -170,8 +160,8 @@ public class
     {
         ClearSettings();
 #if USE_SPECTRE_CONSOLE
-        AnsiOutput = new EasyConsole(Console.Out);
-        AnsiError = new EasyConsole(Console.Error);
+        StandardOutput = new EasyConsole(Console.Out);
+        StandardError = new EasyConsole(Console.Error);
 #endif
     }
     public static void ClearSettings() {
@@ -193,8 +183,8 @@ public class
                     AutoFlush = true
                 });
 #if USE_SPECTRE_CONSOLE
-            AnsiOutput = new EasyConsole(Console.Out);
-            AnsiError = new EasyConsole(Console.Error);
+            StandardOutput = new EasyConsole(Console.Out);
+            StandardError = new EasyConsole(Console.Error);
 #endif
         }
         catch (Exception) {
@@ -572,8 +562,8 @@ public class
         string? title = null
     ) {
 #if USE_SPECTRE_CONSOLE
-        if (title != null) AnsiOutput.Render($"{title}: ");
-        AnsiOutput.Render(str);
+        if (title != null) StandardOutput.Render($"{title}: ");
+        StandardOutput.Render(str);
 #else
         if (title != null) Console.Write($"{title}: ");
         Console.Write(str);
@@ -584,8 +574,8 @@ public class
         string? title = null
     ) {
 #if USE_SPECTRE_CONSOLE
-        if (title != null) AnsiOutput.Render($"{title}: ");
-        AnsiOutput.RenderLine(str);
+        if (title != null) StandardOutput.Render($"{title}: ");
+        StandardOutput.RenderLine(str);
 #else
         if (title != null) Console.Write($"{title}: ");
         Console.WriteLine(str);
@@ -610,15 +600,15 @@ public class
         }
 #if USE_SPECTRE_CONSOLE
         if (UseAnsiConsole) {
-            if (title != null) AnsiOutput.Render($"{title}: ");
+            if (title != null) StandardOutput.Render($"{title}: ");
             if (x != null && x is string str)
-                if (AnsiOutput.IsMarkupString(str)) {
-                    AnsiOutput.RenderLine(str);
+                if (StandardOutput.IsMarkupString(str)) {
+                    StandardOutput.RenderLine(str);
                     return;
                 }
             var s2 = ToPrintable(x, null, compact, maxDepth,
                 removeSurrogatePair);
-            AnsiOutput.WriteLine(s2);
+            StandardOutput.WriteLine(s2);
             return;
         }
 #endif
@@ -645,21 +635,21 @@ public class
         }
 #if USE_SPECTRE_CONSOLE
         if (UseAnsiConsole) {
-            AnsiError.Render("⁅markup⁆[cyan][[Log]][/] ");
-            if (title != null) AnsiError.Render($"{title}: ");
+            StandardError.Render("⁅markup⁆[cyan][[Log]][/] ");
+            if (title != null) StandardError.Render($"{title}: ");
             if (x != null && x is string str)
-                if (AnsiError.IsMarkupString(str)) {
-                    AnsiError.RenderLine(str);
+                if (StandardError.IsMarkupString(str)) {
+                    StandardError.RenderLine(str);
                     if (ShowLineNumbers)
-                        AnsiError.RenderLine($"      [blue]{MarkupSafeString(CurrentSourceCodeLine())}[/]");
+                        StandardError.RenderLine($"      [blue]{MarkupSafeString(CurrentSourceCodeLine())}[/]");
                     return;
                 }
             var s2 = ToPrintable(x, null, compact, maxDepth,
                 removeSurrogatePair);
             //var s3 = MarkupSafeString(s2);
-            AnsiError.WriteLine(s2);
+            StandardError.WriteLine(s2);
             if (ShowLineNumbers)
-                AnsiError.RenderLine($"⁅markup⁆      [blue]{MarkupSafeString(CurrentSourceCodeLine())}[/]");
+                StandardError.RenderLine($"⁅markup⁆      [blue]{MarkupSafeString(CurrentSourceCodeLine())}[/]");
             return;
         }
 #endif
@@ -688,13 +678,13 @@ public class
         }
 #if USE_SPECTRE_CONSOLE
         if (UseAnsiConsole) {
-            AnsiError.Render("⁅markup⁆[purple][[Debug]][/] ");
-            if (title != null) AnsiError.Render($"⁅markup⁆[purple]{MarkupSafeString(title)}:[/] ");
+            StandardError.Render("⁅markup⁆[purple][[Debug]][/] ");
+            if (title != null) StandardError.Render($"⁅markup⁆[purple]{MarkupSafeString(title)}:[/] ");
             var s2 = ToPrintable(x, null, compact, maxDepth,
                 removeSurrogatePair);
             var s3 = MarkupSafeString(s2);
-            AnsiError.RenderLine($"⁅markup⁆[purple]{s3}[/]");
-            AnsiError.RenderLine($"⁅markup⁆        [purple]{MarkupSafeString(CurrentSourceCodeLine())}[/]");
+            StandardError.RenderLine($"⁅markup⁆[purple]{s3}[/]");
+            StandardError.RenderLine($"⁅markup⁆        [purple]{MarkupSafeString(CurrentSourceCodeLine())}[/]");
             return;
         }
 #endif
@@ -1054,11 +1044,15 @@ public class
         }
         return lines;
     }
-    public static string CurrentSourceCodeLine() {
+    public static string CurrentSourceCodeLine(bool rawString = false) {
         var trace = Environment.StackTrace;
         var lines = TextToLines(trace);
         if (lines.Count == 0) return "[!! UNKNOWN SOURCE CODE LINE !!]";
-        return ReplacePathsWithUrls(lines[lines.Count - 1]).Trim();
+        string lastLine = lines[lines.Count - 1];
+        if (rawString) {
+            return lastLine;
+        }
+        return ReplacePathsWithUrls(lastLine).Trim();
     }
     public static string ReplacePathsWithUrls(string stackTrace) {
 #if true
@@ -1120,6 +1114,7 @@ public class
             );
             UseAnsiConsole = true;
             Log($"⁅markup⁆[red][[!! ABORTING...WITH EXIT CODE {exitCode} !!]][/]");
+            _ViewInNotepadPlusPlus(CurrentSourceCodeLine(rawString: true));
             Environment.Exit(exitCode);
         }
         var trace = Environment.StackTrace;
@@ -1130,7 +1125,55 @@ public class
         Log(trace, "STACK TRACE");
         UseAnsiConsole = true;
         Log($"⁅markup⁆[red][[!! ABORTING...WITH EXIT CODE {exitCode} !!]][/]");
+        _ViewInNotepadPlusPlus(CurrentSourceCodeLine(rawString: true));
         Environment.Exit(exitCode);
+    }
+    private static void _ViewInNotepadPlusPlus(string currLine) {
+        if (!EasySystem.IsWindowsPlatform()) return;
+        string? _filePath = null;
+        string? _lineNumber = null;
+        var filePathRegex =
+            new Regex(
+                @"(?<path>[a-zA-Z]:\\(?:[^<>:""/\\|?*]+\\)*[^<>:""/\\|?*]+):.+\s+(?<line_num>\d+)$",
+                RegexOptions.Multiline | RegexOptions.IgnoreCase);
+        // Use a MatchEvaluator delegate for the replacement to apply the Uri conversion logic to each match.
+        var result = filePathRegex.Replace(currLine, match => {
+            var filePath = match.Groups["path"].Value;
+            //Console.WriteLine($"filePath={filePath}");
+            _filePath = filePath;
+            var line_num = match.Groups["line_num"].Value;
+            //line_num = line_num.Replace(":line ", "");
+            _lineNumber = line_num;
+            try {
+                // The System.Uri constructor handles the specific formatting requirements for file URIs,
+                // including correct handling of slashes and special characters like spaces.
+                var fileUri = new Uri(filePath);
+                // We use AbsoluteUri which correctly formats the scheme (file://) and path for a URL.
+                //Console.WriteLine($"line_num(3)={line_num}");
+                var result = $"in {fileUri.AbsoluteUri} : line {line_num}";
+                //Console.WriteLine($"result={result}");
+                return result;
+            }
+            catch (UriFormatException) {
+                // Fallback for paths that the Uri class might not handle correctly (e.g., highly unusual formats)
+                return match.Value;
+            }
+        });
+        if (_filePath != null && File.Exists(_filePath)) {
+            var exe = EasySystem.FindExePath("Notepad++.exe");
+            if (exe == null) {
+                Log("⁅markup⁆[green]Notepad++.exe was not found in PATH; automatic source code viewing canelled![/]");
+            }
+            else {
+                Log(exe, "⁅markup⁆[green]Notepad++.exe is installed...opening the location with it[/]");
+                if (_lineNumber == null) {
+                    EasySystem.LaunchProcess(exe, [_filePath, "-n1"]);
+                }
+                else {
+                    EasySystem.LaunchProcess(exe, [_filePath, $"-n{_lineNumber}"]);
+                }
+            }
+        }
     }
     private static void _AbortOnAssertionFailure(Exception ex, object? hint, int exitCode) {
         ShowDetail = false;
@@ -1145,6 +1188,7 @@ public class
             $"⁅markup⁆[blue]{MarkupSafeString(ReplacePathsWithUrls(ex.ToString()))}[/]",
             "⁅markup⁆[blue]EXCEPTION[/]");
         Log($"⁅markup⁆[red][[!! ABORTING...WITH EXIT CODE {exitCode} !!]][/]");
+        _ViewInNotepadPlusPlus(CurrentSourceCodeLine(rawString: true));
         Environment.Exit(exitCode);
     }
     public static void AssertTrue(bool condition, object? hint = null, int exitCode = 1) {

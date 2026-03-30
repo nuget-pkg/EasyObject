@@ -27,7 +27,7 @@ public class Program {
 // ReSharper disable HeuristicUnreachableCode
         try {
             SetupConsoleEncoding();
-            ShowLineNumbers = false;
+            //ShowLineNumbers = false;
             ShowDetail = true;
             UseAnsiConsole = true;
             DebugOutput = true;
@@ -456,16 +456,11 @@ public class Program {
             var xml01Eo = NewtonsoftJsonUtil.DeserializeFromXml(xml01);
             Log(xml01Eo);
             //
-            //EasySystem.RunToConsole("bash", ["-c", "ls -ltr"]);
-            //var newton = NewtonsoftJsonUtil.DeserializeFromJson("[11,null,33.15,[44,55], {'a': 123}]");
-            var newton = NewtonsoftJsonUtil.DeserializeFromJson("11");
-            ShowDetail = true;
-            Log(newton, title: "newton");
-            Log(FromObject(newton));
-            if (true) {
+            if (false) {
+                Abort();
             }
             //
-            if (false) AssertFalse(11 + 22 == 333); // !! THIS FAILS !!
+            if (false) AssertFalse(11 + 22 == 33); // !! THIS FAILS !!
             //
             if (false) {
                 // !! THIS FAILS (WITH INTELLIGENT HINT...) !!
@@ -483,7 +478,7 @@ public class Program {
                     }
                 });
             //
-            if (false) throw new NotImplementedException();
+            if (true) throw new NotImplementedException();
         }
         catch (Exception ex) {
             Abort(ex); // !! throw new NotImplementedException(); GOES HERE !!
