@@ -1334,7 +1334,7 @@ public class
         ShowDetail = false;
         ShowLineNumbers = false;
         UseAnsiConsole = true;
-        Log("⁅markup⁆[red][[!! TRUST FAILED !!]][/]");
+        Log("⁅markup⁆[red][[!! TRUST VIOLATED !!]][/]");
         Log($"⁅markup⁆[red]{MarkupSafeString(CurrentSourceCodeLine())}[/]");
         UseAnsiConsole = false;
         if (hint != null) Log(hint, "HINT MESSAGE (FOR THIS TRUST VIOLATION)");
