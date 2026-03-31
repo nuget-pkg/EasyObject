@@ -1056,10 +1056,27 @@ public class
         return lines;
     }
     public static string CurrentSourceCodeLine(bool rawString = false) {
+#if false
         var trace = Environment.StackTrace;
+#else
+        StackTrace st = new StackTrace(true);
+        var trace = st.ToString();
+        //Console.Error.WriteLine(trace);
+#endif
         var lines = TextToLines(trace);
         if (lines.Count == 0) return "[!! UNKNOWN SOURCE CODE LINE !!]";
-        string lastLine = lines[lines.Count - 1];
+        string? lastLine = null;
+        for (int i = lines.Count - 1; i >= 0; i--) {
+            string line = lines[i];
+            var m = EasySystem.FindFirstMatch(line, " [0-9]+$");
+            if (m != null) {
+                lastLine = line;
+                break;
+            }
+        }
+        if (lastLine == null) {
+            return "!! LINE INFO NOT FOUND !!";
+        }
         if (rawString) {
             return lastLine;
         }
