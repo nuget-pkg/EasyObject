@@ -39,9 +39,6 @@
         <ProjectReference Include="..\MiniEasyObject\MiniEasyObject.csproj"/>
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="EasyObjectClassic" Version="2026.331.2223.35"/>
-    </ItemGroup>
-    <ItemGroup>
         <Content Include="assets\**">
             <Link>assets\%(RecursiveDir)\%(Filename)%(Extension)</Link>
             <TargetPath>assets\%(RecursiveDir)\%(Filename)%(Extension)</TargetPath>

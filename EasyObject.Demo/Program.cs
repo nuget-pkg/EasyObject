@@ -222,12 +222,6 @@ public class Program {
             trimTest.Trim(hideKeys: ["a"]);
             Log(trimTest, "(3)");
             Log(trimTest.ToJson(keyAsSymbol: true));
-            var parser = new EasyLanguageParser(true, true);
-            var result1 = parser.ParseJson("'🔥引火★★帝国🔥'");
-            Log(result1, "result1");
-            var parser2 = new EasyLanguageParser(true, false);
-            var result2 = parser2.ParseJson("'🔥引火★★帝国🔥'");
-            Log(result2, "result2");
             var containSurrogate = FromObject(new { title = "🔥引火★★帝国🔥" });
             Log(containSurrogate);
             Log(containSurrogate, removeSurrogatePair: true);
@@ -490,72 +484,6 @@ public class Program {
         }
     }
     // ReSharper disable once UnusedMember.Local
-    private static void LegacyLangParserDemo() {
-        EasyObject.JsonParser = new CSharpEasyLanguageHandler(numberAsDecimal: true);
-        var progJson = """
-                       #! /usr/bin/env program
-                       [11, null, "abc"]
-                       """;
-        Log(FromJson(progJson));
-        Log(FromJson(null));
-        var array = NewArray(1, null, "abc", FromJson(progJson));
-        Log(array, "array");
-        var obj = NewObject("a", 111, "b", FromJson(progJson));
-        Log(obj, "obj");
-        // Test newLisp expression
-        var assocList = FromJson("""
-                                 ( ("a" 123) ("b" true) ("c" false) ("d" nil) )
-                                 """);
-        Log(assocList, "assocList");
-        var member = assocList["a"];
-        Log(member, "member");
-        dynamic assocDyn = assocList;
-        var member2 = assocDyn["a"];
-        Log(member2, "member2");
-        var member3 = assocDyn.a;
-        Log(member3, "member3");
-        var progJson2 = """
-                        #! /usr/bin/env program
-                        (defvar $list [11, null, "abc"])
-                        """;
-        UseAnsiConsole = true;
-        var prog2 = FromJson(progJson2);
-        //Log(prog2, "prog2");
-        prog2.Dump("prog2");
-        var parsere3 = new CSharpEasyLanguageHandler(true);
-        var cljureCode01 = File.ReadAllText(GitProjectFile(GetCwd(), "assets", "cljure_code01.clj")!);
-        Log(cljureCode01, "cljureCode01");
-        DumpObject(parsere3.ParseJsonSequence(cljureCode01), "cljureCode01(parsed)");
-        var cljureCode02 = File.ReadAllText((GitProjectFile(GetCwd(), "assets", "cljure_code02.clj")!));
-        Log(cljureCode02, "cljureCode02");
-        DumpObject(parsere3.ParseJsonSequence(cljureCode02), "cljureCode02(parsed)");
-        WriteLine(
-            """[universal]THIS is unicode(log): [252ee4f0-d951-4ea4-bd3f-95e9af976141]2B55[252ee4f0-d951-4ea4-bd3f-95e9af976141]uuFE0F [252ee4f0-d951-4ea4-bd3f-95e9af976141]u2622 [252ee4f0-d951-4ea4-bd3f-95e9af976141]u2603[252ee4f0-d951-4ea4-bd3f-95e9af976141]uu2603[252ee4f0-d951-4ea4-bd3f-95e9af976141]uu2603 [252ee4f0-d951-4ea4-bd3f-95e9af976141]u262E[/universal]""");
-        var xmlString = "<Root><Child>Content</Child></Root>";
-        var doc = XDocument.Parse(xmlString);
-        Log(doc.Root?.ToString());
-        ForceAscii = false;
-        ////var printed = FromJson(trimmedJson);
-        ////DumpObject(printed, "⁅markup⁆[blue]printed[/]");
-        ////printed.Dump("⁅markup⁆[red]printed[/]");
-        Log("⁅markup⁆[blue]printed[/]", "⁅markup⁆[red](?°□°)?[/] [blue]┻━┻[/]");
-        Log("⁅markup⁆[blue]printed[/]", "⁅markup⁆[red](?°□°)?[/] [blue]┻━┻[/]");
-        FromObject(parsere3.ParseJsonSequence(cljureCode02)).Dump(hideKeys: ["!"]);
-        EasyObject ast;
-        ast = FromJson(Demo.BabelOutput.AstJson);
-        var xo = ast.ExportToDynamicObject();
-        Log(xo, "xo");
-        ast = FromJson(Demo.BabelOutput.AstJson);
-        ast.Trim(hideKeys: ["loc", "start", "end"], maxDepth: 3);
-        Log(ast, "ast(1)");
-        ast = FromJson(Demo.BabelOutput.AstJson);
-        ast.Trim(hideKeys: ["loc", "start", "end"] /*, maxDepth: 2*/);
-        Log(ast, "ast(2)", maxDepth: 2);
-        Log(FromJson(Demo.BabelOutput.AstJson), "ast", true, 2, ["start", "end", "loc"]);
-        Log(FromJson(Demo.BabelOutput.AstJson), "⁅markup⁆[green]ast[/]", true, 2,
-            ["start", "end", "loc"]);
-        ClearSettings();
-    }
     internal class Exchangeable1 : IExportToPlainObject {
         public object ExportToPlainObject() {
             return 123;

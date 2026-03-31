@@ -2,7 +2,7 @@
     <PropertyGroup>
         <LangVersion>latest</LangVersion>
         <TargetFrameworks>net462;net8.0</TargetFrameworks>
-        <Version>2026.0401.0109.50</Version>
+        <Version>2026.0401.0512.57</Version>
         <Nullable>enable</Nullable>
         <ImplicitUsings>disable</ImplicitUsings>
         <RootNamespace>MiniEasyObject</RootNamespace>
@@ -34,31 +34,30 @@
         <IsPackable>true</IsPackable>
     </PropertyGroup>
     <ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789`))' == 'net'">
-        <Reference Include="Microsoft.CSharp" />
-        <Reference Include="System" />
-        <Reference Include="System.Core" />
-        <Reference Include="System.Data" />
-        <Reference Include="System.Data.DataSetExtensions" />
-        <Reference Include="System.IO.Compression" />
-        <Reference Include="System.Linq" />
-        <Reference Include="System.Net.Http" />
-        <Reference Include="System.Web" />
-        <Reference Include="System.Xml" />
-        <Reference Include="System.Xml.Linq" />
+        <Reference Include="Microsoft.CSharp"/>
+        <Reference Include="System"/>
+        <Reference Include="System.Core"/>
+        <Reference Include="System.Data"/>
+        <Reference Include="System.Data.DataSetExtensions"/>
+        <Reference Include="System.IO.Compression"/>
+        <Reference Include="System.Linq"/>
+        <Reference Include="System.Net.Http"/>
+        <Reference Include="System.Web"/>
+        <Reference Include="System.Xml"/>
+        <Reference Include="System.Xml.Linq"/>
     </ItemGroup>
     <ItemGroup>
-        <None Include=".\README.md" Pack="true" PackagePath="" />
+        <None Include=".\README.md" Pack="true" PackagePath=""/>
     </ItemGroup>
     <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-        <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-        <PackageReference Include="System.Dynamic.Runtime" Version="4.3.0" />
+        <PackageReference Include="Microsoft.CSharp" Version="4.7.0"/>
+        <PackageReference Include="System.Dynamic.Runtime" Version="4.3.0"/>
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="NUnit" Version="4.5.1" />
-        <PackageReference Include="OpenSystem" Version="2026.331.2311" />
-        <PackageReference Include="PlainObjectInterface" Version="2026.122.1836.32" />
-        <PackageReference Include="PlainObjectConverter" Version="2026.331.2235.55" />
-        <PackageReference Include="JsoncParser" Version="2026.318.150.53" />
+        <PackageReference Include="NUnit" Version="4.5.1"/>
+        <PackageReference Include="OpenSystem" Version="2026.331.2347.20"/>
+        <PackageReference Include="PlainObjectInterface" Version="2026.122.1836.32"/>
+        <PackageReference Include="PlainObjectConverter" Version="2026.401.418.33"/>
     </ItemGroup>
     <ItemGroup>
         <Compile Include="..\EasyObject\EasyExtensions.cs">

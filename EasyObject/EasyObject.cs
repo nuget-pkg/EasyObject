@@ -1139,7 +1139,7 @@ public class
         Environment.Exit(exitCode);
     }
     public static void Break(object? x = null, string? title = null) {
-        if (title == null) title = "EasyObject.Break()";
+        if (title == null) title = "Break()";
         var currLine = CurrentSourceCodeLine(rawString: true);
         string message = currLine.Trim();
         if (x != null) {
@@ -1180,62 +1180,39 @@ public class
             }
         });
         if (_filePath != null && File.Exists(_filePath)) {
-            UseAnsiConsole = true;
-            ShowDetail = false;
+            if (_lineNumber == null) _lineNumber = "1";
+            //UseAnsiConsole = true;
+            //ShowDetail = false;
             string? exe = null;
             Process? p = null;
+            if (EasySystem.GetEnv("I_HATE_EMACS") != "1") {
+                exe = EasySystem.FindExePath("emacsclient.exe");
+                if (exe != null) {
+                    Log(exe, "⁅markup⁆[green]Emacs Client is installed...opening the location with it[/]");
+                    if (wait) {
+                        p = EasySystem.LaunchProcess(exe, ["-nw", "-a", "\"\"", $"+{_lineNumber}", _filePath]);
+                        if (p != null) p.WaitForExit();
+                        return;
+                    }
+                    else {
+                        p = EasySystem.LaunchProcess(exe, ["-r", "-n", "-a", "\"\"", $"+{_lineNumber}", _filePath]);
+                        if (p != null) p.WaitForExit();
+                        return;
+                    }
+                }
+            }
             if (EasySystem.GetEnv("I_LIKE_SCITE") == "1") {
                 //SciTE https://scintilla.org/SciTE.html
                 exe = EasySystem.FindExePath("SciTE.exe");
                 if (exe != null) {
                     Log(exe, "⁅markup⁆[green]SciTE Editor is installed...opening the location with it[/]");
                     if (_lineNumber == null) {
-                        p = EasySystem.LaunchProcess(exe, [_filePath, "-goto:1"]);
+                        p = EasySystem.LaunchProcess(exe, ["-code.page:65001", _filePath, "-goto:1"]);
                         if (p != null && wait) p.WaitForExit();
                         return;
                     }
                     else {
-                        p = EasySystem.LaunchProcess(exe, [_filePath, $"-goto:{_lineNumber}"]);
-                        if (p != null && wait) p.WaitForExit();
-                        return;
-                    }
-                }
-            }
-            if (EasySystem.GetEnv("I_HATE_EMACS") != "1") {
-                if (!wait) {
-                    // [Emacs Client]
-                    exe = EasySystem.FindExePath("emacsclientw.exe");
-                    //exe = EasySystem.FindExePath("emacsclient.exe");
-                    if (exe != null) {
-                        Log(exe, "⁅markup⁆[green]Emacs Client is installed...opening the location with it[/]");
-                        if (_lineNumber == null) {
-                            p = EasySystem.LaunchProcess(exe, ["-r", "-n", "-a", "\"\"", "+1", _filePath]);
-                            if (p != null && wait) p.WaitForExit();
-                            //EasySystem.RunToConsole(exe, ["-r", "-n", "-a", "\"\"", "+1", _filePath]);
-                            return;
-                        }
-                        else {
-                            p = EasySystem.LaunchProcess(exe, ["-r", "-n", "-a", "\"\"", $"+{_lineNumber}", _filePath]);
-                            if (p != null && wait) p.WaitForExit();
-                            //EasySystem.RunToConsole(exe, ["-r", "-n", "-a", "\"\"", $"+{_lineNumber}", _filePath]);
-                            return;
-                        }
-                    }
-                }
-                // [Emacs Editor]
-                if (wait)
-                    exe = EasySystem.FindExePath("emacs.exe");
-                else
-                    exe = EasySystem.FindExePath("runemacs.exe");
-                if (exe != null) {
-                    Log(exe, "⁅markup⁆[green]Emacs Editor is installed...opening the location with it[/]");
-                    if (_lineNumber == null) {
-                        p = EasySystem.LaunchProcess(exe, ["+1", _filePath]);
-                        if (p != null && wait) p.WaitForExit();
-                        return;
-                    }
-                    else {
-                        p = EasySystem.LaunchProcess(exe, [$"+{_lineNumber}", _filePath]);
+                        p = EasySystem.LaunchProcess(exe, ["-code.page:65001", _filePath, $"-goto:{_lineNumber}"]);
                         if (p != null && wait) p.WaitForExit();
                         return;
                     }
