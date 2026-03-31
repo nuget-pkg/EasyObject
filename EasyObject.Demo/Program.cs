@@ -33,7 +33,7 @@ public class Program {
             DebugOutput = true;
             Log("⭕️ハロー©⭕️");
             Break("after ⭕️ハロー©⭕️");
-            ExitOnTrustViolation(new Exception("I FOUND A PROBLEM"), hint: new { TOM = "FOOLISH !!" }, 777);
+            //ExitOnTrustViolation(new Exception("I FOUND A PROBLEM"), hint: new { TOM = "FOOLISH !!" }, 777);
             WriteLine("(1)");
             var eoNull = Null;
             Log(eoNull.ToJson());
@@ -457,6 +457,9 @@ public class Program {
             Log(xml01);
             var xml01Eo = NewtonsoftJsonUtil.DeserializeFromXml(xml01);
             Log(xml01Eo);
+            //
+            string? exe = FindExeRecursive(@"C:\Program Files\Vim", "gvim.exe");
+            Log(exe);
             //
             if (false) {
                 Abort();

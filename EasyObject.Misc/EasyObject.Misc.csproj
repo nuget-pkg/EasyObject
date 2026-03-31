@@ -39,7 +39,7 @@
         <ProjectReference Include="..\MiniEasyObject\MiniEasyObject.csproj"/>
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="EasyObjectClassic" Version="2026.330.525.17"/>
+        <PackageReference Include="EasyObjectClassic" Version="2026.331.2223.35"/>
     </ItemGroup>
     <ItemGroup>
         <Content Include="assets\**">
