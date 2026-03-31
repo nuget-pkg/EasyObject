@@ -1184,6 +1184,23 @@ public class
             ShowDetail = false;
             string? exe = null;
             Process? p = null;
+            if (EasySystem.GetEnv("I_LIKE_SCITE") == "1") {
+                //SciTE https://scintilla.org/SciTE.html
+                exe = EasySystem.FindExePath("SciTE.exe");
+                if (exe != null) {
+                    Log(exe, "⁅markup⁆[green]SciTE Editor is installed...opening the location with it[/]");
+                    if (_lineNumber == null) {
+                        p = EasySystem.LaunchProcess(exe, [_filePath, "-goto:1"]);
+                        if (p != null && wait) p.WaitForExit();
+                        return;
+                    }
+                    else {
+                        p = EasySystem.LaunchProcess(exe, [_filePath, $"-goto:{_lineNumber}"]);
+                        if (p != null && wait) p.WaitForExit();
+                        return;
+                    }
+                }
+            }
             if (EasySystem.GetEnv("I_HATE_EMACS") != "1") {
                 if (!wait) {
                     // [Emacs Client]
