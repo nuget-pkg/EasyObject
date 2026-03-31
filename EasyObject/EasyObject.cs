@@ -152,7 +152,8 @@ public class
     public static EasyConsole StandardOutput;
     public static EasyConsole StandardError;
 #endif
-    public static bool ShowLineNumbers = false; /**/
+    public const bool SHOW_LINE_NUMBER_DEFAUTLT = true;
+    public static bool ShowLineNumbers = SHOW_LINE_NUMBER_DEFAUTLT; /**/
 #if MINIMAL
     static MiniEasyObject()
 #else
@@ -171,7 +172,7 @@ public class
         ShowDetail = false;
         ForceAscii = false;
         UseAnsiConsole = false;
-        ShowLineNumbers = false; /**/
+        ShowLineNumbers = SHOW_LINE_NUMBER_DEFAUTLT; /**/
     }
     public static void SetupConsoleEncoding(Encoding? encoding = null) {
         if (encoding == null) encoding = Encoding.UTF8;
