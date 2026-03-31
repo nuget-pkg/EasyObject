@@ -1342,11 +1342,11 @@ public class
             }
         }
     }
-    public static void ExitOnTrustViolation(Exception ex, object? hint, int exitCode = 1) {
+    public static void DieOnBeliefBetrayed(Exception ex, object? hint, int exitCode = 1) {
         ShowDetail = false;
         ShowLineNumbers = false;
         UseAnsiConsole = true;
-        Log("⁅markup⁆[red][[!! TRUST VIOLATED !!]][/]");
+        Log("⁅markup⁆[red][[!! BELIEF BETRAYED !!]][/]");
         Log($"⁅markup⁆[red]{MarkupSafeString(CurrentSourceCodeLine())}[/]");
         UseAnsiConsole = false;
         if (hint != null) Log(hint, "HINT MESSAGE (FOR THIS TRUST VIOLATION)");
@@ -1356,19 +1356,19 @@ public class
                 $"⁅markup⁆[blue]{MarkupSafeString(ReplacePathsWithUrls(ex.ToString()))}[/]",
                 "⁅markup⁆[blue]EXCEPTION[/]");
         }
-        Log($"⁅markup⁆[red][[!! EXITING ON TRUST VIOLATION...WITH EXIT CODE {exitCode} !!]][/]");
+        Log($"⁅markup⁆[red][[!! DYING ON BELIEF BETRAYED...WITH EXIT CODE {exitCode} !!]][/]");
         _ViewInFavoriteEditor(CurrentSourceCodeLine(rawString: true), wait: true);
         Environment.Exit(exitCode);
     }
     public static void AssertTrue(bool condition, object? hint = null) {
         Assert.IsTrue(condition, ToPrintable(hint));
     }
-    public static void TrustTrue(bool condition, object? hint = null, int exitCode = 1) {
+    public static void BelieveTrue(bool condition, object? hint = null, int exitCode = 1) {
         try {
             Assert.IsTrue(condition);
         }
         catch (Exception ex) {
-            ExitOnTrustViolation(ex, hint, exitCode);
+            DieOnBeliefBetrayed(ex, hint, exitCode);
         }
     }
     public static void AssertFalse(bool condition, object? hint = null) {
@@ -1379,12 +1379,12 @@ public class
             Assert.IsFalse(condition);
         }
     }
-    public static void TrustFalse(bool condition, object? hint = null, int exitCode = 1) {
+    public static void BelieveFalse(bool condition, object? hint = null, int exitCode = 1) {
         try {
             Assert.IsFalse(condition);
         }
         catch (Exception ex) {
-            ExitOnTrustViolation(ex, hint, exitCode);
+            DieOnBeliefBetrayed(ex, hint, exitCode);
         }
     }
     public static void AssertIdentical(object? expected, object? actual, object? hint = null) {
@@ -1395,23 +1395,23 @@ public class
             Assert.AreEqual(expected, actual);
         }
     }
-    public static void TrustIdentical(object? expected, object? actual, object? hint = null, int exitCode = 1) {
+    public static void BelieveIdentical(object? expected, object? actual, object? hint = null, int exitCode = 1) {
         try {
             Assert.AreEqual(expected, actual);
         }
         catch (Exception ex) {
-            ExitOnTrustViolation(ex, hint, exitCode);
+            DieOnBeliefBetrayed(ex, hint, exitCode);
         }
     }
-    public static void AssertUnified(object? expected, object? actual, object? hint = null) {
+    public static void AssertEquivalent(object? expected, object? actual, object? hint = null) {
         AssertIdentical(FromObject(expected).ToObject(), FromObject(actual).ToObject(), hint: hint);
     }
-    public static void TrustUnified(object? expected, object? actual, object? hint = null, int exitCode = 1) {
+    public static void BelieveEquivalent(object? expected, object? actual, object? hint = null, int exitCode = 1) {
         try {
-            EasyObject.AssertUnified(expected, actual);
+            EasyObject.AssertEquivalent(expected, actual);
         }
         catch (Exception ex) {
-            ExitOnTrustViolation(ex, hint, exitCode);
+            DieOnBeliefBetrayed(ex, hint, exitCode);
         }
     }
     public static void AssertNotIdentical(object? expected, object? actual, object? hint = null) {
@@ -1422,23 +1422,23 @@ public class
             Assert.AreNotEqual(expected, actual);
         }
     }
-    public static void TrustNotIdentical(object? expected, object? actual, object? hint = null, int exitCode = 1) {
+    public static void BelieveNotIdentical(object? expected, object? actual, object? hint = null, int exitCode = 1) {
         try {
             Assert.AreNotEqual(expected, actual);
         }
         catch (Exception ex) {
-            ExitOnTrustViolation(ex, hint, exitCode);
+            DieOnBeliefBetrayed(ex, hint, exitCode);
         }
     }
-    public static void AssertNotUnified(object? expected, object? actual, object? hint = null) {
+    public static void AssertNotEquivalent(object? expected, object? actual, object? hint = null) {
         AssertNotIdentical(FromObject(expected).ToObject(), FromObject(actual).ToObject(), hint: hint);
     }
-    public static void TrustNotUnified(object? expected, object? actual, object? hint = null, int exitCode = 1) {
+    public static void BelieveNotEquivalent(object? expected, object? actual, object? hint = null, int exitCode = 1) {
         try {
-            EasyObject.AssertNotUnified(expected, actual);
+            EasyObject.AssertNotEquivalent(expected, actual);
         }
         catch (Exception ex) {
-            ExitOnTrustViolation(ex, hint, exitCode);
+            DieOnBeliefBetrayed(ex, hint, exitCode);
         }
     }
 }

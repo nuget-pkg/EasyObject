@@ -35,15 +35,15 @@ internal class AssertCapabilitiesTest {
         var list1 = list0.AsStringArray;
         var list2 = list0.AsStringList;
         AssertIdentical(list1, list2);
-        AssertUnified(list0, list1);
+        AssertEquivalent(list0, list1);
         AssertIdentical(list1, new object[] { "A", "B", "C"});
         var dict0 = NewObject("A", 11, "B", 22, "C", null);
         var dict1 = dict0.ToObject(asDynamicObject: false);
         var dict2 = dict0.ToObject(asDynamicObject: true);
         AssertIdentical(dict1, dict2);
-        AssertUnified(dict0, dict1);
+        AssertEquivalent(dict0, dict1);
         Echo("pass-01");
-        AssertUnified(dict1, new { A = 11, B = 22, C = Null });
+        AssertEquivalent(dict1, new { A = 11, B = 22, C = Null });
         Echo("pass-02");
         // /*⁅FAILS⁆*/ AssertIdentical(dict1, new { A = 11, B = 22, C = Null });
         //Echo("pass-03");

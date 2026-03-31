@@ -46,7 +46,7 @@ public class Program {
             WriteLine("(3)");
             Log(eo.TypeValue, "eo.TypeValue");
             WriteLine("(4)");
-            TrustIdentical(eo.TypeValue, @object);
+            BelieveIdentical(eo.TypeValue, @object);
             WriteLine("(5)");
             var a = eo["a"];
             WriteLine("(5.1)");
@@ -59,29 +59,29 @@ public class Program {
             WriteLine("(5.2)");
             Log(eo["a"]);
             WriteLine("(6)");
-            TrustIdentical(eo["a"].Cast<int>(), 123);
+            BelieveIdentical(eo["a"].Cast<int>(), 123);
             WriteLine("(7)");
-            TrustIdentical(eo.Keys, new List<string> { "a" });
+            BelieveIdentical(eo.Keys, new List<string> { "a" });
             Log(eo[0], "eo[0]");
-            TrustIdentical(eo[0].TypeValue, @null);
-            TrustTrue(eo[0].IsNull);
+            BelieveIdentical(eo[0].TypeValue, @null);
+            BelieveTrue(eo[0].IsNull);
             Log(eo[1], "eo[1]");
-            TrustIdentical(eo[1].TypeValue, @null);
-            TrustTrue(eo[1].IsNull);
+            BelieveIdentical(eo[1].TypeValue, @null);
+            BelieveTrue(eo[1].IsNull);
             foreach (var pair in eo.Dynamic) Log(pair, "pair");
             eo = FromObject(null);
             Log(eo.TypeValue, "eo.TypeValue");
-            TrustIdentical(eo.TypeValue, @null);
+            BelieveIdentical(eo.TypeValue, @null);
             eo["b"] = true;
-            TrustIdentical(eo["b"].Cast<bool>(), true);
+            BelieveIdentical(eo["b"].Cast<bool>(), true);
             Log(eo["b"].TypeValue, "eo.b.TypeValue");
-            TrustIdentical(eo["b"].TypeValue, boolean);
+            BelieveIdentical(eo["b"].TypeValue, boolean);
             eo[3] = 777;
             Log(eo[3].Cast<int>());
             Log(eo.TypeValue, "eo.TypeValue");
-            TrustIdentical(eo.TypeValue, EasyObject.array);
-            TrustIdentical(eo.Count, 4);
-            TrustIdentical(eo[0].TypeValue, @null);
+            BelieveIdentical(eo.TypeValue, EasyObject.array);
+            BelieveIdentical(eo.Count, 4);
+            BelieveIdentical(eo[0].TypeValue, @null);
 #if false
         Trust.That(() => { var n = eo[0].Cast<int>(); },
             Throws.TypeOf<System.InvalidCastException>()
@@ -89,7 +89,7 @@ public class Program {
             );
 #endif
             //Trust.That((int?)eo[0], Is.EqualTo(null));
-            TrustIdentical(eo[3].Cast<int>(), 777);
+            BelieveIdentical(eo[3].Cast<int>(), 777);
             foreach (var e in eo.Dynamic) Log(e, "e");
             var eo2 = FromObject(eo); // UnWrap() test
             var eo3 = FromJson("""
@@ -382,7 +382,7 @@ public class Program {
             }
             var overLimit = pickCandidates.Pick(9999);
             Echo(overLimit, "overLimit", true);
-            TrustTrue(11 + 22 == 33);
+            BelieveTrue(11 + 22 == 33);
             pickCandidates = NewObject("a", 11, "b", NewArray(1.1, 1.2, 1.3), "c", null, "d", 777);
             DebugOutput = true;
             for (var p = 0; p < 5; p++) {
@@ -459,13 +459,13 @@ public class Program {
                 Abort();
             }
             //
-            if (false) TrustFalse(11 + 22 == 33); // !! THIS FAILS !!
+            if (false) BelieveFalse(11 + 22 == 33); // !! THIS FAILS !!
             //
             if (false) {
                 // !! THIS FAILS (WITH INTELLIGENT HINT...) !!
                 var A = 11;
                 var B = 22;
-                TrustIdentical(A, B, new { A, B }, 123);
+                BelieveIdentical(A, B, new { A, B }, 123);
             }
             //
             if (false)
