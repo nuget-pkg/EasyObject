@@ -511,36 +511,41 @@ public class
         return poc.Stringify(RealData, indent, sortKeys, keyAsSymbol,
             removeSurrogatePair);
     }
-#if USE_WINCONSOLE
-    public static bool HasConsole()
-    {
-        try
-        {
+#if USE_WINCONSOLExxx
+    public static bool HasConsole() {
+        try {
             // Attempt to get a console property
             int left = Console.CursorLeft;
             return true;
         }
-        catch (IOException)
-        {
+        catch (IOException) {
             // If an exception is caught, no console is available
             return false;
         }
     }
-    public static void AllocConsole()
-    {
-        if (IsConsoleApplication) return;
-        WinConsole.Alloc();
-    }
-    public static void FreeConsole()
-    {
-        if (IsConsoleApplication) return;
-        WinConsole.Free();
-    }
-    public static void ReallocConsole()
-    {
-        if (IsConsoleApplication) return;
-        FreeConsole();
+// コンソールを割り当てるためのWin32 API
+    [DllImport("kernel32.dll", SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static extern bool AllocConsole();
+
+    // コンソールを解放するためのWin32 API
+    [DllImport("kernel32.dll", SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static extern bool FreeConsole();
+    public static void ConsoleAlloc() {
+        //if (IsConsoleApplication) return;
+        if (!EasySystem.IsWindowsPlatform()) return;
         AllocConsole();
+    }
+    public static void ConsoleFree() {
+        //if (IsConsoleApplication) return;
+        if (!EasySystem.IsWindowsPlatform()) return;
+        FreeConsole();
+    }
+    public static void ReallocConsole() {
+        //if (IsConsoleApplication) return;
+        ConsoleFree();
+        ConsoleAlloc();
     }
 #endif
     public static string ToPrintable(object? x, string? title = null, bool compact = false, uint maxDepth = 0,
@@ -1119,7 +1124,7 @@ public class
             );
             UseAnsiConsole = true;
             Log($"⁅markup⁆[red][[!! ABORTING...WITH EXIT CODE {exitCode} !!]][/]");
-            _ViewInNotepadPlusPlus(CurrentSourceCodeLine(rawString: true));
+            _ViewInFavoriteEditor(CurrentSourceCodeLine(rawString: true));
             Environment.Exit(exitCode);
         }
         var trace = Environment.StackTrace;
@@ -1130,7 +1135,7 @@ public class
         Log(trace, "STACK TRACE");
         UseAnsiConsole = true;
         Log($"⁅markup⁆[red][[!! ABORTING...WITH EXIT CODE {exitCode} !!]][/]");
-        _ViewInNotepadPlusPlus(CurrentSourceCodeLine(rawString: true));
+        _ViewInFavoriteEditor(CurrentSourceCodeLine(rawString: true));
         Environment.Exit(exitCode);
     }
     public static void Break(object? x = null, string? title = null) {
@@ -1141,9 +1146,9 @@ public class
             message += "\n" + ToPrintable(x);
         }
         Message(message, title: title);
-        _ViewInNotepadPlusPlus(currLine, wait: true);
+        _ViewInFavoriteEditor(currLine, wait: true);
     }
-    private static void _ViewInNotepadPlusPlus(string currLine, bool wait = false) {
+    private static void _ViewInFavoriteEditor(string currLine, bool wait = false) {
         if (!EasySystem.IsWindowsPlatform()) return;
         string? _filePath = null;
         string? _lineNumber = null;
@@ -1325,11 +1330,11 @@ public class
             }
         }
     }
-    private static void _AbortOnAssertionFailure(Exception ex, object? hint, int exitCode) {
+    public static void ExitOnTrustFailure(Exception ex, object? hint, int exitCode = 0) {
         ShowDetail = false;
         ShowLineNumbers = false;
         UseAnsiConsole = true;
-        Log("⁅markup⁆[red][[!! ASSERTION FAILED !!]][/]");
+        Log("⁅markup⁆[red][[!! TRUST FAILED !!]][/]");
         Log($"⁅markup⁆[red]{MarkupSafeString(CurrentSourceCodeLine())}[/]");
         UseAnsiConsole = false;
         if (hint != null) Log(hint, "HINT MESSAGE (FOR THIS ASSERTION)");
@@ -1337,40 +1342,126 @@ public class
         WriteLine(
             $"⁅markup⁆[blue]{MarkupSafeString(ReplacePathsWithUrls(ex.ToString()))}[/]",
             "⁅markup⁆[blue]EXCEPTION[/]");
-        Log($"⁅markup⁆[red][[!! ABORTING...WITH EXIT CODE {exitCode} !!]][/]");
-        _ViewInNotepadPlusPlus(CurrentSourceCodeLine(rawString: true));
-        Environment.Exit(exitCode);
-    }
-    public static void AssertTrue(bool condition, object? hint = null, int exitCode = 1) {
-        try {
-            Assert.IsTrue(condition, "");
+        _ViewInFavoriteEditor(CurrentSourceCodeLine(rawString: true));
+        if (exitCode == 0)
+        {
+            throw new NUnit.Framework.AssertionException(ex.ToString());
         }
-        catch (Exception ex) {
-            _AbortOnAssertionFailure(ex, hint, exitCode);
-        }
-    }
-    public static void AssertFalse(bool condition, object? hint = null, int exitCode = 1) {
-        try {
-            Assert.IsFalse(condition, "");
-        }
-        catch (Exception ex) {
-            _AbortOnAssertionFailure(ex, hint, exitCode);
+        else
+        {
+            Log($"⁅markup⁆[red][[!! ABORTING ON TRUST FAILURE...WITH EXIT CODE {exitCode} !!]][/]");
+            Environment.Exit(exitCode);
         }
     }
-    public static void AssertEqual(object? expected, object? actual, object? hint = null, int exitCode = 1) {
-        try {
+    public static void AssertTrue(bool condition, object? hint = null)
+    {
+        Assert.IsTrue(condition, ToPrintable(hint));
+    }
+    public static void TrustTrue(bool condition, object? hint = null, int exitCode = 1)
+    {
+        try
+        {
+            Assert.IsTrue(condition);
+        }
+        catch (Exception ex)
+        {
+            ExitOnTrustFailure(ex, hint, exitCode);
+        }
+    }
+    public static void AssertFalse(bool condition, object? hint = null)
+    {
+        if (hint != null)
+        {
+            Assert.IsFalse(condition, ToPrintable(hint));
+        }
+        else
+        {
+            Assert.IsFalse(condition);
+        }
+    }
+    public static void TrustFalse(bool condition, object? hint = null, int exitCode = 1)
+    {
+        try
+        {
+            Assert.IsFalse(condition);
+        }
+        catch (Exception ex)
+        {
+            ExitOnTrustFailure(ex, hint, exitCode);
+        }
+    }
+    public static void AssertIdentical(object? expected, object? actual, object? hint = null)
+    {
+        if (hint != null)
+        {
+            Assert.AreEqual(expected, actual, ToPrintable(hint));
+        }
+        else
+        {
             Assert.AreEqual(expected, actual);
         }
-        catch (Exception ex) {
-            _AbortOnAssertionFailure(ex, hint, exitCode);
+    }
+    public static void TrustIdentical(object? expected, object? actual, object? hint = null, int exitCode = 1)
+    {
+        try
+        {
+            Assert.AreEqual(expected, actual);
+        }
+        catch (Exception ex)
+        {
+            ExitOnTrustFailure(ex, hint, exitCode);
         }
     }
-    public static void AssertNotEqual(object? expected, object? actual, object? hint = null, int exitCode = 1) {
-        try {
+    public static void AssertUnified(object? expected, object? actual, object? hint = null)
+    {
+        AssertIdentical(FromObject(expected).ToObject(), FromObject(actual).ToObject(), hint: hint);
+    }
+    public static void TrustUnified(object? expected, object? actual, object? hint = null, int exitCode = 1)
+    {
+        try
+        {
+            EasyObject.AssertUnified(expected, actual);
+        }
+        catch (Exception ex)
+        {
+            ExitOnTrustFailure(ex, hint, exitCode);
+        }
+    }
+    public static void AssertNotIdentical(object? expected, object? actual, object? hint = null)
+    {
+        if (hint != null)
+        {
+            Assert.AreNotEqual(expected, actual, ToPrintable(hint));
+        }
+        else
+        {
             Assert.AreNotEqual(expected, actual);
         }
-        catch (Exception ex) {
-            _AbortOnAssertionFailure(ex, hint, exitCode);
+    }
+    public static void TrustNotIdentical(object? expected, object? actual, object? hint = null, int exitCode = 1)
+    {
+        try
+        {
+            Assert.AreNotEqual(expected, actual);
+        }
+        catch (Exception ex)
+        {
+            ExitOnTrustFailure(ex, hint, exitCode);
+        }
+    }
+    public static void AssertNotUnified(object? expected, object? actual, object? hint = null)
+    {
+        AssertNotIdentical(FromObject(expected).ToObject(), FromObject(actual).ToObject(), hint: hint);
+    }
+    public static void TrustNotUnified(object? expected, object? actual, object? hint = null, int exitCode = 1)
+    {
+        try
+        {
+            EasyObject.AssertNotUnified(expected, actual);
+        }
+        catch (Exception ex)
+        {
+            ExitOnTrustFailure(ex, hint, exitCode);
         }
     }
 }

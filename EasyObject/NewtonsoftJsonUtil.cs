@@ -34,25 +34,35 @@ public partial class NewtonsoftJsonUtil {
     public static byte[] SerializeToToBson(dynamic? x) {
         x = EasyObject.FromObject(x).ToObject(asDynamicObject: false);
         MemoryStream ms = new MemoryStream();
+#pragma warning disable CS0618 // 型またはメンバーが旧型式です
         using (BsonWriter writer = new BsonWriter(ms)) {
             JsonSerializer serializer = new JsonSerializer();
             serializer.Serialize(writer, x);
         }
+#pragma warning restore CS0618 // 型またはメンバーが旧型式です
         return ms.ToArray();
     }
     public static EasyObject DeserializeFromFromBson(byte[] bson) {
         MemoryStream ms = new MemoryStream(bson);
+#pragma warning disable IDE0063 // 単純な 'using' ステートメントを使用する
+#pragma warning disable CS0618 // 型またはメンバーが旧型式です
         using (BsonReader reader = new BsonReader(ms)) {
             JsonSerializer serializer = new JsonSerializer();
             return EasyObject.FromObject(serializer.Deserialize(reader));
         }
+#pragma warning restore CS0618 // 型またはメンバーが旧型式です
+#pragma warning restore IDE0063 // 単純な 'using' ステートメントを使用する
     }
     public static T? DeserializeFromFromBson<T>(byte[] bson) {
         MemoryStream ms = new MemoryStream(bson);
+#pragma warning disable IDE0063 // 単純な 'using' ステートメントを使用する
+#pragma warning disable CS0618 // 型またはメンバーが旧型式です
         using (BsonReader reader = new BsonReader(ms)) {
             JsonSerializer serializer = new JsonSerializer();
             return serializer.Deserialize<T>(reader);
         }
+#pragma warning restore CS0618 // 型またはメンバーが旧型式です
+#pragma warning restore IDE0063 // 単純な 'using' ステートメントを使用する
     }
     public static EasyObject DeserializeFromObject(dynamic? x) {
         if (x == null) return EasyObject.Null;

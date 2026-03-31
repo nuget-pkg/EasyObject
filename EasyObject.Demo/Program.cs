@@ -45,7 +45,7 @@ public class Program {
             WriteLine("(3)");
             Log(eo.TypeValue, "eo.TypeValue");
             WriteLine("(4)");
-            AssertEqual(eo.TypeValue, @object);
+            TrustIdentical(eo.TypeValue, @object);
             WriteLine("(5)");
             var a = eo["a"];
             WriteLine("(5.1)");
@@ -58,37 +58,37 @@ public class Program {
             WriteLine("(5.2)");
             Log(eo["a"]);
             WriteLine("(6)");
-            AssertEqual(eo["a"].Cast<int>(), 123);
+            TrustIdentical(eo["a"].Cast<int>(), 123);
             WriteLine("(7)");
-            AssertEqual(eo.Keys, new List<string> { "a" });
+            TrustIdentical(eo.Keys, new List<string> { "a" });
             Log(eo[0], "eo[0]");
-            AssertEqual(eo[0].TypeValue, @null);
-            AssertTrue(eo[0].IsNull);
+            TrustIdentical(eo[0].TypeValue, @null);
+            TrustTrue(eo[0].IsNull);
             Log(eo[1], "eo[1]");
-            AssertEqual(eo[1].TypeValue, @null);
-            AssertTrue(eo[1].IsNull);
+            TrustIdentical(eo[1].TypeValue, @null);
+            TrustTrue(eo[1].IsNull);
             foreach (var pair in eo.Dynamic) Log(pair, "pair");
             eo = FromObject(null);
             Log(eo.TypeValue, "eo.TypeValue");
-            AssertEqual(eo.TypeValue, @null);
+            TrustIdentical(eo.TypeValue, @null);
             eo["b"] = true;
-            AssertEqual(eo["b"].Cast<bool>(), true);
+            TrustIdentical(eo["b"].Cast<bool>(), true);
             Log(eo["b"].TypeValue, "eo.b.TypeValue");
-            AssertEqual(eo["b"].TypeValue, boolean);
+            TrustIdentical(eo["b"].TypeValue, boolean);
             eo[3] = 777;
             Log(eo[3].Cast<int>());
             Log(eo.TypeValue, "eo.TypeValue");
-            AssertEqual(eo.TypeValue, EasyObject.array);
-            AssertEqual(eo.Count, 4);
-            AssertEqual(eo[0].TypeValue, @null);
+            TrustIdentical(eo.TypeValue, EasyObject.array);
+            TrustIdentical(eo.Count, 4);
+            TrustIdentical(eo[0].TypeValue, @null);
 #if false
-        Assert.That(() => { var n = eo[0].Cast<int>(); },
+        Trust.That(() => { var n = eo[0].Cast<int>(); },
             Throws.TypeOf<System.InvalidCastException>()
             .With.Message.EqualTo("Null オブジェクトを値型に変換することはできません。")
             );
 #endif
-            //Assert.That((int?)eo[0], Is.EqualTo(null));
-            AssertEqual(eo[3].Cast<int>(), 777);
+            //Trust.That((int?)eo[0], Is.EqualTo(null));
+            TrustIdentical(eo[3].Cast<int>(), 777);
             foreach (var e in eo.Dynamic) Log(e, "e");
             var eo2 = FromObject(eo); // UnWrap() test
             var eo3 = FromJson("""
@@ -387,7 +387,7 @@ public class Program {
             }
             var overLimit = pickCandidates.Pick(9999);
             Echo(overLimit, "overLimit", true);
-            AssertTrue(11 + 22 == 33);
+            TrustTrue(11 + 22 == 33);
             pickCandidates = NewObject("a", 11, "b", NewArray(1.1, 1.2, 1.3), "c", null, "d", 777);
             DebugOutput = true;
             for (var p = 0; p < 5; p++) {
@@ -461,13 +461,13 @@ public class Program {
                 Abort();
             }
             //
-            if (false) AssertFalse(11 + 22 == 33); // !! THIS FAILS !!
+            if (false) TrustFalse(11 + 22 == 33); // !! THIS FAILS !!
             //
             if (false) {
                 // !! THIS FAILS (WITH INTELLIGENT HINT...) !!
                 var A = 11;
                 var B = 22;
-                AssertEqual(A, B, new { A, B }, 123);
+                TrustIdentical(A, B, new { A, B }, 123);
             }
             //
             if (false)
