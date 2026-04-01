@@ -8,7 +8,7 @@ try
 {
     SetupConsoleEncoding();
     UseAnsiConsole = true;
-    string dbPath = GitProjectFile(GetCwd(), "test.db")!;
+    string dbPath = GitProjectFile(GetCwd(), "tmp.db")!;
     Log(dbPath, "dbPath");
     var options = new DbOptions()
         .SetCreateIfMissing(true);
