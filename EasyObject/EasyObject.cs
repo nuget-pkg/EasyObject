@@ -12,7 +12,6 @@ using System.Text.RegularExpressions;
 using NUnit.Framework;
 #if USE_SPECTRE_CONSOLE
 using Spectre.Console;
-using Spectre.Console.Json;
 using Spectre.Console.Rendering;
 #endif
 
@@ -1358,11 +1357,11 @@ public class
             Message(hint, title: "\"HINT MESSAGE (FOR THIS EXPECTATION)\"");
         }
         UseAnsiConsole = true;
-        if (ex != null) {
-            WriteLine(
-                $"⁅markup⁆[blue]{MarkupSafeString(ReplacePathsWithUrls(ex.ToString()))}[/]",
-                "⁅markup⁆[blue]EXCEPTION[/]");
-        }
+        //if (ex != null) {
+        WriteLine(
+            $"⁅markup⁆[blue]{MarkupSafeString(ReplacePathsWithUrls(ex.ToString()))}[/]",
+            "⁅markup⁆[blue]EXCEPTION[/]");
+        //}
         Log($"⁅markup⁆[red][[!! ABORTING FOR BETRAYED EXPECTATION...WITH EXIT CODE {exitCode} !!]][/]");
         _ViewInFavoriteEditor(CurrentSourceCodeLine(rawString: true), wait: true);
         Message($"!! ABORTING FOR BETRAYED EXPECTATION...WITH EXIT CODE {exitCode} !!");
