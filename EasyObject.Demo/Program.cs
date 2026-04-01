@@ -12,6 +12,7 @@ using EasyObject = Global.MiniEasyObject;
 using static Global.MiniEasyObject;
 #else
 namespace EasyObjectDemo;
+
 using static Global.EasyObject;
 #endif
 using System;
@@ -21,11 +22,14 @@ using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 using Global;
-using static Global.EasySystem;
-public class Program {
-    public static void Main(string[] args) {
-// ReSharper disable HeuristicUnreachableCode
-        try {
+using static Global.OpenSystem;
+public class Program
+{
+    public static void Main(string[] args)
+    {
+        // ReSharper disable HeuristicUnreachableCode
+        try
+        {
             SetupConsoleEncoding();
             //ShowLineNumbers = false;
             ShowDetail = true;
@@ -117,13 +121,14 @@ public class Program {
             foreach (var e in i.Dynamic) Log(e);
             ////var bigJson = File.ReadAllText("assets/qiita-9ea0c8fd43b61b01a8da.json");
             var bigJson =
-                File.ReadAllText(EasySystem.GitProjectFile(GetCwd(), "assets",
+                File.ReadAllText(OpenSystem.GitProjectFile(GetCwd(), "assets",
                     "qiita-9ea0c8fd43b61b01a8da.json")!); /**/
             //Log(bigJson);
             var sw = new Stopwatch();
             TimeSpan ts;
             sw.Start();
-            for (var c = 0; c < 5; c++) {
+            for (var c = 0; c < 5; c++)
+            {
                 //var test = FromJson(bigJson);
             }
             sw.Stop();
@@ -133,7 +138,8 @@ public class Program {
             WriteLine($"　{ts.Hours}時間 {ts.Minutes}分 {ts.Seconds}秒 {ts.Milliseconds}ミリ秒");
             WriteLine($"　{sw.ElapsedMilliseconds}ミリ秒");
             sw.Start();
-            for (var c = 0; c < 5; c++) {
+            for (var c = 0; c < 5; c++)
+            {
                 //JObject jsonObject = JObject.Parse(bigJson);
             }
             sw.Stop();
@@ -342,7 +348,8 @@ public class Program {
             //ShowLineNumbers = false;
             //ForceAscii = false;
             //Debug("⭕️🈂️❝END❞🈂️", "Debug() shows line info even if `ShowLineNumbers == false`");
-            void LinkTest(string title, string url) {
+            void LinkTest(string title, string url)
+            {
                 //LogWebLink(title, url);
                 EchoWebLink(title, url);
             }
@@ -376,7 +383,8 @@ public class Program {
 
             // !! NEW FEATURE: YOU CAN PICK n ELEMENTS RANDOMELY !!
             var pickCandidates = NewArray(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
-            for (var p = 0; p < 5; p++) {
+            for (var p = 0; p < 5; p++)
+            {
                 var picked = pickCandidates.Pick(3);
                 Echo(picked, $"piccked[{p}]", true);
             }
@@ -385,7 +393,8 @@ public class Program {
             BelieveTrue(11 + 22 == 33);
             pickCandidates = NewObject("a", 11, "b", NewArray(1.1, 1.2, 1.3), "c", null, "d", 777);
             DebugOutput = true;
-            for (var p = 0; p < 5; p++) {
+            for (var p = 0; p < 5; p++)
+            {
                 var picked = pickCandidates.Pick(3);
                 Echo(picked, $"piccked[{p}]", true);
             }
@@ -409,19 +418,23 @@ public class Program {
             var playlistIdsOf5 = youtubePlaylists.Pick(5).AsStringList;
             Log(playlistIdsOf5, title: "playlistIdsOf5", compact: true);
             //Abort();
-            for (var p = 0; p < playlistIdsOf5.Count; p++) {
+            for (var p = 0; p < playlistIdsOf5.Count; p++)
+            {
                 var playlistId = playlistIdsOf5[p];
                 var playlistObject = youtubePlaylists[playlistId];
                 playlistObject[playlistId].Dump(maxDepth: 1);
                 string playlistTitle = playlistObject.Dynamic.title;
                 int videoCount = playlistObject.Dynamic.videos.Count;
                 Log(new { id = playlistId, title = playlistTitle, videoCount }, compact: true);
-                if (videoCount > 0) {
+                if (videoCount > 0)
+                {
                     var videos = playlistObject["videos"];
                     var video0 = videos[0];
-                    Log(new {
+                    Log(new
+                    {
                         id = playlistId,
-                        title = playlistTitle, videoCount,
+                        title = playlistTitle,
+                        videoCount,
                         firstVideoId =
                             (string /* !! explicit cast is necessary when accessing through EasyObject.Dynamic !! */)
                             video0.Dynamic.id,
@@ -455,13 +468,15 @@ public class Program {
             string? exe = FindExeRecursive(@"C:\Program Files\Vim", "gvim.exe");
             Log(exe);
             //
-            if (false) {
+            if (false)
+            {
                 Abort();
             }
             //
             if (false) BelieveFalse(11 + 22 == 33); // !! THIS FAILS !!
             //
-            if (false) {
+            if (false)
+            {
                 // !! THIS FAILS (WITH INTELLIGENT HINT...) !!
                 var A = 11;
                 var B = 22;
@@ -470,45 +485,59 @@ public class Program {
             //
             if (false)
                 // !! YOUR CAN EXIT (ABORT) PROGRAM ... WITH INTELLIGENT HINTING !!
-                Abort(new {
+                Abort(new
+                {
                     abc = 123,
-                    xyz = new {
+                    xyz = new
+                    {
                         test1 = new[] { "A", "B", "C ハロー©" }
                     }
                 });
             //
             if (true) throw new NotImplementedException();
         }
-        catch (Exception ex) {
+        catch (Exception ex)
+        {
             Abort(ex); // !! throw new NotImplementedException(); GOES HERE !!
         }
     }
     // ReSharper disable once UnusedMember.Local
-    internal class Exchangeable1 : IExportToPlainObject {
-        public object ExportToPlainObject() {
+    internal class Exchangeable1 : IExportToPlainObject
+    {
+        public object ExportToPlainObject()
+        {
             return 123;
         }
     }
-    internal class Exchangeable2 {
-        public object ExportToPlainObject() {
+    internal class Exchangeable2
+    {
+        public object ExportToPlainObject()
+        {
             return 456;
         }
     }
-    internal class Exchangeable3 : IExportToCommonJson {
-        public string ExportToCommonJson() {
+    internal class Exchangeable3 : IExportToCommonJson
+    {
+        public string ExportToCommonJson()
+        {
             return "[11, 22, 33]";
         }
     }
-    internal class Exchangeable4 {
-        public string ExportToCommonJson() {
+    internal class Exchangeable4
+    {
+        public string ExportToCommonJson()
+        {
             return "[111, 222, 333]";
         }
     }
-    internal class MyData : EasyObject {
-        public MyData(int n, string s) {
+    internal class MyData : EasyObject
+    {
+        public MyData(int n, string s)
+        {
             ImportFromPlainObject(new { n, s });
         }
-        public MyData(string json) {
+        public MyData(string json)
+        {
             ImportFromCommonJson(json);
         }
         public int N => Dynamic.n;

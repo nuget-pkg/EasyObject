@@ -1,9 +1,9 @@
-﻿using System.Text;
+using System.Text;
 namespace Misc;
 using System;
 using Global;
 using static Global.MiniEasyObject;
-using static Global.EasySystem;
+using static Global.OpenSystem;
 public class Misc01 {
     public static void Main(string[] args) {
         try {
@@ -13,7 +13,7 @@ public class Misc01 {
             UseAnsiConsole = true;
             DebugOutput = true;
             Log("⭕️ハロー©⭕️");
-            EasySystem.RunToConsole(Encoding.UTF8, "bash", ["-c", "ls -ltr"]);
+            OpenSystem.RunToConsole(Encoding.UTF8, "bash", ["-c", "ls -ltr"]);
             var newton = NewtonsoftJsonUtil.DeserializeFromJson("[11,null,33.15,[44,55], {'a': 123}]");
             Log(newton, title: "newton");
             Log(FromObject(newton));
