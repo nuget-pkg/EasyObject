@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net462</TargetFramework>
+    <PackageId>csharp-stellar-base</PackageId>
+    <Authors>Oliver Schindler</Authors>
+    <Description>.NET Standard 2.0 Stellar Base</Description>
+    <PackOnBuild>true</PackOnBuild>
+    <PackageVersion>1.0.3</PackageVersion>
+    <RootNamespace>StellarBase</RootNamespace>
+    <PackageProjectUrl>https://github.com/schindlo/csharp-stellar-framework</PackageProjectUrl>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\generated\generated.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="NuGet.Build.Packaging" Version="0.2.3" />
+  </ItemGroup>
+</Project>
