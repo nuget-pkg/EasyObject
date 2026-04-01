@@ -1135,6 +1135,7 @@ public class
                 Console.Error.WriteLine(
                     exTrace
                 );
+                _ViewInFavoriteEditor(CurrentSourceCodeLine(rawString: true), wait: false);
                 Message(exTrace, "EXCEPTION (FOR ABORTING PROGRAM)");
             }
             catch (Exception ex) {
@@ -1143,8 +1144,8 @@ public class
             }
             UseAnsiConsole = true;
             Log($"⁅markup⁆[red][[!! ABORTING...WITH EXIT CODE {exitCode} !!]][/]");
-            _ViewInFavoriteEditor(CurrentSourceCodeLine(rawString: true), wait: true);
-            Message($"!! ABORTING...WITH EXIT CODE {exitCode} !!");
+            _ViewInFavoriteEditor(CurrentSourceCodeLine(rawString: true), wait: false);
+            Message(new { message, exitCode }, $"!! ABORTING...WITH EXIT CODE {exitCode} !!");
             Environment.Exit(exitCode);
         }
         var trace = Environment.StackTrace;
@@ -1155,7 +1156,7 @@ public class
         Log(trace, "STACK TRACE");
         UseAnsiConsole = true;
         Log($"⁅markup⁆[red][[!! ABORTING...WITH EXIT CODE {exitCode} !!]][/]");
-        _ViewInFavoriteEditor(CurrentSourceCodeLine(rawString: true), wait: true);
+        _ViewInFavoriteEditor(CurrentSourceCodeLine(rawString: true), wait: false);
         Message(message, title: "Abort()");
         Environment.Exit(exitCode);
     }
@@ -1166,7 +1167,7 @@ public class
         if (x != null) {
             message += "\n" + ToPrintable(x);
         }
-        _ViewInFavoriteEditor(currLine, wait: true);
+        _ViewInFavoriteEditor(currLine, wait: false);
         Message(message, title: title);
     }
     private static void _ViewInFavoriteEditor(string currLine, bool wait = false) {
@@ -1201,6 +1202,11 @@ public class
             }
         });
         if (_filePath != null && File.Exists(_filePath)) {
+            void DelayForEditorStart(Process? p, int msec = 1500) {
+                //if (wait) return;
+                if (p == null) return;
+                OpenSystem.Sleep(msec);
+            }
             if (_lineNumber == null) _lineNumber = "1";
             //UseAnsiConsole = true;
             //ShowDetail = false;
@@ -1212,12 +1218,13 @@ public class
                     Log(exe, "⁅markup⁆[green]Emacs Client is installed...opening the location with it[/]");
                     if (wait) {
                         p = OpenSystem.LaunchProcess(exe, ["-nw", "-a", "\"\"", $"+{_lineNumber}", _filePath]);
+                        DelayForEditorStart(p);
                         if (p != null) p.WaitForExit();
                         return;
                     }
                     else {
                         p = OpenSystem.LaunchProcess(exe, ["-r", "-n", "-a", "\"\"", $"+{_lineNumber}", _filePath]);
-                        if (p != null) p.WaitForExit();
+                        DelayForEditorStart(p);
                         return;
                     }
                 }
@@ -1229,11 +1236,13 @@ public class
                     Log(exe, "⁅markup⁆[green]SciTE Editor is installed...opening the location with it[/]");
                     if (_lineNumber == null) {
                         p = OpenSystem.LaunchProcess(exe, ["-code.page:65001", _filePath, "-goto:1"]);
+                        DelayForEditorStart(p);
                         if (p != null && wait) p.WaitForExit();
                         return;
                     }
                     else {
                         p = OpenSystem.LaunchProcess(exe, ["-code.page:65001", _filePath, $"-goto:{_lineNumber}"]);
+                        DelayForEditorStart(p);
                         if (p != null && wait) p.WaitForExit();
                         return;
                     }
@@ -1249,6 +1258,7 @@ public class
                             p = OpenSystem.LaunchProcess(exe, ["--wait", _filePath]);
                         else
                             p = OpenSystem.LaunchProcess(exe, [_filePath]);
+                        DelayForEditorStart(p);
                         if (p != null && wait) p.WaitForExit();
                         return;
                     }
@@ -1257,6 +1267,7 @@ public class
                             p = OpenSystem.LaunchProcess(exe, ["--wait", $"{_filePath}:{_lineNumber}"]);
                         else
                             p = OpenSystem.LaunchProcess(exe, [$"{_filePath}:{_lineNumber}"]);
+                        DelayForEditorStart(p);
                         if (p != null && wait) p.WaitForExit();
                         return;
                     }
@@ -1272,6 +1283,7 @@ public class
                             p = OpenSystem.LaunchProcess(exe, ["--wait", _filePath]);
                         else
                             p = OpenSystem.LaunchProcess(exe, [_filePath]);
+                        DelayForEditorStart(p);
                         if (p != null && wait) p.WaitForExit();
                         return;
                     }
@@ -1282,6 +1294,7 @@ public class
                             ]);
                         else
                             p = OpenSystem.LaunchProcess(exe, ["-g", $"{_filePath}:{_lineNumber}"]);
+                        DelayForEditorStart(p);
                         if (p != null && wait) p.WaitForExit();
                         return;
                     }
@@ -1294,11 +1307,13 @@ public class
                     Log(exe, "⁅markup⁆[green]Notepad++.exe is installed...opening the location with it[/]");
                     if (_lineNumber == null) {
                         p = OpenSystem.LaunchProcess(exe, [_filePath, "-n1"]);
+                        DelayForEditorStart(p);
                         if (p != null && wait) p.WaitForExit();
                         return;
                     }
                     else {
                         p = OpenSystem.LaunchProcess(exe, [_filePath, $"-n{_lineNumber}"]);
+                        DelayForEditorStart(p);
                         if (p != null && wait) p.WaitForExit();
                         return;
                     }
@@ -1311,11 +1326,13 @@ public class
                     Log(exe, "⁅markup⁆[green]Notepad3.exe is installed...opening the location with it[/]");
                     if (_lineNumber == null) {
                         p = OpenSystem.LaunchProcess(exe, ["/g", "1", _filePath]);
+                        DelayForEditorStart(p);
                         if (p != null && wait) p.WaitForExit();
                         return;
                     }
                     else {
                         p = OpenSystem.LaunchProcess(exe, ["/g", _lineNumber, _filePath]);
+                        DelayForEditorStart(p);
                         if (p != null && wait) p.WaitForExit();
                         return;
                     }
@@ -1354,6 +1371,7 @@ public class
         UseAnsiConsole = false;
         if (hint != null) {
             Log(hint, "HINT MESSAGE (FOR THIS EXPECTATION)");
+            _ViewInFavoriteEditor(CurrentSourceCodeLine(rawString: true), wait: false);
             Message(hint, title: "\"HINT MESSAGE (FOR THIS EXPECTATION)\"");
         }
         UseAnsiConsole = true;
@@ -1363,7 +1381,7 @@ public class
             "⁅markup⁆[blue]EXCEPTION[/]");
         //}
         Log($"⁅markup⁆[red][[!! ABORTING FOR BETRAYED EXPECTATION...WITH EXIT CODE {exitCode} !!]][/]");
-        _ViewInFavoriteEditor(CurrentSourceCodeLine(rawString: true), wait: true);
+        _ViewInFavoriteEditor(CurrentSourceCodeLine(rawString: true), wait: false);
         Message($"!! ABORTING FOR BETRAYED EXPECTATION...WITH EXIT CODE {exitCode} !!");
         Environment.Exit(exitCode);
     }

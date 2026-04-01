@@ -57,7 +57,7 @@
         <PackageReference Include="NUnit" Version="4.5.1" />
         <PackageReference Include="OpenSystem" Version="2026.401.907.49" />
         <PackageReference Include="PlainObjectInterface" Version="2026.122.1836.32" />
-        <PackageReference Include="PlainObjectConverter" Version="2026.402.515.22" />
+        <PackageReference Include="PlainObjectConverter" Version="2026.402.700" />
     </ItemGroup>
     <ItemGroup>
         <Compile Include="..\EasyObject\EasyExtensions.cs">
