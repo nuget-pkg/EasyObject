@@ -18,10 +18,13 @@ public class Program
         SetupConsoleEncoding();
         UseAnsiConsole = true;
 
+        Log(GetCwd());
+
         InMemorySample();
         DiskSample();
-        Console.WriteLine("Press <ENTER> to end");
-        Console.ReadLine();
+        //Console.WriteLine("Press <ENTER> to end");
+        //Console.ReadLine();
+        Break("[END]");
     }
 
     static void InMemorySample()
