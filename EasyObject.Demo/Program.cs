@@ -450,7 +450,9 @@ public class Program {
             Log(xml01Eo);
             //
             string? exe = FindExeRecursive(@"C:\Program Files\Vim", "gvim.exe");
-            Log(exe);
+            if (exe != null) {
+                Break(exe, "!! Hello Vimmer !!");
+            }
             //
             if (false) {
                 Abort();
