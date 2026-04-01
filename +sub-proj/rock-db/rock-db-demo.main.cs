@@ -15,8 +15,9 @@ try
     using (var db = RocksDb.Open(options, dbPath))
     {
         // Using strings below, but can also use byte arrays for both keys and values
-        db.Put("key", "value");
-        string value = db.Get("key");
+        db.Put("key", "value⁅記号⁆◉▶▸⸝↪️ ↩️ ℴ𝓬➺➢ᰔ  ヾ➠✅🈂️❓❗＼／：＊“≪≫￤；‘｀＃％＄＆＾～￤﴾﴿⁅⁆【】≪≫＋ー＊＝⚽ 𝑪𝒉𝒆𝒄𝒌 🌐🪩", encoding: System.Text.Encoding.UTF8);
+        string value = db.Get("key", encoding: System.Text.Encoding.UTF8);
+        Log(value, title: "value");
         db.Remove("key");
     }
 }
