@@ -249,14 +249,10 @@ public class Program {
             Log(myDictionary.AsStringList, @"myDictionary.AsStringList");
             Log(myArray.Reverse(), @"myArray.Reverse()");
             Log(myDictionary.Reverse(), @"myDictionary.Reverse()");
-
-            //string json = Utf8StringFromUrl("https://jsonplaceholder.typicode.com/todos/1");
-            //Log(json, "json");
-            //var todo = FromJson(json);
-            //Log(todo, "todo");
-
-            //var todo2 = FromUrl("https://jsonplaceholder.typicode.com/todos/1");
-            //Log(todo2, "todo2");
+            string json = Utf8StringFromUrl("https://jsonplaceholder.typicode.com/todos/1")!;
+            Break(json, "json");
+            var todo = FromJson(json);
+            Break(todo, "todo");
             WriteLine("[stdout] This is unicode: ⭕️ ☢ ☃☃☃ ☮");
             Console.Error.WriteLine("[stderr] This is unicode: ⭕️ ☢ ☃☃☃ ☮");
             double videoDuration = 9999;
@@ -270,8 +266,6 @@ public class Program {
             Log($"⁅markup⁆[green]{safeMessage}[/]");
             WriteLine("⁅markup⁆[blue][link=https://www.youtube.com/]Ctrl+Click this link to visit YouTube[/][/]!",
                 "⁅markup⁆[red](?°□°)?[/] [blue]┻━┻[/]");
-
-            //Crash();
             var embeddedJsonUrl =
                 "https://github.com/nuget-pkg/Global.Sys/blob/2026.0311.1056.12/Global.Sys.Demo/assets/text-embed-text-02.json";
             var embeddedEo = FromUrl(embeddedJsonUrl);
@@ -284,10 +278,8 @@ public class Program {
             var eo1 = FromJson(text1);
             Log(eo1);
             //Crash();
-#if true //!TEST_MINI
             embeddedEo = ExtractFromFile(embeddedJsonUrl);
             Log(embeddedEo, "embeddedEO(nuget-assets::my-ls.exe)");
-#endif
             var noError = FromJson("\n", true);
             Log(noError, "noError");
             Echo("⁅markup⁆[green]This is green.[/]");
@@ -308,7 +300,11 @@ public class Program {
                     }
                 }
                 """;
-            Log(UniversalTransformer.SafeSourceCode(code));
+            string safeCode = UniversalTransformer.SafeSourceCode(code);
+            Break(safeCode, "safeCode");
+            string restoredCode = UniversalTransformer.RestoreSourceCode(safeCode);
+            Break(restoredCode, "restoredCode");
+            //
             var fname =
                 """[1080p] ✅ 👀 🫧 💻 🌐 🎵 <xml>aaa</xml> ; {Title}!? x=11+22-33; ,(🔥引火帝国🔥):"name1" 'name2'?.txt""";
             Log(UniversalTransformer.SafeFileName(fname), "⁅markup⁆[blue]adjusted file name[/]");

@@ -1133,16 +1133,19 @@ public class
             var exTrace = e.ToString();
             try {
                 exTrace = ReplacePathsWithUrls(exTrace);
+                Console.Error.WriteLine(
+                    exTrace
+                );
+                Message(exTrace, "EXCEPTION (FOR ABORTING PROGRAM)");
             }
             catch (Exception ex) {
-                Console.Error.WriteLine(ex);
+                Console.Error.WriteLine(ex.ToString());
+                Message(ex.ToString(), "EXCEPTION (FOR ABORTING PROGRAM)");
             }
-            Console.Error.WriteLine(
-                exTrace
-            );
             UseAnsiConsole = true;
             Log($"⁅markup⁆[red][[!! ABORTING...WITH EXIT CODE {exitCode} !!]][/]");
             _ViewInFavoriteEditor(CurrentSourceCodeLine(rawString: true), wait: true);
+            Message($"!! ABORTING...WITH EXIT CODE {exitCode} !!");
             Environment.Exit(exitCode);
         }
         var trace = Environment.StackTrace;
@@ -1154,6 +1157,7 @@ public class
         UseAnsiConsole = true;
         Log($"⁅markup⁆[red][[!! ABORTING...WITH EXIT CODE {exitCode} !!]][/]");
         _ViewInFavoriteEditor(CurrentSourceCodeLine(rawString: true), wait: true);
+        Message(message, title: "Abort()");
         Environment.Exit(exitCode);
     }
     public static void Break(object? x = null, string? title = null) {
@@ -1163,8 +1167,8 @@ public class
         if (x != null) {
             message += "\n" + ToPrintable(x);
         }
-        Message(message, title: title);
         _ViewInFavoriteEditor(currLine, wait: true);
+        Message(message, title: title);
     }
     private static void _ViewInFavoriteEditor(string currLine, bool wait = false) {
         if (!OpenSystem.IsWindowsPlatform()) return;
@@ -1349,15 +1353,19 @@ public class
         Log("⁅markup⁆[red][[!! EXPECTATION BETRAYED !!]][/]");
         Log($"⁅markup⁆[red]{MarkupSafeString(CurrentSourceCodeLine())}[/]");
         UseAnsiConsole = false;
-        if (hint != null) Log(hint, "HINT MESSAGE (FOR THIS TRUST VIOLATION)");
+        if (hint != null) {
+            Log(hint, "HINT MESSAGE (FOR THIS EXPECTATION)");
+            Message(hint, title: "\"HINT MESSAGE (FOR THIS EXPECTATION)\"");
+        }
         UseAnsiConsole = true;
         if (ex != null) {
             WriteLine(
                 $"⁅markup⁆[blue]{MarkupSafeString(ReplacePathsWithUrls(ex.ToString()))}[/]",
                 "⁅markup⁆[blue]EXCEPTION[/]");
         }
-        Log($"⁅markup⁆[red][[!! DYING ON EXPECTATION BETRAYED...WITH EXIT CODE {exitCode} !!]][/]");
+        Log($"⁅markup⁆[red][[!! ABORTING FOR BETRAYED EXPECTATION...WITH EXIT CODE {exitCode} !!]][/]");
         _ViewInFavoriteEditor(CurrentSourceCodeLine(rawString: true), wait: true);
+        Message($"!! ABORTING FOR BETRAYED EXPECTATION...WITH EXIT CODE {exitCode} !!");
         Environment.Exit(exitCode);
     }
     public static void AssertTrue(bool condition, object? hint = null) {
