@@ -704,7 +704,8 @@ public class
         string? title = null,
         bool compact = false,
         uint maxDepth = 0,
-        List<string>? hideKeys = null
+        List<string>? hideKeys = null,
+        uint msgBoxFlag = /*MB_ICONINFORMATION*/0x00000040
     ) {
         if (!OpenSystem.IsWindowsPlatform()) {
             Log(x, title: title, compact: compact, maxDepth: maxDepth, hideKeys: hideKeys);
@@ -720,7 +721,11 @@ public class
                 false);
         }
         var s = ToPrintable(x, null, compact);
-        NativeMethods.MessageBoxW(IntPtr.Zero, s, title, 0);
+        NativeMethods.MessageBoxW(IntPtr.Zero, s, title,
+            // https://housoubu.mizusasi.net/data/prog/p003.html
+            /*MB_OK*/
+            0x00000000 | msgBoxFlag | /*MB_TOPMOST*/0x00040000 | /*MB_SETFOREGROUND*/0x00010000
+        );
     }
     public static void DumpObject(
         object? x,
@@ -1136,16 +1141,18 @@ public class
                     exTrace
                 );
                 _ViewInFavoriteEditor(CurrentSourceCodeLine(rawString: true), wait: false);
-                Message(exTrace, "EXCEPTION (FOR ABORTING PROGRAM)");
+                Message(exTrace, "EXCEPTION (FOR ABORTING PROGRAM)", msgBoxFlag: /*MB_ICONERROR*/ 0x00000010);
             }
             catch (Exception ex) {
                 Console.Error.WriteLine(ex.ToString());
-                Message(ex.ToString(), "EXCEPTION (FOR ABORTING PROGRAM)");
+                _ViewInFavoriteEditor(CurrentSourceCodeLine(rawString: true), wait: false);
+                Message(ex.ToString(), "EXCEPTION (FOR ABORTING PROGRAM)", msgBoxFlag: /*MB_ICONERROR*/ 0x00000010);
             }
             UseAnsiConsole = true;
             Log($"⁅markup⁆[red][[!! ABORTING...WITH EXIT CODE {exitCode} !!]][/]");
             _ViewInFavoriteEditor(CurrentSourceCodeLine(rawString: true), wait: false);
-            Message(new { message, exitCode }, $"!! ABORTING...WITH EXIT CODE {exitCode} !!");
+            Message(new { message, exitCode }, $"!! ABORTING...WITH EXIT CODE {exitCode} !!",
+                msgBoxFlag: /*MB_ICONERROR*/ 0x00000010);
             Environment.Exit(exitCode);
         }
         var trace = Environment.StackTrace;
@@ -1157,7 +1164,7 @@ public class
         UseAnsiConsole = true;
         Log($"⁅markup⁆[red][[!! ABORTING...WITH EXIT CODE {exitCode} !!]][/]");
         _ViewInFavoriteEditor(CurrentSourceCodeLine(rawString: true), wait: false);
-        Message(message, title: "Abort()");
+        Message(message, title: "Abort()", msgBoxFlag: /*MB_ICONERROR*/ 0x00000010);
         Environment.Exit(exitCode);
     }
     public static void Break(object? x = null, string? title = null) {
@@ -1202,9 +1209,20 @@ public class
             }
         });
         if (_filePath != null && File.Exists(_filePath)) {
-            void DelayForEditorStart(Process? p, int msec = 1500) {
-                //if (wait) return;
+            void DelayForEditorStart(Process? p, int msec = 500) {
                 if (p == null) return;
+                try {
+                    bool isReady = p.WaitForInputIdle(5000);
+                    if (isReady) {
+                        p.Refresh(); // Refresh to ensure MainWindowHandle is updated
+                        if (p.MainWindowHandle != IntPtr.Zero) {
+                            Console.WriteLine("Window successfully opened.");
+                        }
+                    }
+                }
+                catch {
+                    ;
+                }
                 OpenSystem.Sleep(msec);
             }
             if (_lineNumber == null) _lineNumber = "1";
@@ -1372,7 +1390,7 @@ public class
         if (hint != null) {
             Log(hint, "HINT MESSAGE (FOR THIS EXPECTATION)");
             _ViewInFavoriteEditor(CurrentSourceCodeLine(rawString: true), wait: false);
-            Message(hint, title: "\"HINT MESSAGE (FOR THIS EXPECTATION)\"");
+            Message(hint, title: "HINT MESSAGE (FOR THIS EXPECTATION)", msgBoxFlag: /*MB_ICONERROR*/ 0x00000010);
         }
         UseAnsiConsole = true;
         //if (ex != null) {
@@ -1382,7 +1400,8 @@ public class
         //}
         Log($"⁅markup⁆[red][[!! ABORTING FOR BETRAYED EXPECTATION...WITH EXIT CODE {exitCode} !!]][/]");
         _ViewInFavoriteEditor(CurrentSourceCodeLine(rawString: true), wait: false);
-        Message($"!! ABORTING FOR BETRAYED EXPECTATION...WITH EXIT CODE {exitCode} !!");
+        Message($"!! ABORTING FOR BETRAYED EXPECTATION...WITH EXIT CODE {exitCode} !!",
+            msgBoxFlag: /*MB_ICONERROR*/ 0x00000010);
         Environment.Exit(exitCode);
     }
     public static void AssertTrue(bool condition, object? hint = null) {
