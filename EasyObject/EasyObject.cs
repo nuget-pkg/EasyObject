@@ -1230,6 +1230,44 @@ public class
             //ShowDetail = false;
             string? exe = null;
             Process? p = null;
+            // if (OpenSystem.GetEnv("I_LIKE_SCITE") == "1") {
+            //     //SciTE https://scintilla.org/SciTE.html
+            //     exe = OpenSystem.FindExePath("SciTE.exe");
+            //     if (exe != null) {
+            //         Log(exe, "⁅markup⁆[green]SciTE Editor is installed...opening the location with it[/]");
+            //         if (_lineNumber == null) {
+            //             p = OpenSystem.LaunchProcess(exe, ["-code.page:65001", _filePath, "-goto:1"]);
+            //             DelayForEditorStart(p);
+            //             if (p != null && wait) p.WaitForExit();
+            //             return;
+            //         }
+            //         else {
+            //             p = OpenSystem.LaunchProcess(exe, ["-code.page:65001", _filePath, $"-goto:{_lineNumber}"]);
+            //             DelayForEditorStart(p);
+            //             if (p != null && wait) p.WaitForExit();
+            //             return;
+            //         }
+            //     }
+            // }
+            if (OpenSystem.GetEnv("I_HATE_NOTEPAD_PP") != "1") {
+                // [Notepad++]
+                exe = OpenSystem.FindExePath("Notepad++.exe");
+                if (exe != null) {
+                    Log(exe, "⁅markup⁆[green]Notepad++.exe is installed...opening the location with it[/]");
+                    if (_lineNumber == null) {
+                        p = OpenSystem.LaunchProcess(exe, [_filePath, "-n1"]);
+                        DelayForEditorStart(p);
+                        if (p != null && wait) p.WaitForExit();
+                        return;
+                    }
+                    else {
+                        p = OpenSystem.LaunchProcess(exe, [_filePath, $"-n{_lineNumber}"]);
+                        DelayForEditorStart(p);
+                        if (p != null && wait) p.WaitForExit();
+                        return;
+                    }
+                }
+            }
             if (OpenSystem.GetEnv("I_HATE_EMACS") != "1") {
                 exe = OpenSystem.FindExePath("emacsclient.exe");
                 if (exe != null) {
@@ -1243,25 +1281,6 @@ public class
                     else {
                         p = OpenSystem.LaunchProcess(exe, ["-r", "-n", "-a", "\"\"", $"+{_lineNumber}", _filePath]);
                         DelayForEditorStart(p);
-                        return;
-                    }
-                }
-            }
-            if (OpenSystem.GetEnv("I_LIKE_SCITE") == "1") {
-                //SciTE https://scintilla.org/SciTE.html
-                exe = OpenSystem.FindExePath("SciTE.exe");
-                if (exe != null) {
-                    Log(exe, "⁅markup⁆[green]SciTE Editor is installed...opening the location with it[/]");
-                    if (_lineNumber == null) {
-                        p = OpenSystem.LaunchProcess(exe, ["-code.page:65001", _filePath, "-goto:1"]);
-                        DelayForEditorStart(p);
-                        if (p != null && wait) p.WaitForExit();
-                        return;
-                    }
-                    else {
-                        p = OpenSystem.LaunchProcess(exe, ["-code.page:65001", _filePath, $"-goto:{_lineNumber}"]);
-                        DelayForEditorStart(p);
-                        if (p != null && wait) p.WaitForExit();
                         return;
                     }
                 }
@@ -1318,25 +1337,6 @@ public class
                     }
                 }
             }
-            if (OpenSystem.GetEnv("I_HATE_NOTEPAD_PP") != "1") {
-                // [Notepad++]
-                exe = OpenSystem.FindExePath("Notepad++.exe");
-                if (exe != null) {
-                    Log(exe, "⁅markup⁆[green]Notepad++.exe is installed...opening the location with it[/]");
-                    if (_lineNumber == null) {
-                        p = OpenSystem.LaunchProcess(exe, [_filePath, "-n1"]);
-                        DelayForEditorStart(p);
-                        if (p != null && wait) p.WaitForExit();
-                        return;
-                    }
-                    else {
-                        p = OpenSystem.LaunchProcess(exe, [_filePath, $"-n{_lineNumber}"]);
-                        DelayForEditorStart(p);
-                        if (p != null && wait) p.WaitForExit();
-                        return;
-                    }
-                }
-            }
             if (OpenSystem.GetEnv("I_HATE_NOTEPAD_3") != "1") {
                 // [Notepad3.exe]
                 exe = OpenSystem.FindExePath("Notepad3.exe");
@@ -1372,11 +1372,6 @@ public class
                 Log(
                     "⁅markup⁆[green]Notepad3.exe was not found in PATH; automatic source code viewing canelled![/]"
                 );
-                if (wait) {
-                    Console.Error.Write("Hit any key to continue...");
-                    Console.Error.Flush();
-                    Console.In.ReadLine();
-                }
             }
         }
     }
