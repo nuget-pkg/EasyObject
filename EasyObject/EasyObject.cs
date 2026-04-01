@@ -1209,7 +1209,7 @@ public class
             }
         });
         if (_filePath != null && File.Exists(_filePath)) {
-            void DelayForEditorStart(Process? p, int msec = 500) {
+            void DelayForEditorStart(Process? p, int msec = 200) {
                 if (p == null) return;
                 try {
                     bool isReady = p.WaitForInputIdle(5000);
