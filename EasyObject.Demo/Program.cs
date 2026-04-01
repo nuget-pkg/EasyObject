@@ -12,7 +12,6 @@ using EasyObject = Global.MiniEasyObject;
 using static Global.MiniEasyObject;
 #else
 namespace EasyObjectDemo;
-
 using static Global.EasyObject;
 #endif
 using System;
@@ -23,13 +22,10 @@ using System.Linq;
 using System.Xml.Linq;
 using Global;
 using static Global.OpenSystem;
-public class Program
-{
-    public static void Main(string[] args)
-    {
+public class Program {
+    public static void Main(string[] args) {
         // ReSharper disable HeuristicUnreachableCode
-        try
-        {
+        try {
             SetupConsoleEncoding();
             //ShowLineNumbers = false;
             ShowDetail = true;
@@ -50,7 +46,7 @@ public class Program
             WriteLine("(3)");
             Log(eo.TypeValue, "eo.TypeValue");
             WriteLine("(4)");
-            BelieveIdentical(eo.TypeValue, @object);
+            ExpectIdentical(eo.TypeValue, @object);
             WriteLine("(5)");
             var a = eo["a"];
             WriteLine("(5.1)");
@@ -63,29 +59,29 @@ public class Program
             WriteLine("(5.2)");
             Log(eo["a"]);
             WriteLine("(6)");
-            BelieveIdentical(eo["a"].Cast<int>(), 123);
+            ExpectIdentical(eo["a"].Cast<int>(), 123);
             WriteLine("(7)");
-            BelieveIdentical(eo.Keys, new List<string> { "a" });
+            ExpectIdentical(eo.Keys, new List<string> { "a" });
             Log(eo[0], "eo[0]");
-            BelieveIdentical(eo[0].TypeValue, @null);
-            BelieveTrue(eo[0].IsNull);
+            ExpectIdentical(eo[0].TypeValue, @null);
+            ExpectTrue(eo[0].IsNull);
             Log(eo[1], "eo[1]");
-            BelieveIdentical(eo[1].TypeValue, @null);
-            BelieveTrue(eo[1].IsNull);
+            ExpectIdentical(eo[1].TypeValue, @null);
+            ExpectTrue(eo[1].IsNull);
             foreach (var pair in eo.Dynamic) Log(pair, "pair");
             eo = FromObject(null);
             Log(eo.TypeValue, "eo.TypeValue");
-            BelieveIdentical(eo.TypeValue, @null);
+            ExpectIdentical(eo.TypeValue, @null);
             eo["b"] = true;
-            BelieveIdentical(eo["b"].Cast<bool>(), true);
+            ExpectIdentical(eo["b"].Cast<bool>(), true);
             Log(eo["b"].TypeValue, "eo.b.TypeValue");
-            BelieveIdentical(eo["b"].TypeValue, boolean);
+            ExpectIdentical(eo["b"].TypeValue, boolean);
             eo[3] = 777;
             Log(eo[3].Cast<int>());
             Log(eo.TypeValue, "eo.TypeValue");
-            BelieveIdentical(eo.TypeValue, EasyObject.array);
-            BelieveIdentical(eo.Count, 4);
-            BelieveIdentical(eo[0].TypeValue, @null);
+            ExpectIdentical(eo.TypeValue, EasyObject.array);
+            ExpectIdentical(eo.Count, 4);
+            ExpectIdentical(eo[0].TypeValue, @null);
 #if false
         Trust.That(() => { var n = eo[0].Cast<int>(); },
             Throws.TypeOf<System.InvalidCastException>()
@@ -93,7 +89,7 @@ public class Program
             );
 #endif
             //Trust.That((int?)eo[0], Is.EqualTo(null));
-            BelieveIdentical(eo[3].Cast<int>(), 777);
+            ExpectIdentical(eo[3].Cast<int>(), 777);
             foreach (var e in eo.Dynamic) Log(e, "e");
             var eo2 = FromObject(eo); // UnWrap() test
             var eo3 = FromJson("""
@@ -127,8 +123,7 @@ public class Program
             var sw = new Stopwatch();
             TimeSpan ts;
             sw.Start();
-            for (var c = 0; c < 5; c++)
-            {
+            for (var c = 0; c < 5; c++) {
                 //var test = FromJson(bigJson);
             }
             sw.Stop();
@@ -138,8 +133,7 @@ public class Program
             WriteLine($"　{ts.Hours}時間 {ts.Minutes}分 {ts.Seconds}秒 {ts.Milliseconds}ミリ秒");
             WriteLine($"　{sw.ElapsedMilliseconds}ミリ秒");
             sw.Start();
-            for (var c = 0; c < 5; c++)
-            {
+            for (var c = 0; c < 5; c++) {
                 //JObject jsonObject = JObject.Parse(bigJson);
             }
             sw.Stop();
@@ -348,8 +342,7 @@ public class Program
             //ShowLineNumbers = false;
             //ForceAscii = false;
             //Debug("⭕️🈂️❝END❞🈂️", "Debug() shows line info even if `ShowLineNumbers == false`");
-            void LinkTest(string title, string url)
-            {
+            void LinkTest(string title, string url) {
                 //LogWebLink(title, url);
                 EchoWebLink(title, url);
             }
@@ -383,18 +376,16 @@ public class Program
 
             // !! NEW FEATURE: YOU CAN PICK n ELEMENTS RANDOMELY !!
             var pickCandidates = NewArray(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
-            for (var p = 0; p < 5; p++)
-            {
+            for (var p = 0; p < 5; p++) {
                 var picked = pickCandidates.Pick(3);
                 Echo(picked, $"piccked[{p}]", true);
             }
             var overLimit = pickCandidates.Pick(9999);
             Echo(overLimit, "overLimit", true);
-            BelieveTrue(11 + 22 == 33);
+            ExpectTrue(11 + 22 == 33);
             pickCandidates = NewObject("a", 11, "b", NewArray(1.1, 1.2, 1.3), "c", null, "d", 777);
             DebugOutput = true;
-            for (var p = 0; p < 5; p++)
-            {
+            for (var p = 0; p < 5; p++) {
                 var picked = pickCandidates.Pick(3);
                 Echo(picked, $"piccked[{p}]", true);
             }
@@ -418,20 +409,17 @@ public class Program
             var playlistIdsOf5 = youtubePlaylists.Pick(5).AsStringList;
             Log(playlistIdsOf5, title: "playlistIdsOf5", compact: true);
             //Abort();
-            for (var p = 0; p < playlistIdsOf5.Count; p++)
-            {
+            for (var p = 0; p < playlistIdsOf5.Count; p++) {
                 var playlistId = playlistIdsOf5[p];
                 var playlistObject = youtubePlaylists[playlistId];
                 playlistObject[playlistId].Dump(maxDepth: 1);
                 string playlistTitle = playlistObject.Dynamic.title;
                 int videoCount = playlistObject.Dynamic.videos.Count;
                 Log(new { id = playlistId, title = playlistTitle, videoCount }, compact: true);
-                if (videoCount > 0)
-                {
+                if (videoCount > 0) {
                     var videos = playlistObject["videos"];
                     var video0 = videos[0];
-                    Log(new
-                    {
+                    Log(new {
                         id = playlistId,
                         title = playlistTitle,
                         videoCount,
@@ -468,76 +456,60 @@ public class Program
             string? exe = FindExeRecursive(@"C:\Program Files\Vim", "gvim.exe");
             Log(exe);
             //
-            if (false)
-            {
+            if (false) {
                 Abort();
             }
             //
-            if (false) BelieveFalse(11 + 22 == 33); // !! THIS FAILS !!
+            if (false) ExpectFalse(11 + 22 == 33); // !! THIS FAILS !!
             //
-            if (false)
-            {
+            if (false) {
                 // !! THIS FAILS (WITH INTELLIGENT HINT...) !!
                 var A = 11;
                 var B = 22;
-                BelieveIdentical(A, B, new { A, B }, 123);
+                ExpectIdentical(A, B, new { A, B }, 123);
             }
             //
             if (false)
                 // !! YOUR CAN EXIT (ABORT) PROGRAM ... WITH INTELLIGENT HINTING !!
-                Abort(new
-                {
+                Abort(new {
                     abc = 123,
-                    xyz = new
-                    {
+                    xyz = new {
                         test1 = new[] { "A", "B", "C ハロー©" }
                     }
                 });
             //
             if (true) throw new NotImplementedException();
         }
-        catch (Exception ex)
-        {
+        catch (Exception ex) {
             Abort(ex); // !! throw new NotImplementedException(); GOES HERE !!
         }
     }
     // ReSharper disable once UnusedMember.Local
-    internal class Exchangeable1 : IExportToPlainObject
-    {
-        public object ExportToPlainObject()
-        {
+    internal class Exchangeable1 : IExportToPlainObject {
+        public object ExportToPlainObject() {
             return 123;
         }
     }
-    internal class Exchangeable2
-    {
-        public object ExportToPlainObject()
-        {
+    internal class Exchangeable2 {
+        public object ExportToPlainObject() {
             return 456;
         }
     }
-    internal class Exchangeable3 : IExportToCommonJson
-    {
-        public string ExportToCommonJson()
-        {
+    internal class Exchangeable3 : IExportToCommonJson {
+        public string ExportToCommonJson() {
             return "[11, 22, 33]";
         }
     }
-    internal class Exchangeable4
-    {
-        public string ExportToCommonJson()
-        {
+    internal class Exchangeable4 {
+        public string ExportToCommonJson() {
             return "[111, 222, 333]";
         }
     }
-    internal class MyData : EasyObject
-    {
-        public MyData(int n, string s)
-        {
+    internal class MyData : EasyObject {
+        public MyData(int n, string s) {
             ImportFromPlainObject(new { n, s });
         }
-        public MyData(string json)
-        {
+        public MyData(string json) {
             ImportFromCommonJson(json);
         }
         public int N => Dynamic.n;
