@@ -1,14 +1,10 @@
+//+#nuget System.Reflection.Metadata;
 //css_nuget EasyObject;
 
 using Global;
 using System;
 using System.IO;
-using System.Text;
 using static Global.EasyObject;
-
-using System.IO;
-using System.Reflection.Metadata;
-using System.Reflection.PortableExecutable;
 using System.Reflection.PortableExecutable;
 
 SetupConsoleEncoding();
@@ -19,9 +15,13 @@ Console.WriteLine("Running as a CS_SCRIPT...");
 
 try
 {
-    ShowDetail = true;
+    ShowDetail = false;
+    ShowLineNumbers = false;
     Log("ハロー©");
     Log(new { args });
+    Log(IsDotNetAssembly(@"C:\home17\cmd\busybox64u.exe"));
+    Log(IsDotNetAssembly(@"C:\home17\cmd\MyClass1.dll"));
+    //"C:\home17\cmd\MyClass1.dll"
 }
 catch (Exception e)
 {
