@@ -662,7 +662,8 @@ public class
                 if (StandardError.IsMarkupString(str)) {
                     StandardError.RenderLine(str);
                     if (ShowLineNumbers)
-                        StandardError.RenderLine($"⁅markup⁆      [blue]{MarkupSafeString(CurrentSourceCodeLine())}[/]");
+                        StandardError.RenderLine(
+                            $"⁅markup⁆[blue]  ➡️➡️ {MarkupSafeString(CurrentSourceCodeLine())}[/]");
                     return;
                 }
             var s2 = ToPrintable(x, null, compact, maxDepth,
@@ -670,7 +671,7 @@ public class
             //var s3 = MarkupSafeString(s2);
             StandardError.WriteLine(s2);
             if (ShowLineNumbers)
-                StandardError.RenderLine($"⁅markup⁆      [blue]{MarkupSafeString(CurrentSourceCodeLine())}[/]");
+                StandardError.RenderLine($"⁅markup⁆[blue]  ➡️➡️ {MarkupSafeString(CurrentSourceCodeLine())}[/]");
             return;
         }
 #endif
@@ -706,14 +707,14 @@ public class
                 removeSurrogatePair);
             var s3 = MarkupSafeString(s2);
             StandardError.RenderLine($"⁅markup⁆[purple]{s3}[/]");
-            StandardError.RenderLine($"⁅markup⁆        [purple]{MarkupSafeString(CurrentSourceCodeLine())}[/]");
+            StandardError.RenderLine($"⁅markup⁆  ➡️➡️ [purple]{MarkupSafeString(CurrentSourceCodeLine())}[/]");
             return;
         }
 #endif
         var s = ToPrintable(x, title, compact, maxDepth,
             removeSurrogatePair);
         Console.Error.WriteLine("⁅✨DEBUG✨⁆ " + s);
-        Console.Error.WriteLine($"  {CurrentSourceCodeLine()}");
+        Console.Error.WriteLine($"  ➡️➡️ {CurrentSourceCodeLine()}");
     }
     public static void Message(
         object? x,
@@ -1079,13 +1080,8 @@ public class
         return lines;
     }
     public static string CurrentSourceCodeLine(bool rawString = false) {
-#if false
-        var trace = Environment.StackTrace;
-#else
         StackTrace st = new StackTrace(true);
         var trace = st.ToString();
-        //Console.Error.WriteLine(trace);
-#endif
         var lines = TextToLines(trace);
         if (lines.Count == 0) return "[!! UNKNOWN SOURCE CODE LINE !!]";
         string? lastLine = null;
@@ -1101,7 +1097,7 @@ public class
             return "!! LINE INFO NOT FOUND !!";
         }
         if (rawString) {
-            return lastLine;
+            return lastLine.Trim();
         }
         return ReplacePathsWithUrls(lastLine).Trim();
     }
