@@ -2,7 +2,7 @@
     <PropertyGroup>
         <LangVersion>latest</LangVersion>
         <TargetFrameworks>net462;net8.0</TargetFrameworks>
-        <Version>2026.0403.0332.39</Version>
+        <Version>2026.0403.0603.08</Version>
         <Nullable>enable</Nullable>
         <ImplicitUsings>disable</ImplicitUsings>
         <RootNamespace>MiniEasyObject</RootNamespace>
@@ -27,9 +27,15 @@
         <DefineConstants>$(DefineConstants);MINIMAL</DefineConstants>
     </PropertyGroup>
     <PropertyGroup>
-        <DebugType>full</DebugType>
-    </PropertyGroup>
-    <PropertyGroup>
+        <!--<DebugType>full</DebugType>-->
+		<!-- https://gemini.google.com/share/62f63a243809 -->
+		<AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+		<DebugType>portable</DebugType>
+		<PublishRepositoryUrl>true</PublishRepositoryUrl>
+		<EmbedUntrackedSources>true</EmbedUntrackedSources>
+	</PropertyGroup>
+
+	<PropertyGroup>
         <!--needef for project using xunit-->
         <IsPackable>true</IsPackable>
     </PropertyGroup>
