@@ -12,7 +12,8 @@ internal class AssertCapabilitiesTest {
         //NUnitLog(TestContext.CurrentContext.Test.FullName);
     }
     [Test]
-    public void Test901() {
+    public void Test901()
+    {
         ShowDetail = true;
         EasyObject eo = "abc";
         Echo(eo, "eo");
@@ -23,7 +24,8 @@ internal class AssertCapabilitiesTest {
         Echo(eo, "eo");
         AssertIdentical(eo.TypeValue, @object);
         Console.WriteLine(eo);
-        foreach (var e in eo.Dynamic) {
+        foreach (var e in eo.Dynamic)
+        {
             Echo(e, "e");
             AssertIdentical(e.Key, "A");
             AssertIdentical(e.Value.Cast<string>(), "AAA");
@@ -47,5 +49,12 @@ internal class AssertCapabilitiesTest {
         Log("pass-02");
         // /*⁅FAILS⁆*/ AssertIdentical(dict1, new { A = 11, B = 22, C = Null });
         //Log("pass-03");
+    }
+    [Test]
+    public void Test902()
+    {
+        ShowDetail = true;
+        EasyObject eo = NewArray("a", "b", "c");
+        eo.Dump(maxCount: 2);
     }
 }
