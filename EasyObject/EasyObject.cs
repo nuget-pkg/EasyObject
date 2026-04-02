@@ -656,7 +656,7 @@ public class
         }
 #if USE_SPECTRE_CONSOLE
         if (UseAnsiConsole) {
-            StandardError.Render("⁅markup⁆[cyan][[🌐LOG🌐]][/] ");
+            StandardError.Render("⁅markup⁆[cyan]⁅🌐LOG🌐⁆[/] ");
             if (title != null) StandardError.Render($"{title}: ");
             if (x != null && x is string str)
                 if (StandardError.IsMarkupString(str)) {
@@ -676,7 +676,7 @@ public class
 #endif
         var s = ToPrintable(x, title, compact, maxDepth,
             removeSurrogatePair);
-        Console.Error.WriteLine("[🌐LOG🌐] " + s);
+        Console.Error.WriteLine("⁅🌐LOG🌐⁆ " + s);
         if (ShowLineNumbers) Console.Error.WriteLine($"      {CurrentSourceCodeLine()}");
     }
     public static void Debug(
@@ -700,7 +700,7 @@ public class
         }
 #if USE_SPECTRE_CONSOLE
         if (UseAnsiConsole) {
-            StandardError.Render("⁅markup⁆[purple][[🌔DEBUG🌔]][/] ");
+            StandardError.Render("⁅markup⁆[purple]⁅✨DEBUG✨⁆[/] ");
             if (title != null) StandardError.Render($"⁅markup⁆[purple]{MarkupSafeString(title)}:[/] ");
             var s2 = ToPrintable(x, null, compact, maxDepth,
                 removeSurrogatePair);
@@ -712,7 +712,7 @@ public class
 #endif
         var s = ToPrintable(x, title, compact, maxDepth,
             removeSurrogatePair);
-        Console.Error.WriteLine("[🌔DEBUG🌔] " + s);
+        Console.Error.WriteLine("⁅✨DEBUG✨⁆ " + s);
         Console.Error.WriteLine($"  {CurrentSourceCodeLine()}");
     }
     public static void Message(
@@ -1249,25 +1249,6 @@ public class
             //ShowDetail = false;
             string? exe = null;
             Process? p = null;
-            // if (HyperOperatingSystem.GetEnv("I_LIKE_SCITE") == "1") {
-            //     //SciTE https://scintilla.org/SciTE.html
-            //     exe = HyperOperatingSystem.FindExePath("SciTE.exe");
-            //     if (exe != null) {
-            //         Log(exe, "⁅markup⁆[green]SciTE Editor is installed...opening the location with it[/]");
-            //         if (_lineNumber == null) {
-            //             p = HyperOperatingSystem.LaunchProcess(exe, ["-code.page:65001", _filePath, "-goto:1"]);
-            //             DelayForEditorStart(p);
-            //             if (p != null && wait) p.WaitForExit();
-            //             return;
-            //         }
-            //         else {
-            //             p = HyperOperatingSystem.LaunchProcess(exe, ["-code.page:65001", _filePath, $"-goto:{_lineNumber}"]);
-            //             DelayForEditorStart(p);
-            //             if (p != null && wait) p.WaitForExit();
-            //             return;
-            //         }
-            //     }
-            // }
             if (HyperOperatingSystem.GetEnv("I_HATE_NOTEPAD_PP") != "1") {
                 // [Notepad++]
                 exe = HyperOperatingSystem.FindExePath("Notepad++.exe");
@@ -1500,5 +1481,11 @@ public class
         catch (Exception ex) {
             HandleBetrayedExpectation(ex, hint, exitCode);
         }
+    }
+    public static void Line(string message = "") {
+        bool showLineNumbers = ShowLineNumbers;
+        ShowLineNumbers = true;
+        Log(message, "||◣LINE()◥||");
+        ShowLineNumbers = showLineNumbers;
     }
 }

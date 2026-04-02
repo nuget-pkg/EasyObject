@@ -456,6 +456,7 @@ public class Program {
             //
             DebugOutput = true;
             Debug("Hello Debug", "DEBUG TITLE");
+            Line();
             //
             if (false) {
                 Abort();
