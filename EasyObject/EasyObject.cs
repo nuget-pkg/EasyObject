@@ -160,6 +160,7 @@ public class
 #endif
     {
         ClearSettings();
+        SetupConsoleEncoding(Encoding.UTF8); /**/
 #if USE_SPECTRE_CONSOLE
         StandardOutput = new EasyConsole(Console.Out);
         StandardError = new EasyConsole(Console.Error);
@@ -565,8 +566,12 @@ public class
     }
     private static string? _DecorateTitle(string? title) {
         if (title == null) return null;
-        if (!UseAnsiConsole) title = title.Replace("⁅markup⁆", "");
-        title = $"⭕️✅❝𝑪𝒉𝒆𝒄𝒌：{title}❞✅";
+        if (!UseAnsiConsole) {
+            title = title.Replace("⁅markup⁆", "");
+        }
+        if (!title.Contains("||◣") && !title.Contains("◥||")) {
+            title = $"✅❝𝑪𝒉𝒆𝒄𝒌：{title}❞✅";
+        }
         return title;
     }
     public static void Write(
@@ -651,7 +656,7 @@ public class
         }
 #if USE_SPECTRE_CONSOLE
         if (UseAnsiConsole) {
-            StandardError.Render("⁅markup⁆[cyan][[Log]][/] ");
+            StandardError.Render("⁅markup⁆[cyan][[🌐Log🌐]][/] ");
             if (title != null) StandardError.Render($"{title}: ");
             if (x != null && x is string str)
                 if (StandardError.IsMarkupString(str)) {
@@ -671,7 +676,7 @@ public class
 #endif
         var s = ToPrintable(x, title, compact, maxDepth,
             removeSurrogatePair);
-        Console.Error.WriteLine("[Log] " + s);
+        Console.Error.WriteLine("[🌐Log🌐] " + s);
         if (ShowLineNumbers) Console.Error.WriteLine($"      {CurrentSourceCodeLine()}");
     }
     public static void Debug(
@@ -695,7 +700,7 @@ public class
         }
 #if USE_SPECTRE_CONSOLE
         if (UseAnsiConsole) {
-            StandardError.Render("⁅markup⁆[purple][[Debug]][/] ");
+            StandardError.Render("⁅markup⁆[purple][[🌐Debug🌐]][/] ");
             if (title != null) StandardError.Render($"⁅markup⁆[purple]{MarkupSafeString(title)}:[/] ");
             var s2 = ToPrintable(x, null, compact, maxDepth,
                 removeSurrogatePair);
@@ -707,7 +712,7 @@ public class
 #endif
         var s = ToPrintable(x, title, compact, maxDepth,
             removeSurrogatePair);
-        Console.Error.WriteLine("[Debug] " + s);
+        Console.Error.WriteLine("[🌐Debug🌐] " + s);
         Console.Error.WriteLine($"  {CurrentSourceCodeLine()}");
     }
     public static void Message(
@@ -1178,11 +1183,11 @@ public class
         //UseAnsiConsole = true;
         Log($"⁅markup⁆[red][[!! ABORTING...WITH EXIT CODE {exitCode} !!]][/]");
         _ViewInFavoriteEditor(CurrentSourceCodeLine(rawString: true), wait: false);
-        Message(message, title: "Abort()", msgBoxFlag: /*MB_ICONERROR*/ 0x00000010);
+        Message(message, title: "||◣ABORT()◥||", msgBoxFlag: /*MB_ICONERROR*/ 0x00000010);
         Environment.Exit(exitCode);
     }
     public static void Break(object? x = null, string? title = null) {
-        if (title == null) title = "Break()";
+        if (title == null) title = "||◣BREAK()◥||";
         var currLine = CurrentSourceCodeLine(rawString: true);
         string message = currLine.Trim();
         if (x != null) {

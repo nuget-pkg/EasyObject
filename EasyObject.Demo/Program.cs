@@ -26,7 +26,7 @@ public class Program {
     public static void Main(string[] args) {
         // ReSharper disable HeuristicUnreachableCode
         try {
-            SetupConsoleEncoding();
+            //SetupConsoleEncoding(); /* Default is UTF8: (Since 2026.04.02) */
             //ShowLineNumbers = false;
             ShowDetail = true;
             UseAnsiConsole = true;
@@ -453,6 +453,9 @@ public class Program {
             if (exe != null) {
                 Break(exe, "!! Hello Vimmer !!");
             }
+            //
+            DebugOutput = true;
+            Debug("Hello Debug", "DEBUG TITLE");
             //
             if (false) {
                 Abort();
