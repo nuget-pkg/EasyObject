@@ -402,7 +402,7 @@ public class Program {
             var tmpList = youtubePlaylists["PLTvSv0jkjbk8SOhwrGhDxHY3gbqN-rzB7"];
             var tmpVideos = tmpList["videos"];
             Log(tmpList.Count, "tmpList.Count");
-            Abort();
+            //Abort();
 
             youtubePlaylists
                 .Shuffle() /* !! THIS STEP (PIPELINE) IS NOT NECESSARY FOR DEBUGGING PURPOSE; JUST DEMONSTRATING EasyObject#Shuffle() !! */
