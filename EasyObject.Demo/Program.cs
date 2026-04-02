@@ -480,7 +480,7 @@ public class Program {
                     }
                 });
             //
-            if (true) throw new NotImplementedException();
+            if (false) throw new NotImplementedException();
         }
         catch (Exception ex) {
             Abort(ex); // !! throw new NotImplementedException(); GOES HERE !!

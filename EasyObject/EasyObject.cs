@@ -642,7 +642,8 @@ public class
         bool compact = false,
         uint maxDepth = 0,
         List<string>? hideKeys = null,
-        bool removeSurrogatePair = false
+        bool removeSurrogatePair = false,
+        bool dontShowLineNumbers = false
     ) {
         title = _DecorateTitle(title);
         _EnsureCursorLeft();
@@ -661,7 +662,7 @@ public class
             if (x != null && x is string str)
                 if (StandardError.IsMarkupString(str)) {
                     StandardError.RenderLine(str);
-                    if (ShowLineNumbers)
+                    if (!dontShowLineNumbers && ShowLineNumbers)
                         StandardError.RenderLine(
                             $"⁅markup⁆[blue]  ➡️➡️ {MarkupSafeString(CurrentSourceCodeLine())}[/]");
                     return;
@@ -1249,7 +1250,8 @@ public class
                 // [Visual Studio Code]
                 exe = HyperOperatingSystem.FindExePath("code.cmd");
                 if (exe != null) {
-                    Log(exe, "⁅markup⁆[green]Visual Studio Code is installed...opening the location with it[/]");
+                    //Log(exe, "⁅markup⁆[green]Visual Studio Code is installed...opening the location with it[/]", dontShowLineNumbers: true);
+                    //Log(exe, "⁅markup⁆[green]Visual Studio Code is installed...opening the location with it[/]", dontShowLineNumbers: true);
                     if (_lineNumber == null) {
                         if (wait)
                             p = HyperOperatingSystem.LaunchProcess(exe, ["--wait", _filePath]);
@@ -1276,7 +1278,8 @@ public class
                 // [Notepad++]
                 exe = HyperOperatingSystem.FindExePath("Notepad++.exe");
                 if (exe != null) {
-                    Log(exe, "⁅markup⁆[green]Notepad++.exe is installed...opening the location with it[/]");
+                    //Log(exe, "⁅markup⁆[green]Notepad++.exe is installed...opening the location with it[/]", dontShowLineNumbers: true);
+                    //Log(exe, "⁅markup⁆[green]Notepad++.exe is installed...opening the location with it[/]", dontShowLineNumbers: true);
                     if (_lineNumber == null) {
                         p = HyperOperatingSystem.LaunchProcess(exe, [_filePath, "-n1"]);
                         DelayForEditorStart(p);
@@ -1294,7 +1297,8 @@ public class
             if (HyperOperatingSystem.GetEnv("I_HATE_EMACS") != "1") {
                 exe = HyperOperatingSystem.FindExePath("emacsclient.exe");
                 if (exe != null) {
-                    Log(exe, "⁅markup⁆[green]Emacs Client is installed...opening the location with it[/]");
+                    //Log(exe, "⁅markup⁆[green]Emacs Client is installed...opening the location with it[/]", dontShowLineNumbers: true);
+                    //Log(exe, "⁅markup⁆[green]Emacs Client is installed...opening the location with it[/]", dontShowLineNumbers: true);
                     if (wait) {
                         p = HyperOperatingSystem.LaunchProcess(exe,
                         [
@@ -1319,7 +1323,8 @@ public class
                 // [Zed Editor]
                 exe = HyperOperatingSystem.FindExePath("Zed.exe");
                 if (exe != null) {
-                    Log(exe, "⁅markup⁆[green]Zed Editor is installed...opening the location with it[/]");
+                    //Log(exe, "⁅markup⁆[green]Zed Editor is installed...opening the location with it[/]", dontShowLineNumbers: true);
+                    //Log(exe, "⁅markup⁆[green]Zed Editor is installed...opening the location with it[/]", dontShowLineNumbers: true);
                     if (_lineNumber == null) {
                         if (wait)
                             p = HyperOperatingSystem.LaunchProcess(exe, ["--wait", _filePath]);
@@ -1344,7 +1349,8 @@ public class
                 // [Notepad3.exe]
                 exe = HyperOperatingSystem.FindExePath("Notepad3.exe");
                 if (exe != null) {
-                    Log(exe, "⁅markup⁆[green]Notepad3.exe is installed...opening the location with it[/]");
+                    //Log(exe, "⁅markup⁆[green]Notepad3.exe is installed...opening the location with it[/]", dontShowLineNumbers: true);
+                    //Log(exe, "⁅markup⁆[green]Notepad3.exe is installed...opening the location with it[/]", dontShowLineNumbers: true);
                     if (_lineNumber == null) {
                         p = HyperOperatingSystem.LaunchProcess(exe, ["/g", "1", _filePath]);
                         DelayForEditorStart(p);
@@ -1486,7 +1492,7 @@ public class
     public static void Line(string message = "") {
         bool showLineNumbers = ShowLineNumbers;
         ShowLineNumbers = true;
-        Log(message, "||◣LINE()◥||");
+        Log(message, "||◣LINE()◥||", dontShowLineNumbers: true);
         ShowLineNumbers = showLineNumbers;
     }
 }
