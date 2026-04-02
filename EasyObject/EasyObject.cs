@@ -160,7 +160,6 @@ public class
 #endif
     {
         ClearSettings();
-        SetupConsoleEncoding(Encoding.UTF8); /**/
 #if USE_SPECTRE_CONSOLE
         StandardOutput = new EasyConsole(Console.Out);
         StandardError = new EasyConsole(Console.Error);
@@ -173,6 +172,7 @@ public class
         ForceAscii = false;
         UseAnsiConsole = false;
         ShowLineNumbers = SHOW_LINE_NUMBER_DEFAUTLT; /**/
+        SetupConsoleEncoding(Encoding.UTF8); /**/
     }
     public static void SetupConsoleEncoding(Encoding? encoding = null) {
         if (encoding == null) encoding = Encoding.UTF8;
