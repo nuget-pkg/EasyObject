@@ -54,7 +54,17 @@ internal class AssertCapabilitiesTest {
     public void Test902()
     {
         ShowDetail = true;
+        Line();
         EasyObject eo = NewArray("a", "b", "c");
+        Line();
+        Echo(eo, maxCount: 2, title: "1");
+        Line();
         eo.Dump(maxCount: 2);
+        Line();
+        EasyObject.Dump(eo, maxCount: 2);
+        Line();
+        eo.Trim(maxCount: 2);
+        Line();
+        Echo(eo);
     }
 }

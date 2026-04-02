@@ -1098,7 +1098,7 @@ public class
         }
         return lines;
     }
-    public static string CurrentSourceCodeLine(bool rawString = false) {
+    public static string CurrentSourceCodeLine(bool rawString = false, bool summaryOnly = false) {
         StackTrace st = new StackTrace(true);
         var trace = st.ToString();
         var lines = TextToLines(trace);
@@ -1106,8 +1106,12 @@ public class
         string? lastLine = null;
         for (int i = lines.Count - 1; i >= 0; i--) {
             string line = lines[i];
-            var m = HyperOperatingSystem.FindFirstMatch(line, " [0-9]+$");
+            var m = HyperOperatingSystem.FindFirstMatch(line, " ([0-9]+)$");
             if (m != null) {
+                if (summaryOnly)
+                {
+                    return $"{m[1]}行目";
+                }
                 lastLine = line;
                 break;
             }
@@ -1509,10 +1513,10 @@ public class
             HandleBetrayedExpectation(ex, hint, exitCode);
         }
     }
-    public static void Line(string message = "") {
+    public static void Line() {
         bool showLineNumbers = ShowLineNumbers;
         ShowLineNumbers = true;
-        Log(message, "||◣LINE()◥||", dontShowLineNumbers: true);
+        Echo(CurrentSourceCodeLine(summaryOnly: true), "||◣LINE()◥||");
         ShowLineNumbers = showLineNumbers;
     }
 }
