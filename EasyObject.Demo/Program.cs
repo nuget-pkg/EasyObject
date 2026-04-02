@@ -412,7 +412,7 @@ public class Program {
             for (var p = 0; p < playlistIdsOf5.Count; p++) {
                 var playlistId = playlistIdsOf5[p];
                 var playlistObject = youtubePlaylists[playlistId.Cast<string>()];
-                playlistObject[playlistId.Cast<string>()].Dump(title: playlistId.Cast<string>(), maxDepth: 0);
+                playlistObject.Dump(title: playlistId.Cast<string>(), maxDepth: 0);
                 string playlistTitle = playlistObject.Dynamic.title;
                 int videoCount = playlistObject.Dynamic.videos.Count;
                 Log(new { id = playlistId, title = playlistTitle, videoCount }, compact: true);
