@@ -33,9 +33,6 @@
 		<EmbedUntrackedSources>true</EmbedUntrackedSources>
 	</PropertyGroup>
     <PropertyGroup>
-        <!--needef for project using xunit-->
-    </PropertyGroup>
-    <PropertyGroup>
         <DefineConstants>$(DefineConstants);USE_SPECTRE_CONSOLE</DefineConstants>
     </PropertyGroup>
     <ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789`))' == 'net'">
