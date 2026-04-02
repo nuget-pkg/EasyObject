@@ -50,7 +50,7 @@ public class EasyConsole //: IAnsiConsole
 #if !USE_SPECTRE_CONSOLE
         this._writer.WriteLine(s);
 #else
-        if (!s.StartsWith("⁅markup⁆")) {
+        if (!s.Contains("⁅markup⁆")) { /**/
             _ansiConsole.Write(s);
         }
         else {
@@ -63,7 +63,7 @@ public class EasyConsole //: IAnsiConsole
 #if !USE_SPECTRE_CONSOLE
         this._writer.Write(s);
 #else
-        if (!s.StartsWith("⁅markup⁆")) {
+        if (!s.Contains("⁅markup⁆")) {
             _ansiConsole.WriteLine(s);
         }
         else {
@@ -73,7 +73,7 @@ public class EasyConsole //: IAnsiConsole
 #endif
     }
     public bool IsMarkupString(string str) {
-        return str.StartsWith("⁅markup⁆");
+        return str.Contains("⁅markup⁆");
     }
     public void Write(string s) {
         _writer.Write(s);
@@ -534,12 +534,12 @@ public class
     private static extern bool FreeConsole();
     public static void ConsoleAlloc() {
         //if (IsConsoleApplication) return;
-        if (!OpenSystem.IsWindowsPlatform()) return;
+        if (!HyperOperatingSystem.IsWindowsPlatform()) return;
         AllocConsole();
     }
     public static void ConsoleFree() {
         //if (IsConsoleApplication) return;
-        if (!OpenSystem.IsWindowsPlatform()) return;
+        if (!HyperOperatingSystem.IsWindowsPlatform()) return;
         FreeConsole();
     }
     public static void ReallocConsole() {
@@ -563,10 +563,17 @@ public class
         return str;
 #endif
     }
+    private static string? _DecorateTitle(string? title) {
+        if (title == null) return null;
+        if (!UseAnsiConsole) title = title.Replace("⁅markup⁆", "");
+        title = $"⭕️✅❝𝑪𝒉𝒆𝒄𝒌：{title}❞✅";
+        return title;
+    }
     public static void Write(
         string str,
         string? title = null
     ) {
+        title = _DecorateTitle(title);
 #if USE_SPECTRE_CONSOLE
         if (title != null) StandardOutput.Render($"{title}: ");
         StandardOutput.Render(str);
@@ -579,6 +586,7 @@ public class
         string str = "",
         string? title = null
     ) {
+        title = _DecorateTitle(title);
 #if USE_SPECTRE_CONSOLE
         if (title != null) StandardOutput.Render($"{title}: ");
         StandardOutput.RenderLine(str);
@@ -595,6 +603,7 @@ public class
         List<string>? hideKeys = null,
         bool removeSurrogatePair = false
     ) {
+        title = _DecorateTitle(title);
         _EnsureCursorLeft();
         hideKeys ??= new List<string>();
         if (maxDepth > 0 || hideKeys.Count > 0) {
@@ -630,6 +639,7 @@ public class
         List<string>? hideKeys = null,
         bool removeSurrogatePair = false
     ) {
+        title = _DecorateTitle(title);
         _EnsureCursorLeft();
         hideKeys ??= new List<string>();
         if (maxDepth > 0 || hideKeys.Count > 0) {
@@ -673,6 +683,7 @@ public class
         bool removeSurrogatePair = false
     ) {
         if (!DebugOutput) return;
+        title = _DecorateTitle(title);
         _EnsureCursorLeft();
         hideKeys ??= new List<string>();
         if (maxDepth > 0 || hideKeys.Count > 0) {
@@ -707,7 +718,8 @@ public class
         List<string>? hideKeys = null,
         uint msgBoxFlag = /*MB_ICONINFORMATION*/0x00000040
     ) {
-        if (!OpenSystem.IsWindowsPlatform()) {
+        title = _DecorateTitle(title);
+        if (!HyperOperatingSystem.IsWindowsPlatform()) {
             Log(x, title: title, compact: compact, maxDepth: maxDepth, hideKeys: hideKeys);
             return;
         }
@@ -735,6 +747,7 @@ public class
         List<string>? hideKeys = null,
         bool removeSurrogatePair = false
     ) {
+        title = _DecorateTitle(title);
         _EnsureCursorLeft();
         Echo(
             x,
@@ -752,6 +765,7 @@ public class
         List<string>? hideKeys = null,
         bool removeSurrogatePair = false
     ) {
+        //title = _DecorateTitle(title); /* DumpObject() covers this. */        
         DumpObject(this, title, compact, maxDepth, hideKeys,
             removeSurrogatePair);
     }
@@ -1072,7 +1086,7 @@ public class
         string? lastLine = null;
         for (int i = lines.Count - 1; i >= 0; i--) {
             string line = lines[i];
-            var m = OpenSystem.FindFirstMatch(line, " [0-9]+$");
+            var m = HyperOperatingSystem.FindFirstMatch(line, " [0-9]+$");
             if (m != null) {
                 lastLine = line;
                 break;
@@ -1131,7 +1145,7 @@ public class
         ShowLineNumbers = false;
         UseAnsiConsole = true;
         Log("⁅markup⁆[red][[!! ABORTING PROGRAM !!]][/]");
-        UseAnsiConsole = false;
+        //UseAnsiConsole = false;
         if (message != null && !(message is Exception)) Log(message, "MESSAGE (FOR ABORTING PROGRAM)");
         if (message is Exception e) {
             var exTrace = e.ToString();
@@ -1148,7 +1162,7 @@ public class
                 _ViewInFavoriteEditor(CurrentSourceCodeLine(rawString: true), wait: false);
                 Message(ex.ToString(), "EXCEPTION (FOR ABORTING PROGRAM)", msgBoxFlag: /*MB_ICONERROR*/ 0x00000010);
             }
-            UseAnsiConsole = true;
+            //UseAnsiConsole = true;
             Log($"⁅markup⁆[red][[!! ABORTING...WITH EXIT CODE {exitCode} !!]][/]");
             _ViewInFavoriteEditor(CurrentSourceCodeLine(rawString: true), wait: false);
             Message(new { message, exitCode }, $"!! ABORTING...WITH EXIT CODE {exitCode} !!",
@@ -1161,7 +1175,7 @@ public class
         trace = "\n" + string.Join("\n", lines);
         trace = ReplacePathsWithUrls(trace);
         Log(trace, "STACK TRACE");
-        UseAnsiConsole = true;
+        //UseAnsiConsole = true;
         Log($"⁅markup⁆[red][[!! ABORTING...WITH EXIT CODE {exitCode} !!]][/]");
         _ViewInFavoriteEditor(CurrentSourceCodeLine(rawString: true), wait: false);
         Message(message, title: "Abort()", msgBoxFlag: /*MB_ICONERROR*/ 0x00000010);
@@ -1178,7 +1192,7 @@ public class
         Message(message, title: title);
     }
     private static void _ViewInFavoriteEditor(string currLine, bool wait = false) {
-        if (!OpenSystem.IsWindowsPlatform()) return;
+        if (!HyperOperatingSystem.IsWindowsPlatform()) return;
         string? _filePath = null;
         string? _lineNumber = null;
         var filePathRegex =
@@ -1223,133 +1237,135 @@ public class
                 catch {
                     ;
                 }
-                OpenSystem.Sleep(msec);
+                HyperOperatingSystem.Sleep(msec);
             }
             if (_lineNumber == null) _lineNumber = "1";
             //UseAnsiConsole = true;
             //ShowDetail = false;
             string? exe = null;
             Process? p = null;
-            // if (OpenSystem.GetEnv("I_LIKE_SCITE") == "1") {
+            // if (HyperOperatingSystem.GetEnv("I_LIKE_SCITE") == "1") {
             //     //SciTE https://scintilla.org/SciTE.html
-            //     exe = OpenSystem.FindExePath("SciTE.exe");
+            //     exe = HyperOperatingSystem.FindExePath("SciTE.exe");
             //     if (exe != null) {
             //         Log(exe, "⁅markup⁆[green]SciTE Editor is installed...opening the location with it[/]");
             //         if (_lineNumber == null) {
-            //             p = OpenSystem.LaunchProcess(exe, ["-code.page:65001", _filePath, "-goto:1"]);
+            //             p = HyperOperatingSystem.LaunchProcess(exe, ["-code.page:65001", _filePath, "-goto:1"]);
             //             DelayForEditorStart(p);
             //             if (p != null && wait) p.WaitForExit();
             //             return;
             //         }
             //         else {
-            //             p = OpenSystem.LaunchProcess(exe, ["-code.page:65001", _filePath, $"-goto:{_lineNumber}"]);
+            //             p = HyperOperatingSystem.LaunchProcess(exe, ["-code.page:65001", _filePath, $"-goto:{_lineNumber}"]);
             //             DelayForEditorStart(p);
             //             if (p != null && wait) p.WaitForExit();
             //             return;
             //         }
             //     }
             // }
-            if (OpenSystem.GetEnv("I_HATE_NOTEPAD_PP") != "1") {
+            if (HyperOperatingSystem.GetEnv("I_HATE_NOTEPAD_PP") != "1") {
                 // [Notepad++]
-                exe = OpenSystem.FindExePath("Notepad++.exe");
+                exe = HyperOperatingSystem.FindExePath("Notepad++.exe");
                 if (exe != null) {
                     Log(exe, "⁅markup⁆[green]Notepad++.exe is installed...opening the location with it[/]");
                     if (_lineNumber == null) {
-                        p = OpenSystem.LaunchProcess(exe, [_filePath, "-n1"]);
+                        p = HyperOperatingSystem.LaunchProcess(exe, [_filePath, "-n1"]);
                         DelayForEditorStart(p);
                         if (p != null && wait) p.WaitForExit();
                         return;
                     }
                     else {
-                        p = OpenSystem.LaunchProcess(exe, [_filePath, $"-n{_lineNumber}"]);
+                        p = HyperOperatingSystem.LaunchProcess(exe, [_filePath, $"-n{_lineNumber}"]);
                         DelayForEditorStart(p);
                         if (p != null && wait) p.WaitForExit();
                         return;
                     }
                 }
             }
-            if (OpenSystem.GetEnv("I_HATE_EMACS") != "1") {
-                exe = OpenSystem.FindExePath("emacsclient.exe");
+            if (HyperOperatingSystem.GetEnv("I_HATE_EMACS") != "1") {
+                exe = HyperOperatingSystem.FindExePath("emacsclient.exe");
                 if (exe != null) {
                     Log(exe, "⁅markup⁆[green]Emacs Client is installed...opening the location with it[/]");
                     if (wait) {
-                        p = OpenSystem.LaunchProcess(exe, ["-nw", "-a", "\"\"", $"+{_lineNumber}", _filePath]);
+                        p = HyperOperatingSystem.LaunchProcess(exe,
+                            ["-nw", "-a", "\"\"", $"+{_lineNumber}", _filePath]);
                         DelayForEditorStart(p);
                         if (p != null) p.WaitForExit();
                         return;
                     }
                     else {
-                        p = OpenSystem.LaunchProcess(exe, ["-r", "-n", "-a", "\"\"", $"+{_lineNumber}", _filePath]);
+                        p = HyperOperatingSystem.LaunchProcess(exe,
+                            ["-r", "-n", "-a", "\"\"", $"+{_lineNumber}", _filePath]);
                         DelayForEditorStart(p);
                         return;
                     }
                 }
             }
-            if (OpenSystem.GetEnv("I_HATE_ZED") != "1") {
+            if (HyperOperatingSystem.GetEnv("I_HATE_ZED") != "1") {
                 // [Zed Editor]
-                exe = OpenSystem.FindExePath("Zed.exe");
+                exe = HyperOperatingSystem.FindExePath("Zed.exe");
                 if (exe != null) {
                     Log(exe, "⁅markup⁆[green]Zed Editor is installed...opening the location with it[/]");
                     if (_lineNumber == null) {
                         if (wait)
-                            p = OpenSystem.LaunchProcess(exe, ["--wait", _filePath]);
+                            p = HyperOperatingSystem.LaunchProcess(exe, ["--wait", _filePath]);
                         else
-                            p = OpenSystem.LaunchProcess(exe, [_filePath]);
+                            p = HyperOperatingSystem.LaunchProcess(exe, [_filePath]);
                         DelayForEditorStart(p);
                         if (p != null && wait) p.WaitForExit();
                         return;
                     }
                     else {
                         if (wait)
-                            p = OpenSystem.LaunchProcess(exe, ["--wait", $"{_filePath}:{_lineNumber}"]);
+                            p = HyperOperatingSystem.LaunchProcess(exe, ["--wait", $"{_filePath}:{_lineNumber}"]);
                         else
-                            p = OpenSystem.LaunchProcess(exe, [$"{_filePath}:{_lineNumber}"]);
+                            p = HyperOperatingSystem.LaunchProcess(exe, [$"{_filePath}:{_lineNumber}"]);
                         DelayForEditorStart(p);
                         if (p != null && wait) p.WaitForExit();
                         return;
                     }
                 }
             }
-            if (OpenSystem.GetEnv("I_HATE_VSCODE") != "1") {
+            if (HyperOperatingSystem.GetEnv("I_HATE_VSCODE") != "1") {
                 // [Visual Studio Code]
-                exe = OpenSystem.FindExePath("code.cmd");
+                exe = HyperOperatingSystem.FindExePath("code.cmd");
                 if (exe != null) {
                     Log(exe, "⁅markup⁆[green]Visual Studio Code is installed...opening the location with it[/]");
                     if (_lineNumber == null) {
                         if (wait)
-                            p = OpenSystem.LaunchProcess(exe, ["--wait", _filePath]);
+                            p = HyperOperatingSystem.LaunchProcess(exe, ["--wait", _filePath]);
                         else
-                            p = OpenSystem.LaunchProcess(exe, [_filePath]);
+                            p = HyperOperatingSystem.LaunchProcess(exe, [_filePath]);
                         DelayForEditorStart(p);
                         if (p != null && wait) p.WaitForExit();
                         return;
                     }
                     else {
                         if (wait)
-                            p = OpenSystem.LaunchProcess(exe, [
+                            p = HyperOperatingSystem.LaunchProcess(exe, [
                                 "--wait", "-g", $"{_filePath}:{_lineNumber}"
                             ]);
                         else
-                            p = OpenSystem.LaunchProcess(exe, ["-g", $"{_filePath}:{_lineNumber}"]);
+                            p = HyperOperatingSystem.LaunchProcess(exe, ["-g", $"{_filePath}:{_lineNumber}"]);
                         DelayForEditorStart(p);
                         if (p != null && wait) p.WaitForExit();
                         return;
                     }
                 }
             }
-            if (OpenSystem.GetEnv("I_HATE_NOTEPAD_3") != "1") {
+            if (HyperOperatingSystem.GetEnv("I_HATE_NOTEPAD_3") != "1") {
                 // [Notepad3.exe]
-                exe = OpenSystem.FindExePath("Notepad3.exe");
+                exe = HyperOperatingSystem.FindExePath("Notepad3.exe");
                 if (exe != null) {
                     Log(exe, "⁅markup⁆[green]Notepad3.exe is installed...opening the location with it[/]");
                     if (_lineNumber == null) {
-                        p = OpenSystem.LaunchProcess(exe, ["/g", "1", _filePath]);
+                        p = HyperOperatingSystem.LaunchProcess(exe, ["/g", "1", _filePath]);
                         DelayForEditorStart(p);
                         if (p != null && wait) p.WaitForExit();
                         return;
                     }
                     else {
-                        p = OpenSystem.LaunchProcess(exe, ["/g", _lineNumber, _filePath]);
+                        p = HyperOperatingSystem.LaunchProcess(exe, ["/g", _lineNumber, _filePath]);
                         DelayForEditorStart(p);
                         if (p != null && wait) p.WaitForExit();
                         return;
@@ -1381,13 +1397,13 @@ public class
         UseAnsiConsole = true;
         Log("⁅markup⁆[red][[!! EXPECTATION BETRAYED !!]][/]");
         Log($"⁅markup⁆[red]{MarkupSafeString(CurrentSourceCodeLine())}[/]");
-        UseAnsiConsole = false;
+        //UseAnsiConsole = false;
         if (hint != null) {
             Log(hint, "HINT MESSAGE (FOR THIS EXPECTATION)");
             _ViewInFavoriteEditor(CurrentSourceCodeLine(rawString: true), wait: false);
             Message(hint, title: "HINT MESSAGE (FOR THIS EXPECTATION)", msgBoxFlag: /*MB_ICONERROR*/ 0x00000010);
         }
-        UseAnsiConsole = true;
+        //UseAnsiConsole = true;
         //if (ex != null) {
         WriteLine(
             $"⁅markup⁆[blue]{MarkupSafeString(ReplacePathsWithUrls(ex.ToString()))}[/]",

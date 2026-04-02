@@ -21,7 +21,7 @@ using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 using Global;
-using static Global.OpenSystem;
+using static Global.HyperOperatingSystem;
 public class Program {
     public static void Main(string[] args) {
         // ReSharper disable HeuristicUnreachableCode
@@ -117,7 +117,7 @@ public class Program {
             foreach (var e in i.Dynamic) Log(e);
             ////var bigJson = File.ReadAllText("assets/qiita-9ea0c8fd43b61b01a8da.json");
             var bigJson =
-                File.ReadAllText(OpenSystem.GitProjectFile(GetCwd(), "assets",
+                File.ReadAllText(HyperOperatingSystem.GitProjectFile(GetCwd(), "assets",
                     "qiita-9ea0c8fd43b61b01a8da.json")!); /**/
             //Log(bigJson);
             var sw = new Stopwatch();
