@@ -1245,6 +1245,33 @@ public class
             //ShowDetail = false;
             string? exe = null;
             Process? p = null;
+            if (HyperOperatingSystem.GetEnv("I_HATE_VSCODE") != "1") {
+                // [Visual Studio Code]
+                exe = HyperOperatingSystem.FindExePath("code.cmd");
+                if (exe != null) {
+                    Log(exe, "⁅markup⁆[green]Visual Studio Code is installed...opening the location with it[/]");
+                    if (_lineNumber == null) {
+                        if (wait)
+                            p = HyperOperatingSystem.LaunchProcess(exe, ["--wait", _filePath]);
+                        else
+                            p = HyperOperatingSystem.LaunchProcess(exe, [_filePath]);
+                        DelayForEditorStart(p);
+                        if (p != null && wait) p.WaitForExit();
+                        return;
+                    }
+                    else {
+                        if (wait)
+                            p = HyperOperatingSystem.LaunchProcess(exe, [
+                                "--wait", "-g", $"{_filePath}:{_lineNumber}"
+                            ]);
+                        else
+                            p = HyperOperatingSystem.LaunchProcess(exe, ["-g", $"{_filePath}:{_lineNumber}"]);
+                        DelayForEditorStart(p);
+                        if (p != null && wait) p.WaitForExit();
+                        return;
+                    }
+                }
+            }
             if (HyperOperatingSystem.GetEnv("I_HATE_NOTEPAD_PP") != "1") {
                 // [Notepad++]
                 exe = HyperOperatingSystem.FindExePath("Notepad++.exe");
@@ -1270,14 +1297,19 @@ public class
                     Log(exe, "⁅markup⁆[green]Emacs Client is installed...opening the location with it[/]");
                     if (wait) {
                         p = HyperOperatingSystem.LaunchProcess(exe,
-                            ["-nw", "-a", "\"\"", $"+{_lineNumber}", _filePath]);
+                        [
+                            "-nw", "-a", "\"\"", $"+{_lineNumber}", _filePath, "--eval" /*, "(recenter-top-bottom)"*/
+                        ]);
                         DelayForEditorStart(p);
                         if (p != null) p.WaitForExit();
                         return;
                     }
                     else {
                         p = HyperOperatingSystem.LaunchProcess(exe,
-                            ["-r", "-n", "-a", "\"\"", $"+{_lineNumber}", _filePath]);
+                        [
+                            "-r", "-n", "-a", "\"\"", $"+{_lineNumber}",
+                            _filePath /*, "--eval", "(recenter-top-bottom)"*/
+                        ]);
                         DelayForEditorStart(p);
                         return;
                     }
@@ -1302,33 +1334,6 @@ public class
                             p = HyperOperatingSystem.LaunchProcess(exe, ["--wait", $"{_filePath}:{_lineNumber}"]);
                         else
                             p = HyperOperatingSystem.LaunchProcess(exe, [$"{_filePath}:{_lineNumber}"]);
-                        DelayForEditorStart(p);
-                        if (p != null && wait) p.WaitForExit();
-                        return;
-                    }
-                }
-            }
-            if (HyperOperatingSystem.GetEnv("I_HATE_VSCODE") != "1") {
-                // [Visual Studio Code]
-                exe = HyperOperatingSystem.FindExePath("code.cmd");
-                if (exe != null) {
-                    Log(exe, "⁅markup⁆[green]Visual Studio Code is installed...opening the location with it[/]");
-                    if (_lineNumber == null) {
-                        if (wait)
-                            p = HyperOperatingSystem.LaunchProcess(exe, ["--wait", _filePath]);
-                        else
-                            p = HyperOperatingSystem.LaunchProcess(exe, [_filePath]);
-                        DelayForEditorStart(p);
-                        if (p != null && wait) p.WaitForExit();
-                        return;
-                    }
-                    else {
-                        if (wait)
-                            p = HyperOperatingSystem.LaunchProcess(exe, [
-                                "--wait", "-g", $"{_filePath}:{_lineNumber}"
-                            ]);
-                        else
-                            p = HyperOperatingSystem.LaunchProcess(exe, ["-g", $"{_filePath}:{_lineNumber}"]);
                         DelayForEditorStart(p);
                         if (p != null && wait) p.WaitForExit();
                         return;
