@@ -605,6 +605,7 @@ public class
         string? title = null,
         bool compact = false,
         uint maxDepth = 0,
+        uint maxCount = 0,
         List<string>? hideKeys = null,
         bool removeSurrogatePair = false
     ) {
@@ -614,9 +615,10 @@ public class
         if (maxDepth > 0 || hideKeys.Count > 0) {
             var eo = FromObject(x);
             x = eo.Clone(
-                maxDepth,
-                hideKeys,
-                false);
+                maxDepth: maxCount,
+                maxCount: maxCount,
+                hideKeys: hideKeys,
+                always: false);
         }
 #if USE_SPECTRE_CONSOLE
         if (UseAnsiConsole) {
@@ -641,6 +643,7 @@ public class
         string? title = null,
         bool compact = false,
         uint maxDepth = 0,
+        uint maxCount = 0,
         List<string>? hideKeys = null,
         bool removeSurrogatePair = false,
         bool dontShowLineNumbers = false
@@ -651,9 +654,10 @@ public class
         if (maxDepth > 0 || hideKeys.Count > 0) {
             var eo = FromObject(x);
             x = eo.Clone(
-                maxDepth,
-                hideKeys,
-                false);
+                maxDepth: maxCount,
+                maxCount: maxCount,
+                hideKeys: hideKeys,
+                always: false);
         }
 #if USE_SPECTRE_CONSOLE
         if (UseAnsiConsole) {
@@ -686,6 +690,7 @@ public class
         string? title = null,
         bool compact = false,
         uint maxDepth = 0,
+        uint maxCount = 0,
         List<string>? hideKeys = null,
         bool removeSurrogatePair = false
     ) {
@@ -696,9 +701,10 @@ public class
         if (maxDepth > 0 || hideKeys.Count > 0) {
             var eo = FromObject(x);
             x = eo.Clone(
-                maxDepth,
-                hideKeys,
-                false);
+                maxDepth: maxCount,
+                maxCount: maxCount,
+                hideKeys: hideKeys,
+                always: false);
         }
 #if USE_SPECTRE_CONSOLE
         if (UseAnsiConsole) {
@@ -722,6 +728,7 @@ public class
         string? title = null,
         bool compact = false,
         uint maxDepth = 0,
+        uint maxCount = 0,
         List<string>? hideKeys = null,
         uint msgBoxFlag = /*MB_ICONINFORMATION*/0x00000040
     ) {
@@ -735,9 +742,10 @@ public class
         if (maxDepth > 0 || hideKeys.Count > 0) {
             var eo = FromObject(x);
             x = eo.Clone(
-                maxDepth,
-                hideKeys,
-                false);
+                maxDepth: maxCount,
+                maxCount: maxCount,
+                hideKeys: hideKeys,
+                always: false);
         }
         var s = ToPrintable(x, null, compact);
         NativeMethods.MessageBoxW(IntPtr.Zero, s, title,
@@ -908,16 +916,18 @@ public class
     }
     public void Trim(
         uint maxDepth = 0,
+        uint maxCount = 0,
         List<string>? hideKeys = null
     ) {
-        EasyObjectEditor.Trim(this, maxDepth, hideKeys);
+        EasyObjectEditor.Trim(this, maxDepth: maxDepth, maxCount: maxCount, hideKeys: hideKeys);
     }
     public EasyObject Clone(
         uint maxDepth = 0,
+        uint maxCount = 0,
         List<string>? hideKeys = null,
         bool always = true
     ) {
-        return EasyObjectEditor.Clone(this, maxDepth, hideKeys, always);
+        return EasyObjectEditor.Clone(this, maxDepth: maxDepth, maxCount: maxCount, hideKeys: hideKeys, always: always);
     }
     public EasyObject? Shift() {
         if (RealList == null) return null;

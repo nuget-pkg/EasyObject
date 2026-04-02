@@ -6,6 +6,7 @@ namespace Global {
 #endif
     using System.Collections.Generic;
     using System.Dynamic;
+    using System.Linq;
 #if MINIMAL
     using static MiniEasyObject;
 #else
@@ -19,6 +20,7 @@ namespace Global {
         public static EasyObject Clone(
             EasyObject x,
             uint maxDepth = 0,
+            uint maxCount = 0,
             List<string>? hideKeys = null,
             bool always = true
         ) {
@@ -30,25 +32,48 @@ namespace Global {
                 }
             }
             x = FromObject(x);
-            Trim(x, maxDepth, hideKeys);
+            Trim(x, maxDepth: maxDepth, maxCount: maxCount, hideKeys: hideKeys);
             return x;
         }
         public static void Trim(
             EasyObject x,
             uint maxDepth = 0,
+            uint maxCount = 0,
             List<string>? hideKeys = null
         ) {
             //if (x == null) return;
-            hideKeys = hideKeys ?? new List<string>();
-            TrimHelper(1, x, maxDepth, hideKeys);
+            hideKeys = (hideKeys ?? new List<string>());
+            TrimHelper(1, x, hideKeys, maxDepth: maxDepth, maxCount: maxCount);
         }
         private static void TrimHelper(
             uint depth,
             EasyObject x,
+            List<string> hideKeys,
             uint maxDepth,
-            List<string> hideKeys
+            uint maxCount = 0
         ) {
             //if (x == null) return;
+            if (maxCount > 0)
+            {
+                if (x.IsArray)
+                {
+                    x.RealData = x.RealList!.Take((int)maxCount).ToList();
+                }
+                else if (x.IsObject)
+                {
+                    Dictionary<string, EasyObject> dict = x.RealDictionary!;
+                    if (dict.Count > maxCount)
+                    {
+                        var keys = dict.Keys.Take((int)maxCount).ToList(); ;
+                        Dictionary<string, EasyObject> newDict = new Dictionary<string, EasyObject>();
+                        for (int i = 0; i < keys.Count; i++)
+                        {
+                            newDict[keys[i]] = dict[keys[i]];
+                        }
+                        x.RealData = newDict;
+                    }
+                }
+            }
             if (maxDepth > 0) {
                 if (depth >= maxDepth) {
                     if (x.IsArray) {
@@ -68,7 +93,7 @@ namespace Global {
             }
             if (x.IsArray) {
                 for (int i = 0; i < x.Count; i++) {
-                    TrimHelper(depth + 1, x.RealList![i], maxDepth, hideKeys);
+                    TrimHelper(depth + 1, x.RealList![i], maxDepth: maxDepth, maxCount: maxCount, hideKeys: hideKeys);
                 }
             }
             else if (x.IsObject) {
@@ -79,7 +104,7 @@ namespace Global {
                         x.RealDictionary!.Remove(key);
                         continue;
                     }
-                    TrimHelper(depth + 1, x.RealDictionary![key], maxDepth, hideKeys);
+                    TrimHelper(depth + 1, x.RealDictionary![key], maxDepth: maxDepth, maxCount: maxCount, hideKeys: hideKeys);
                 }
             }
         }
