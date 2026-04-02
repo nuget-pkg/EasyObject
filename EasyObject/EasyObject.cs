@@ -656,7 +656,7 @@ public class
         }
 #if USE_SPECTRE_CONSOLE
         if (UseAnsiConsole) {
-            StandardError.Render("⁅markup⁆[cyan][[🌐Log🌐]][/] ");
+            StandardError.Render("⁅markup⁆[cyan][[🌐LOG🌐]][/] ");
             if (title != null) StandardError.Render($"{title}: ");
             if (x != null && x is string str)
                 if (StandardError.IsMarkupString(str)) {
@@ -676,7 +676,7 @@ public class
 #endif
         var s = ToPrintable(x, title, compact, maxDepth,
             removeSurrogatePair);
-        Console.Error.WriteLine("[🌐Log🌐] " + s);
+        Console.Error.WriteLine("[🌐LOG🌐] " + s);
         if (ShowLineNumbers) Console.Error.WriteLine($"      {CurrentSourceCodeLine()}");
     }
     public static void Debug(
@@ -700,7 +700,7 @@ public class
         }
 #if USE_SPECTRE_CONSOLE
         if (UseAnsiConsole) {
-            StandardError.Render("⁅markup⁆[purple][[🌐Debug🌐]][/] ");
+            StandardError.Render("⁅markup⁆[purple][[🌔DEBUG🌔]][/] ");
             if (title != null) StandardError.Render($"⁅markup⁆[purple]{MarkupSafeString(title)}:[/] ");
             var s2 = ToPrintable(x, null, compact, maxDepth,
                 removeSurrogatePair);
@@ -712,7 +712,7 @@ public class
 #endif
         var s = ToPrintable(x, title, compact, maxDepth,
             removeSurrogatePair);
-        Console.Error.WriteLine("[🌐Debug🌐] " + s);
+        Console.Error.WriteLine("[🌔DEBUG🌔] " + s);
         Console.Error.WriteLine($"  {CurrentSourceCodeLine()}");
     }
     public static void Message(
@@ -1183,11 +1183,11 @@ public class
         //UseAnsiConsole = true;
         Log($"⁅markup⁆[red][[!! ABORTING...WITH EXIT CODE {exitCode} !!]][/]");
         _ViewInFavoriteEditor(CurrentSourceCodeLine(rawString: true), wait: false);
-        Message(message, title: "||◣ABORT()◥||", msgBoxFlag: /*MB_ICONERROR*/ 0x00000010);
+        Message(message, title: "||◣ABORT(UNTITLED)◥||", msgBoxFlag: /*MB_ICONERROR*/ 0x00000010);
         Environment.Exit(exitCode);
     }
     public static void Break(object? x = null, string? title = null) {
-        if (title == null) title = "||◣BREAK()◥||";
+        if (title == null) title = "||◣BREAK(UNTITLED)◥||";
         var currLine = CurrentSourceCodeLine(rawString: true);
         string message = currLine.Trim();
         if (x != null) {
