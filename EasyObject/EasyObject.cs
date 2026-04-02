@@ -615,7 +615,7 @@ public class
         if (maxDepth > 0 || hideKeys.Count > 0) {
             var eo = FromObject(x);
             x = eo.Clone(
-                maxDepth: maxCount,
+                maxDepth: maxDepth,
                 maxCount: maxCount,
                 hideKeys: hideKeys,
                 always: false);
@@ -754,11 +754,12 @@ public class
             0x00000000 | msgBoxFlag | /*MB_TOPMOST*/0x00040000 | /*MB_SETFOREGROUND*/0x00010000
         );
     }
-    public static void DumpObject(
+    public static void Dump(
         EasyObject x,
         string? title = null,
         bool compact = false,
         uint maxDepth = 0,
+        uint maxCount = 0,
         List<string>? hideKeys = null,
         bool removeSurrogatePair = false
     ) {
@@ -772,6 +773,7 @@ public class
             title: title,
             compact: compact,
             maxDepth: maxDepth,
+            maxCount: maxCount,
             hideKeys: hideKeys,
             removeSurrogatePair: removeSurrogatePair
         );
@@ -780,13 +782,14 @@ public class
         string? title = null,
         bool compact = false,
         uint maxDepth = 0,
+        uint maxCount = 0,
         List<string>? hideKeys = null,
         bool removeSurrogatePair = false
     ) {
         //title = _DecorateTitle(title); /* DumpObject() covers this. */
         DebugOutput = true;
         Debug(FullName(this.RealData));
-        DumpObject(this, title: title, compact: compact, maxDepth: maxDepth, hideKeys: hideKeys,
+        EasyObject.Dump(this, title: title, compact: compact, maxDepth: maxDepth, maxCount: maxCount, hideKeys: hideKeys,
             removeSurrogatePair: removeSurrogatePair);
     }
     private static class NativeMethods {

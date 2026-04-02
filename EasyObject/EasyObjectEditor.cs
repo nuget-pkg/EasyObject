@@ -1,6 +1,7 @@
 // ReSharper disable RedundantNameQualifier
 // ReSharper disable ForCanBeConvertedToForeach
 namespace Global {
+    using System;
 #if MINIMAL
     using EasyObject = Global.MiniEasyObject;
 #endif
@@ -27,7 +28,7 @@ namespace Global {
             //if (x == null) return Null;
             hideKeys = hideKeys ?? new List<string>();
             if (!always) {
-                if (maxDepth == 0 && hideKeys.Count == 0) {
+                if (maxDepth == 0 && maxCount == 0 && hideKeys.Count == 0) {
                     return x;
                 }
             }
@@ -43,9 +44,13 @@ namespace Global {
         ) {
             //if (x == null) return;
             hideKeys = (hideKeys ?? new List<string>());
-            TrimHelper(1, x, hideKeys, maxDepth: maxDepth, maxCount: maxCount);
+            if (maxCount > 0)
+            {
+                TrimHelper(1, x, hideKeys, maxDepth: 0, maxCount: maxCount);
+            }
+            TrimHelper(1, x, hideKeys, maxDepth: maxDepth, maxCount: 0);
         }
-        private static void TrimHelper(
+        private static EasyObject TrimHelper(
             uint depth,
             EasyObject x,
             List<string> hideKeys,
@@ -57,7 +62,10 @@ namespace Global {
             {
                 if (x.IsArray)
                 {
-                    x.RealData = x.RealList!.Take((int)maxCount).ToList();
+                    var newList = x.RealList!.Take((int)maxCount).ToList();
+                    Console.WriteLine($"newList.Count={newList.Count}");
+                    newList = newList.Select(x => TrimHelper(depth + 1, x, hideKeys, maxDepth: maxDepth, maxCount: maxCount)).ToList();
+                    x.RealData = newList;
                 }
                 else if (x.IsObject)
                 {
@@ -68,7 +76,7 @@ namespace Global {
                         Dictionary<string, EasyObject> newDict = new Dictionary<string, EasyObject>();
                         for (int i = 0; i < keys.Count; i++)
                         {
-                            newDict[keys[i]] = dict[keys[i]];
+                            newDict[keys[i]] = TrimHelper(depth + 1,dict[keys[i]], hideKeys, maxDepth: maxDepth, maxCount: maxCount);
                         }
                         x.RealData = newDict;
                     }
@@ -91,22 +99,26 @@ namespace Global {
                     }
                 }
             }
-            if (x.IsArray) {
-                for (int i = 0; i < x.Count; i++) {
-                    TrimHelper(depth + 1, x.RealList![i], maxDepth: maxDepth, maxCount: maxCount, hideKeys: hideKeys);
-                }
-            }
-            else if (x.IsObject) {
-                var keys = x.Keys;
-                for (int i = 0; i < keys.Count; i++) {
-                    string key = keys[i];
-                    if (hideKeys.Contains(key)) {
-                        x.RealDictionary!.Remove(key);
-                        continue;
-                    }
-                    TrimHelper(depth + 1, x.RealDictionary![key], maxDepth: maxDepth, maxCount: maxCount, hideKeys: hideKeys);
-                }
-            }
+            //if (x.IsArray) {
+            //    //for (int i = 0; i < x.Count; i++) {
+            //    //    TrimHelper(depth + 1, x.RealList![i], maxDepth: maxDepth, maxCount: maxCount, hideKeys: hideKeys);
+            //    //}
+            //    var newList = x.RealList!.Select(x => TrimHelper(depth + 1, x, maxDepth: maxDepth, maxCount: maxCount)).ToList();
+            //    return EasyObject.FromObject(newList);
+            //}
+            //else if (x.IsObject) {
+
+            //    var keys = x.Keys;
+            //    for (int i = 0; i < keys.Count; i++) {
+            //        string key = keys[i];
+            //        if (hideKeys.Contains(key)) {
+            //            x.RealDictionary!.Remove(key);
+            //            continue;
+            //        }
+            //        TrimHelper(depth + 1, x.RealDictionary![key], maxDepth: maxDepth, maxCount: maxCount, hideKeys: hideKeys);
+            //    }
+            //}
+            return EasyObject.FromObject(x);
         }
         private static void Clear(EasyObject x) {
             // (x == null) return;
