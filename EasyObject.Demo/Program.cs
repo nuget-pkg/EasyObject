@@ -300,17 +300,17 @@ public class Program {
                     }
                 }
                 """;
-            string safeCode = UniversalTransformer.SafeSourceCode(code);
+            string safeCode = Universal.UniversalTransformer.SafeSourceCode(code);
             Break(safeCode, "safeCode");
-            string restoredCode = UniversalTransformer.RestoreSourceCode(safeCode);
+            string restoredCode = Universal.UniversalTransformer.RestoreSourceCode(safeCode);
             Break(restoredCode, "restoredCode");
             //
             var fname =
                 """[1080p] ✅ 👀 🫧 💻 🌐 🎵 <xml>aaa</xml> ; {Title}!? x=11+22-33; ,(🔥引火帝国🔥):"name1" 'name2'?.txt""";
-            Log(UniversalTransformer.SafeFileName(fname), "⁅markup⁆[blue]adjusted file name[/]");
-            Log(UniversalTransformer.SafeFileName(fname, replaceSurrogate: ""),
+            Log(Universal.UniversalTransformer.SafeFileName(fname), "⁅markup⁆[blue]adjusted file name[/]");
+            Log(Universal.UniversalTransformer.SafeFileName(fname, replaceSurrogate: ""),
                 "⁅markup⁆[green]adjusted file name (keeping surrogate pairs)[/]");
-            Log(UniversalTransformer.SafeFileName(fname, replaceSurrogate: "@"),
+            Log(Universal.UniversalTransformer.SafeFileName(fname, replaceSurrogate: "@"),
                 "⁅markup⁆[purple]adjusted file name (spicifying surrogate pairs' replacement)[/]");
 
             //Log("This is unicode(echo): ⭕️ ☢ ☃☃☃ ☮");
@@ -398,17 +398,21 @@ public class Program {
             //var youtubePlaylists = NewtonsoftJsonUtil.DeserializeFromJson(File.ReadAllText(playlistJsonPath));
             var youtubePlaylists = NewtonsoftJsonUtil.FromJsonFile(playlistJsonPath);
 #endif
-            youtubePlaylists.Dump(maxDepth: 2);
+            youtubePlaylists
+                .Shuffle() /* !! THIS STEP (PIPELINE) IS NOT NECESSARY FOR DEBUGGING PURPOSE; JUST DEMONSTRATING EasyObject#Shuffle() !! */
+                .Take(5) /*!! TAKE FIRST FIVEs BECAUSE THIS JSON IS TOO LONG; EasyObject#Take(5) DOEST NOT DESTOY ORIGINAL JSON Object or ORIGINAL JSON Array !!*/
+                .Dump(maxDepth: 2, title: "SHALLOW-DUMP");
             //Log(FullName(youtubePlaylists.RealData));
             //Log(youtubePlaylists.RealData!.GetType().FullName);
             //Abort();
-            var playlistIdsOf5 = youtubePlaylists.Pick(5).AsStringList;
+            var playlistIdsOf5 = youtubePlaylists.Pick(5) /*.AsStringList*/;
+            DumpObject(playlistIdsOf5, "playlistIdsOf5");
             Log(playlistIdsOf5, title: "playlistIdsOf5", compact: true);
             //Abort();
             for (var p = 0; p < playlistIdsOf5.Count; p++) {
                 var playlistId = playlistIdsOf5[p];
-                var playlistObject = youtubePlaylists[playlistId];
-                playlistObject[playlistId].Dump(maxDepth: 1);
+                var playlistObject = youtubePlaylists[playlistId.Cast<string>()];
+                playlistObject[playlistId.Cast<string>()].Dump(title: playlistId.Cast<string>(), maxDepth: 0);
                 string playlistTitle = playlistObject.Dynamic.title;
                 int videoCount = playlistObject.Dynamic.videos.Count;
                 Log(new { id = playlistId, title = playlistTitle, videoCount }, compact: true);

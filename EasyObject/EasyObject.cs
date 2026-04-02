@@ -569,7 +569,7 @@ public class
         if (!UseAnsiConsole) {
             title = title.Replace("⁅markup⁆", "");
         }
-        if (!title.Contains("||◣") && !title.Contains("◥||")) {
+        if (!title.Contains("||◣") && !title.Contains("◥||") && !title.Contains("⁅🌐DUMP🌐⁆")) {
             title = $"✅❝𝑪𝒉𝒆𝒄𝒌：{title}❞✅";
         }
         return title;
@@ -747,22 +747,25 @@ public class
         );
     }
     public static void DumpObject(
-        object? x,
+        EasyObject x,
         string? title = null,
         bool compact = false,
         uint maxDepth = 0,
         List<string>? hideKeys = null,
         bool removeSurrogatePair = false
     ) {
+        if (title != null) {
+            title = $"⁅markup⁆[yellow]⁅🌐DUMP🌐⁆{MarkupSafeString(title)}[/]";
+        }
         title = _DecorateTitle(title);
         _EnsureCursorLeft();
         Echo(
             x,
-            title,
-            compact,
-            maxDepth,
-            hideKeys,
-            removeSurrogatePair
+            title: title,
+            compact: compact,
+            maxDepth: maxDepth,
+            hideKeys: hideKeys,
+            removeSurrogatePair: removeSurrogatePair
         );
     }
     public void Dump(
@@ -772,9 +775,11 @@ public class
         List<string>? hideKeys = null,
         bool removeSurrogatePair = false
     ) {
-        //title = _DecorateTitle(title); /* DumpObject() covers this. */        
-        DumpObject(this, title, compact, maxDepth, hideKeys,
-            removeSurrogatePair);
+        //title = _DecorateTitle(title); /* DumpObject() covers this. */
+        DebugOutput = true;
+        Debug(FullName(this.RealData));
+        DumpObject(this, title: title, compact: compact, maxDepth: maxDepth, hideKeys: hideKeys,
+            removeSurrogatePair: removeSurrogatePair);
     }
     private static class NativeMethods {
         [DllImport("user32.dll", CharSet = CharSet.Unicode)]

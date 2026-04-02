@@ -54,7 +54,7 @@
         <PackageReference Include="System.Dynamic.Runtime" Version="4.3.0"/>
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="HyperOperatingSystem" Version="2026.402.1806.57"/>
+        <PackageReference Include="HyperOperatingSystem" Version="2026.403.49.34"/>
         <PackageReference Include="NUnit" Version="4.5.1"/>
         <PackageReference Include="PlainObjectInterface" Version="2026.122.1836.32"/>
         <PackageReference Include="PlainObjectConverter" Version="2026.402.700"/>
