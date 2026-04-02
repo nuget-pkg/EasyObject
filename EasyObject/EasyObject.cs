@@ -654,7 +654,7 @@ public class
         if (maxDepth > 0 || hideKeys.Count > 0) {
             var eo = FromObject(x);
             x = eo.Clone(
-                maxDepth: maxCount,
+                maxDepth: maxDepth,
                 maxCount: maxCount,
                 hideKeys: hideKeys,
                 always: false);
@@ -701,7 +701,7 @@ public class
         if (maxDepth > 0 || hideKeys.Count > 0) {
             var eo = FromObject(x);
             x = eo.Clone(
-                maxDepth: maxCount,
+                maxDepth: maxDepth,
                 maxCount: maxCount,
                 hideKeys: hideKeys,
                 always: false);
@@ -742,7 +742,7 @@ public class
         if (maxDepth > 0 || hideKeys.Count > 0) {
             var eo = FromObject(x);
             x = eo.Clone(
-                maxDepth: maxCount,
+                maxDepth: maxDepth,
                 maxCount: maxCount,
                 hideKeys: hideKeys,
                 always: false);
@@ -1189,7 +1189,9 @@ public class
                 msgBoxFlag: /*MB_ICONERROR*/ 0x00000010);
             Environment.Exit(exitCode);
         }
-        var trace = Environment.StackTrace;
+        StackTrace st = new StackTrace(true);
+        var trace = st.ToString();
+        ////var trace = Environment.StackTrace;
         var lines = TextToLines(trace);
         lines = lines.Skip(2).ToList();
         trace = "\n" + string.Join("\n", lines);

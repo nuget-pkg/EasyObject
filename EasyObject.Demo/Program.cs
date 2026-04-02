@@ -398,6 +398,12 @@ public class Program {
             //var youtubePlaylists = NewtonsoftJsonUtil.DeserializeFromJson(File.ReadAllText(playlistJsonPath));
             var youtubePlaylists = NewtonsoftJsonUtil.FromJsonFile(playlistJsonPath);
 #endif
+
+            var tmpList = youtubePlaylists["PLTvSv0jkjbk8SOhwrGhDxHY3gbqN-rzB7"];
+            var tmpVideos = tmpList["videos"];
+            Log(tmpList.Count, "tmpList.Count");
+            Abort();
+
             youtubePlaylists
                 .Shuffle() /* !! THIS STEP (PIPELINE) IS NOT NECESSARY FOR DEBUGGING PURPOSE; JUST DEMONSTRATING EasyObject#Shuffle() !! */
                 .Take(5) /*!! TAKE FIRST FIVEs BECAUSE THIS JSON IS TOO LONG; EasyObject#Take(5) DOEST NOT DESTOY ORIGINAL JSON Object or ORIGINAL JSON Array !!*/
