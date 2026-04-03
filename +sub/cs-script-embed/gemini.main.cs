@@ -7,6 +7,7 @@ using System.Linq;
 using static Global.EasyObject;
 try
 {
+    UseAnsiConsole = true;
     // 実行したいコード (//css_nuget を含める)
     string code = @"
         //css_nuget Newtonsoft.Json
@@ -21,7 +22,7 @@ try
             }
         }";
     var script = CSScript.Evaluator
-        .ReferenceAssemblyByName("System.Runtime") // これがないと Newtonsoft.Json が見つからないことがあります
+                     //.ReferenceAssemblyByName("System.Runtime") // これがないと Newtonsoft.Json が見つからないことがあります
                      .ReferenceAssembliesFromCode(code);
     CSScript.Evaluator.With(static eval =>
     {
@@ -38,7 +39,11 @@ try
     }
     var scriptType = assembly.GetType("DynamicClass+Script");
     ExpectTrue(scriptType != null, "(typpe != null)");
-    scriptType!.GetMethods().ForEach(m => Log($"Method: {m.Name}"));
+    var wellKnownMethods = new[] { "ToString", "Equals", "GetHashCode", "GetType" };
+    scriptType!.GetMethods().ForEach(m => {
+        if (!wellKnownMethods.Contains(m.Name))
+            Log($"Method: {m.Name}");
+        });
     ExpectTrue(scriptType.GetMethod("Run") != null, "(scriptType.GetMethod(\"Run\") != null)");
     scriptType.GetMethod("Run")!.Invoke(Activator.CreateInstance(scriptType), null);
 }
