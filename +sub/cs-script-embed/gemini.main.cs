@@ -22,15 +22,16 @@ try
             }
         }";
     var script = CSScript.Evaluator
-                     //.ReferenceAssemblyByName("System.Runtime") // これがないと Newtonsoft.Json が見つからないことがあります
-                     .ReferenceAssembliesFromCode(code);
+                     //.ReferenceAssemblyByName("System.Runtime")
+                     //.ReferenceAssembliesFromCode(code)
+                     ;
     CSScript.Evaluator.With(static eval =>
     {
         eval.IsCachingEnabled = false;
     });
     var assembly = script.CompileMethod(code);
     Log(assembly != null);
-    ExpectTrue(assembly != null);
+    ExpectTrue(assembly != null, "(assemmbly != null)");
     var classes = assembly!.GetExportedTypes()
                           .Where(t => t.IsClass);
     foreach (var type in classes)
@@ -42,7 +43,7 @@ try
     var wellKnownMethods = new[] { "ToString", "Equals", "GetHashCode", "GetType" };
     scriptType!.GetMethods().ForEach(m => {
         if (!wellKnownMethods.Contains(m.Name))
-            Log($"Method: {m.Name}");
+            Log($"User-defined method found: {m.Name}");
         });
     ExpectTrue(scriptType.GetMethod("Run") != null, "(scriptType.GetMethod(\"Run\") != null)");
     scriptType.GetMethod("Run")!.Invoke(Activator.CreateInstance(scriptType), null);
