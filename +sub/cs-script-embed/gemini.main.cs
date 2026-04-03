@@ -55,13 +55,23 @@ try
     var assembly = script.CompileMethod(code);
     Log(assembly != null);
     ExpectTrue(assembly != null);
-    var classes = assembly!.GetTypes()
+    //var classes = assembly!.GetTypes()
+    //                      .Where(t => t.IsClass);
+    //foreach (var type in classes)
+    //{
+    //    Console.WriteLine($"Found all of classes: {type.FullName}");
+    //}
+    var classes = assembly!.GetExportedTypes()
                           .Where(t => t.IsClass);
-
     foreach (var type in classes)
     {
-        Console.WriteLine($"Found class: {type.FullName}");
+        Console.WriteLine($"Found exported class: {type.FullName}");
     }
+    var scriptType = assembly.GetType("DynamicClass+Script");
+    ExpectTrue(scriptType != null, "(typpe != null)");
+    scriptType!.GetMethods().ForEach(m => Log($"Method: {m.Name}"));
+    scriptType.GetMethod("Run")!.Invoke(Activator.CreateInstance(scriptType), null);
+
     //if (asm != null)
     //{
     //    //asm.GetAttached<Project>().Refs.ForEach(r => Log($"Referenced: {r}"));
