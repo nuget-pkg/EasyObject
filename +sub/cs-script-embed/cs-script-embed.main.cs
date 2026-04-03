@@ -16,7 +16,7 @@ try
     }";
 
     // 2. Identify the path to the NuGet DLL (Must be accessible at runtime)
-    string jsonPath = @"C:\Users\user\.nuget\packages\newtonsoft.json\13.0.1\lib\netstandard2.0\Newtonsoft.Json.dll";
+    string jsonPath = @"C:\Users\user\.nuget\packages\newtonsoft.json\13.0.1\lib\net45\Newtonsoft.Json.dll";
 
     // 3. Create the compilation
     var compilation = CSharpCompilation.Create("DynamicAssembly")
@@ -35,6 +35,7 @@ try
     {
         ms.Seek(0, SeekOrigin.Begin);
         Assembly assembly = Assembly.Load(ms.ToArray());
+        Console.WriteLine("Assembly loaded successfully!");
         // Use reflection to run the code...
     }
 
