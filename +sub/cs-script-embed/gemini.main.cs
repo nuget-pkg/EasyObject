@@ -53,6 +53,10 @@ try
     });
     var asm = script.CompileMethod(code);
     Log(asm != null);
+    if (asm != null)
+    {
+        asm.GetAttached<Project>().Refs.ForEach(r => Log($"Referenced: {r}"));
+    }
     //script = script.LoadCode<dynamic>(code);
     //                     .LoadCode<dynamic>(code);
 
@@ -66,5 +70,6 @@ try
 }
 catch (Exception ex)
 {
+    Abort(ex);
     Console.WriteLine($"Error: {ex.Message}");
 }
