@@ -70,24 +70,8 @@ try
     var scriptType = assembly.GetType("DynamicClass+Script");
     ExpectTrue(scriptType != null, "(typpe != null)");
     scriptType!.GetMethods().ForEach(m => Log($"Method: {m.Name}"));
+    ExpectTrue(scriptType.GetMethod("Run") != null, "(scriptType.GetMethod(\"Run\") != null)");
     scriptType.GetMethod("Run")!.Invoke(Activator.CreateInstance(scriptType), null);
-
-    //if (asm != null)
-    //{
-    //    //asm.GetAttached<Project>().Refs.ForEach(r => Log($"Referenced: {r}"));
-    //    var project = asm.GetAttached<Project>();
-    //    Log(project != null, "(project != null)");
-    //}
-    //script = script.LoadCode<dynamic>(code);
-    //                     .LoadCode<dynamic>(code);
-
-    // 2. コンパイル & インスタンス化
-    // CompileMethod ではなく、全体をコンパイルして dynamic で受けるのが楽です
-    //dynamic script = CSScript.Evaluator
-    //                         .LoadCode(code);
-
-    // 3. 実行
-    //script.Run();
 }
 catch (Exception ex)
 {
