@@ -55,7 +55,9 @@ try
     Log(asm != null);
     if (asm != null)
     {
-        asm.GetAttached<Project>().Refs.ForEach(r => Log($"Referenced: {r}"));
+        //asm.GetAttached<Project>().Refs.ForEach(r => Log($"Referenced: {r}"));
+        var project = asm.GetAttached<Project>();
+        Log(project != null, "(project != null)");
     }
     //script = script.LoadCode<dynamic>(code);
     //                     .LoadCode<dynamic>(code);
@@ -71,5 +73,5 @@ try
 catch (Exception ex)
 {
     Abort(ex);
-    Console.WriteLine($"Error: {ex.Message}");
+    //Console.WriteLine($"Error: {ex.Message}");
 }
