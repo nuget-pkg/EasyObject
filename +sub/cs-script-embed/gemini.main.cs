@@ -4,6 +4,7 @@
 using CSScripting;
 using CSScriptLib;
 using System;
+using System.Linq;
 using static Global.EasyObject;
 
 
@@ -51,14 +52,22 @@ try
         //eval.CompileMethod = CompileMethod.CompileToMemory; // メモリ上でコンパイル
 
     });
-    var asm = script.CompileMethod(code);
-    Log(asm != null);
-    if (asm != null)
+    var assembly = script.CompileMethod(code);
+    Log(assembly != null);
+    ExpectTrue(assembly != null);
+    var classes = assembly!.GetTypes()
+                          .Where(t => t.IsClass);
+
+    foreach (var type in classes)
     {
-        //asm.GetAttached<Project>().Refs.ForEach(r => Log($"Referenced: {r}"));
-        var project = asm.GetAttached<Project>();
-        Log(project != null, "(project != null)");
+        Console.WriteLine($"Found class: {type.FullName}");
     }
+    //if (asm != null)
+    //{
+    //    //asm.GetAttached<Project>().Refs.ForEach(r => Log($"Referenced: {r}"));
+    //    var project = asm.GetAttached<Project>();
+    //    Log(project != null, "(project != null)");
+    //}
     //script = script.LoadCode<dynamic>(code);
     //                     .LoadCode<dynamic>(code);
 
