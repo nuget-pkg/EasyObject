@@ -12,15 +12,12 @@ try
     string code = """
 //css_nuget YoutubeExplode
 //css_nuget YoutubeExplode.Converter
-//vvvcss_nuget EasyObject
-//using Spectre.Console;
 using System;
-using System.Data;
 using System.Threading.Tasks;
 using YoutubeExplode;
 using YoutubeExplode.Converter;
-//using static Global.EasyObject;
-//using static Global.EasySystem;
+
+//new Script().Run();
 
 public class Script
 {
@@ -28,23 +25,19 @@ public class Script
     {
         try
         {
-            //UseAnsiConsole = true;
             var youtube = new YoutubeClient();
             //var videoUrl = "https://www.youtube.com/watch?v=gkdpDAhRsDk";
             var videoUrl = "https://www.youtube.com/watch?v=wzcdhDyNmMM";
-            //Break(videoUrl, "videoUrl");
             async Task<YoutubeExplode.Videos.Video> Getter(string videoUrl)
             {
                 return await youtube.Videos.GetAsync(videoUrl);
             }
             var videoAsync = Getter(videoUrl);
             videoAsync.Wait();
-
             // 1. まず動画の詳細情報（メタデータ）を取得
             var video = videoAsync.Result; //await youtube.Videos.GetAsync(videoUrl);
             var filePath = $"{video.Title}.mkv";
             Console.WriteLine($"filePath: {filePath}");
-
             // 進捗を表示するためのハンドラを作成
             var progressHandler = new Progress<double>(p =>
             {
@@ -52,11 +45,16 @@ public class Script
                 Console.Write($"\rダウンロード中... {p:P1} ");
             });
             // DownloadAsync の引数に進捗ハンドラを追加
-            await youtube.Videos.DownloadAsync(videoUrl, filePath, builder => builder
-                .SetContainer("matroska")
-                .SetPreset(ConversionPreset.VeryFast),
-                progressHandler // ここに進捗オブジェクトを渡す
-            );
+            async Task Downloader(string videoUrl, string filePath)
+            {
+                await youtube.Videos.DownloadAsync(videoUrl, filePath, builder => builder
+                    .SetContainer("matroska")
+                    .SetPreset(ConversionPreset.VeryFast),
+                    progressHandler // ここに進捗オブジェクトを渡す
+                );
+            }
+            var downloadAsync = Downloader(videoUrl, filePath);
+            downloadAsync.Wait();
             Console.WriteLine("\n完了！");
         }
         catch (Exception ex)
