@@ -7,6 +7,7 @@ internal class AssertCapabilitiesTest {
     [SetUp]
     public void Setup() {
         ClearSettings();
+        UseAnsiConsole = true;
         Echo("abc", "def");
         Log(FullName(this));
         //NUnitLog(TestContext.CurrentContext.Test.FullName);
@@ -56,8 +57,8 @@ internal class AssertCapabilitiesTest {
         ShowDetail = true;
         Line();
         EasyObject eo = NewArray("a", "b", "c");
-        //Line();
-        //Echo(eo, maxCount: 2, title: "1");
+        Line();
+        Echo(eo, maxCount: 2, title: "1");
         //Line();
         //eo.Dump(maxCount: 2);
         //Line();

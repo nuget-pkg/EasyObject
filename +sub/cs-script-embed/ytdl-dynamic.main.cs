@@ -64,18 +64,6 @@ public class Script
     }
 }
 """;
-
-    ////css_nuget Newtonsoft.Json
-    //using System;
-    //    using Newtonsoft.Json;
-    //    public class Script
-    //    {
-    //        public void Run()
-    //        {
-    //            var data = new { Message = "Hello from NuGet!", Time = DateTime.Now };
-    //            Console.WriteLine(JsonConvert.SerializeObject(data, Formatting.Indented));
-    //        }
-    //    }";
     var script = CSScript.Evaluator
                      .ReferenceAssemblyByName("System.Threading.Tasks.Extensions")
                      //.ReferenceAssembliesFromCode(code)
