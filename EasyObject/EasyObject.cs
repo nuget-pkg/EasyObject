@@ -1062,7 +1062,7 @@ public class
         UseAnsiConsole = true;
         Log("⁅markup⁆[red][[!! ABORTING PROGRAM !!]][/]");
         //UseAnsiConsole = false;
-        if (message != null && !(message is Exception)) Log(message, "MESSAGE (FOR ABORTING PROGRAM)");
+        if (message != null && !(message is Exception)) Log(message, "𝑴𝑬𝑺𝑺𝑨𝑮𝑬 (FOR ABORTING PROGRAM)");
         if (message is Exception e) {
             var exTrace = e.ToString();
             try {
@@ -1071,12 +1071,13 @@ public class
                     exTrace
                 );
                 _ViewInFavoriteEditor(CuurentStackFrame());
-                Message(exTrace, "EXCEPTION (FOR ABORTING PROGRAM)", msgBoxFlag: /*MB_ICONERROR*/ 0x00000010);
+                Message(exTrace, "𝑬𝑿𝑪𝑬𝑷𝑻𝑰𝑶𝑵 (FOR ABORTING PROGRAM)", msgBoxFlag: /*MB_ICONERROR*/ 0x00000010);
             }
             catch (Exception ex) {
                 Console.Error.WriteLine(ex.ToString());
                 _ViewInFavoriteEditor(CuurentStackFrame());
-                Message(ex.ToString(), "EXCEPTION (FOR ABORTING PROGRAM)", msgBoxFlag: /*MB_ICONERROR*/ 0x00000010);
+                Message(ex.ToString(), "𝑬𝑿𝑪𝑬𝑷𝑻𝑰𝑶𝑵 (FOR ABORTING PROGRAM)",
+                    msgBoxFlag: /*MB_ICONERROR*/ 0x00000010);
             }
             //UseAnsiConsole = true;
             Log($"⁅markup⁆[red][[!! ABORTING...WITH EXIT CODE {exitCode} !!]][/]");
@@ -1117,9 +1118,10 @@ public class
             string location = (file != null) ? $"at {file}:{line}" : "";
             return $"{location}";
         }
+        // Serif Bold Italic: ⁅𝑶𝑹𝑰𝑮𝑰𝑵𝑨𝑳 𝑨𝑺𝑪𝑰𝑰 𝑪𝑶𝑫𝑬⁆ 𝑨 𝑩 𝑪 𝑫 𝑬 𝑭 𝑮 𝑯 𝑰 𝑱 𝑲 𝑳 𝑴 𝑵 𝑶 𝑷 𝑸 𝑹 𝑺 𝑻 𝑼 𝑽 𝑾 𝑿 𝒀 𝒁 𝒂𝒃𝒄𝒅𝒆𝒇𝒈𝒉𝒊𝒋𝒌𝒍𝒎𝒏𝒐𝒑𝒒𝒓𝒔𝒕𝒖𝒗𝒘𝒙𝒚𝒛 0123456789
         if (message != null) {
-            Log(message, title: "✅MESSAGE ﴾FROM PopupStackTrace()﴿✅");
-            Message(message, title: "✅MESSAGE ﴾FROM PopupStackTrace()﴿✅");
+            Log(message, title: "✅𝑴𝑬𝑺𝑺𝑨𝑮𝑬 ﴾FROM PopupStackTrace()﴿✅");
+            Message(message, title: "✅𝑴𝑬𝑺𝑺𝑨𝑮𝑬 ﴾FROM PopupStackTrace()﴿✅");
         }
         var st = new StackTrace(true);
         var trace = _StackTrace_.ToString();
@@ -1183,13 +1185,13 @@ public class
         Log("⁅markup⁆[red][[!! TERMINATING PROGRAM ON FAILURE !!]][/]");
         Log($"⁅markup⁆[red]{MarkupSafeString(CurrentSourceCodeLine())}[/]");
         if (hint != null) {
-            Log(hint, "HINT MESSAGE (REGARDING THIS FAILURE)");
+            Log(hint, "HINT 𝑴𝑬𝑺𝑺𝑨𝑮𝑬 (REGARDING THIS FAILURE)");
             _ViewInFavoriteEditor(currFrame: (currentStackFrame != null ? currentStackFrame : CuurentStackFrame()));
-            Message(hint, "HINT MESSAGE (REGARDING THIS FAILURE)", msgBoxFlag: /*MB_ICONERROR*/ 0x00000010);
+            Message(hint, "HINT 𝑴𝑬𝑺𝑺𝑨𝑮𝑬 (REGARDING THIS FAILURE)", msgBoxFlag: /*MB_ICONERROR*/ 0x00000010);
         }
         WriteLine(
             $"⁅markup⁆[blue]{MarkupSafeString(ReplacePathsWithUrls(ex.ToString()))}[/]",
-            "⁅markup⁆[blue]EXCEPTION[/]");
+            "⁅markup⁆[blue]𝑬𝑿𝑪𝑬𝑷𝑻𝑰𝑶𝑵[/]");
         Log($"⁅markup⁆[red][[!! TERMINATING PROGRAM ON FAILURE...WITH EXIT CODE {exitCode} !!]][/]");
         _ViewInFavoriteEditor(currFrame: (currentStackFrame != null ? currentStackFrame : CuurentStackFrame()));
         Message($"!! TERMINATING PROGRAM ON FAILURE...WITH EXIT CODE {exitCode} !!",
