@@ -557,7 +557,7 @@ public class
         var s = ToPrintable(x, title, compact, maxDepth,
             removeSurrogatePair);
         Console.Error.WriteLine("⁅🌐LOG🌐⁆ " + s);
-        if (ShowLineNumbers) Console.Error.WriteLine($"      {CurrentSourceCodeLine()}");
+        if (ShowLineNumbers) Console.Error.WriteLine($"  ➡️➡️ {CurrentSourceCodeLine()}");
     }
     public static void Debug(
         object? x,
@@ -658,16 +658,9 @@ public class
         List<string>? hideKeys = null,
         bool removeSurrogatePair = false
     ) {
-        //title = _DecorateTitle(title); /* DumpObject() covers this. */
-        //DebugOutput = true;
-        //Debug(FullName(this.RealData));
+        //title = _DecorateTitle(title); /* `public static void EasyObject#Dump()` covers this. */
         Dump(this, title, compact, maxDepth, maxCount, hideKeys,
             removeSurrogatePair);
-    }
-    private static class NativeMethods {
-        [DllImport("user32.dll", CharSet = CharSet.Unicode)]
-        internal static extern int MessageBoxW(
-            IntPtr hWnd, string lpText, string lpCaption, uint uType);
     }
     private EasyObject TryAssoc(string name) {
         try {
@@ -1383,5 +1376,11 @@ public class
         ShowLineNumbers = true;
         Echo(CurrentSourceCodeLine(summaryOnly: true), "||◣LINE()◥||");
         ShowLineNumbers = showLineNumbers;
+    }
+    private static class NativeMethods
+    {
+        [DllImport("user32.dll", CharSet = CharSet.Unicode)]
+        internal static extern int MessageBoxW(
+            IntPtr hWnd, string lpText, string lpCaption, uint uType);
     }
 }
