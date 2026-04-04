@@ -189,7 +189,7 @@ public class
             if (obj == null) return EasyObjectType.@null;
             switch (Type.GetTypeCode(obj.GetType())) {
                 case TypeCode.Boolean:
-                    return EasyObjectType.boolean;
+                    return EasyObjectType.@boolean;
                 case TypeCode.String:
                 case TypeCode.Char:
                 case TypeCode.DateTime:
@@ -205,9 +205,9 @@ public class
                 case TypeCode.Decimal:
                 case TypeCode.SByte:
                 case TypeCode.Byte:
-                    return EasyObjectType.number;
+                    return EasyObjectType.@number;
                 case TypeCode.Object:
-                    return obj is List<EasyObject> ? EasyObjectType.array : EasyObjectType.@object;
+                    return obj is List<EasyObject> ? EasyObjectType.@array : EasyObjectType.@object;
                 case TypeCode.DBNull:
                 case TypeCode.Empty:
                 default:
@@ -216,7 +216,7 @@ public class
             }
         }
     }
-    public string TypeName => TypeValue.ToString();
+    public string TypeName => $"@{TypeValue.ToString()}";
     public List<EasyObject>? RealList => RealData as List<EasyObject>;
     public Dictionary<string, EasyObject>? RealDictionary => RealData as Dictionary<string, EasyObject>;
     public int Count {

@@ -47,15 +47,15 @@ public class Tests
         var ary = Null.Add(11).Add("abc");
         Echo(ary, "ary");
         Assert.That(ary.TypeValue, Is.EqualTo(@array));
-        Assert.That(ary[0].TypeName, Is.EqualTo("number"));
-        Assert.That(ary[1].TypeName, Is.EqualTo("string"));
+        Assert.That(ary[0].TypeName, Is.EqualTo("@number"));
+        Assert.That(ary[1].TypeName, Is.EqualTo("@string"));
         Assert.That(ary.Count, Is.EqualTo(2));
 
         var dic = Null.Add("a", 11).Add("b", "abc");
         Echo(dic, "dic");
         Assert.That(dic.TypeValue, Is.EqualTo(@object));
-        Assert.That(dic["a"].TypeName, Is.EqualTo("number"));
-        Assert.That(dic["b"].TypeName, Is.EqualTo("string"));
+        Assert.That(dic["a"].TypeName, Is.EqualTo("@number"));
+        Assert.That(dic["b"].TypeName, Is.EqualTo("@string"));
 
         ary = EmptyArray;
         Assert.That(ary.TypeValue, Is.EqualTo(@array));
