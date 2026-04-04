@@ -523,15 +523,13 @@ public class
         bool dontShowLineNumbers = false
     ) {
         var _StackTrace_ = new System.Diagnostics.StackTrace(true);
-        StackFrame? CuurentStackFrame()
-        {
+        StackFrame? CuurentStackFrame() {
             // Author: ❝Gemini (Google Large Language Model)❞さん
             // See: https://gemini.google.com/share/9377a3e5f18f
             var frame = _StackTrace_.GetFrame(1);
             return frame;
         }
-        string CurrentSourceCodeLine()
-        {
+        string CurrentSourceCodeLine() {
             // Author: ❝Gemini (Google Large Language Model)❞さん
             // See: https://gemini.google.com/share/9377a3e5f18f
             var frame = CuurentStackFrame();
@@ -588,15 +586,13 @@ public class
         bool removeSurrogatePair = false
     ) {
         var _StackTrace_ = new System.Diagnostics.StackTrace(true);
-        StackFrame? CuurentStackFrame()
-        {
+        StackFrame? CuurentStackFrame() {
             // Author: ❝Gemini (Google Large Language Model)❞さん
             // See: https://gemini.google.com/share/9377a3e5f18f
             var frame = _StackTrace_.GetFrame(1);
             return frame;
         }
-        string CurrentSourceCodeLine()
-        {
+        string CurrentSourceCodeLine() {
             // Author: ❝Gemini (Google Large Language Model)❞さん
             // See: https://gemini.google.com/share/9377a3e5f18f
             var frame = CuurentStackFrame();
@@ -1044,15 +1040,13 @@ public class
     }
     public static void Abort(object? message = null, int exitCode = 1) {
         var _StackTrace_ = new System.Diagnostics.StackTrace(true);
-        StackFrame? CuurentStackFrame()
-        {
+        StackFrame? CuurentStackFrame() {
             // Author: ❝Gemini (Google Large Language Model)❞さん
             // See: https://gemini.google.com/share/9377a3e5f18f
             var frame = _StackTrace_.GetFrame(1);
             return frame;
         }
-        string CurrentSourceCodeLine()
-        {
+        string CurrentSourceCodeLine() {
             // Author: ❝Gemini (Google Large Language Model)❞さん
             // See: https://gemini.google.com/share/9377a3e5f18f
             var frame = CuurentStackFrame();
@@ -1106,15 +1100,13 @@ public class
     }
     public static void Break(object? x = null, string? title = null) {
         var _StackTrace_ = new System.Diagnostics.StackTrace(true);
-        StackFrame? CuurentStackFrame()
-        {
+        StackFrame? CuurentStackFrame() {
             // Author: ❝Gemini (Google Large Language Model)❞さん
             // See: https://gemini.google.com/share/9377a3e5f18f
             var frame = _StackTrace_.GetFrame(1);
             return frame;
         }
-        string CurrentSourceCodeLine()
-        {
+        string CurrentSourceCodeLine() {
             // Author: ❝Gemini (Google Large Language Model)❞さん
             // See: https://gemini.google.com/share/9377a3e5f18f
             var frame = CuurentStackFrame();
@@ -1125,212 +1117,181 @@ public class
             return $"{location}";
         }
         if (title == null) title = "||◣BREAK(UNTITLED)◥||";
-        var currLine = CurrentSourceCodeLine(/*true*/);
+        var currLine = CurrentSourceCodeLine( /*true*/);
         var message = currLine.Trim();
         if (x != null) message += "\n" + ToPrintable(x);
         _ViewInFavoriteEditor(CuurentStackFrame());
         Message(message, title);
     }
-    private static void _ViewInFavoriteEditor(/*string currLine, */
+    private static void _ViewInFavoriteEditor( /*string currLine, */
         StackFrame? currFrame,
         bool wait = false
-        )
-    {
-        if (!HyperOperatingSystem.IsWindowsPlatform()) return;
-        string? _filePath = null;
-        string? _lineNumber = null;
-        if (currFrame != null)
-        {
-            _filePath = currFrame.GetFileName();
-            _lineNumber = currFrame.GetFileLineNumber().ToString();
-        }
-        //var filePathRegex =
-        //    new Regex(
-        //        @"(?<path>[a-zA-Z]:\\(?:[^<>:""/\\|?*]+\\)*[^<>:""/\\|?*]+):.+\s+(?<line_num>\d+)$",
-        //        RegexOptions.Multiline | RegexOptions.IgnoreCase);
-        //// Use a MatchEvaluator delegate for the replacement to apply the Uri conversion logic to each match.
-        //// ReSharper disable once UnusedVariable
-        //var result = filePathRegex.Replace(currLine, match => {
-        //    var filePath = match.Groups["path"].Value;
-        //    //Console.WriteLine($"filePath={filePath}");
-        //    _filePath = filePath;
-        //    var line_num = match.Groups["line_num"].Value;
-        //    //line_num = line_num.Replace(":line ", "");
-        //    _lineNumber = line_num;
-        //    try {
-        //        // The System.Uri constructor handles the specific formatting requirements for file URIs,
-        //        // including correct handling of slashes and special characters like spaces.
-        //        var fileUri = new Uri(filePath);
-        //        // We use AbsoluteUri which correctly formats the scheme (file://) and path for a URL.
-        //        //Console.WriteLine($"line_num(3)={line_num}");
-        //        var result = $"in {fileUri.AbsoluteUri} : line {line_num}";
-        //        //Console.WriteLine($"result={result}");
-        //        return result;
-        //    }
-        //    catch (UriFormatException) {
-        //        // Fallback for paths that the Uri class might not handle correctly (e.g., highly unusual formats)
-        //        return match.Value;
-        //    }
-        //});
-        if (_filePath != null && File.Exists(_filePath)) {
-            void DelayForEditorStart(Process? p, int msec = 200) {
-                if (p == null) return;
-                try {
-                    var isReady = p.WaitForInputIdle(5000);
-                    if (isReady) {
-                        p.Refresh(); // Refresh to ensure MainWindowHandle is updated
-                        if (p.MainWindowHandle != IntPtr.Zero) Console.WriteLine("Window successfully opened.");
-                    }
-                }
-                catch {
-                    ;
-                }
-                HyperOperatingSystem.Sleep(msec);
-            }
-            if (_lineNumber == null) _lineNumber = "1";
-            //UseAnsiConsole = true;
-            //ShowDetail = false;
-            string? exe = null;
-            Process? p /*= null*/;
-            if (HyperOperatingSystem.GetEnv("I_HATE_VSCODE") != "1") {
-                // [Visual Studio Code]
-                exe = HyperOperatingSystem.FindExePath("code.cmd");
-                if (exe != null) {
-                    //Log(exe, "⁅markup⁆[green]Visual Studio Code is installed...opening the location with it[/]", dontShowLineNumbers: true);
-                    //Log(exe, "⁅markup⁆[green]Visual Studio Code is installed...opening the location with it[/]", dontShowLineNumbers: true);
-                    if (_lineNumber == null) {
-                        if (wait)
-                            p = HyperOperatingSystem.LaunchProcess(exe, ["--wait", _filePath]);
-                        else
-                            p = HyperOperatingSystem.LaunchProcess(exe, [_filePath]);
-                        DelayForEditorStart(p);
-                        if (p != null && wait) p.WaitForExit();
-                        return;
-                    }
-                    if (wait)
-                        p = HyperOperatingSystem.LaunchProcess(exe, [
-                            "--wait", "-g", $"{_filePath}:{_lineNumber}"
-                        ]);
-                    else
-                        p = HyperOperatingSystem.LaunchProcess(exe, ["-g", $"{_filePath}:{_lineNumber}"]);
-                    DelayForEditorStart(p);
-                    if (p != null && wait) p.WaitForExit();
-                    return;
-                }
-            }
-            if (HyperOperatingSystem.GetEnv("I_HATE_NOTEPAD_PP") != "1") {
-                // [Notepad++]
-                exe = HyperOperatingSystem.FindExePath("Notepad++.exe");
-                if (exe != null) {
-                    //Log(exe, "⁅markup⁆[green]Notepad++.exe is installed...opening the location with it[/]", dontShowLineNumbers: true);
-                    //Log(exe, "⁅markup⁆[green]Notepad++.exe is installed...opening the location with it[/]", dontShowLineNumbers: true);
-                    if (_lineNumber == null) {
-                        p = HyperOperatingSystem.LaunchProcess(exe, [_filePath, "-n1"]);
-                        DelayForEditorStart(p);
-                        if (p != null && wait) p.WaitForExit();
-                        return;
-                    }
-                    p = HyperOperatingSystem.LaunchProcess(exe, [_filePath, $"-n{_lineNumber}"]);
-                    DelayForEditorStart(p);
-                    if (p != null && wait) p.WaitForExit();
-                    return;
-                }
-            }
-            if (HyperOperatingSystem.GetEnv("I_HATE_EMACS") != "1") {
-                exe = HyperOperatingSystem.FindExePath("emacsclient.exe");
-                if (exe != null) {
-                    //Log(exe, "⁅markup⁆[green]Emacs Client is installed...opening the location with it[/]", dontShowLineNumbers: true);
-                    //Log(exe, "⁅markup⁆[green]Emacs Client is installed...opening the location with it[/]", dontShowLineNumbers: true);
-                    if (wait) {
-                        p = HyperOperatingSystem.LaunchProcess(exe,
-                        [
-                            "-nw", "-a", "\"\"", $"+{_lineNumber}", _filePath, "--eval" /*, "(recenter-top-bottom)"*/
-                        ]);
-                        DelayForEditorStart(p);
-                        if (p != null) p.WaitForExit();
-                        return;
-                    }
-                    p = HyperOperatingSystem.LaunchProcess(exe,
-                    [
-                        "-r", "-n", "-a", "\"\"", $"+{_lineNumber}",
-                        _filePath /*, "--eval", "(recenter-top-bottom)"*/
-                    ]);
-                    DelayForEditorStart(p);
-                    return;
-                }
-            }
-            if (HyperOperatingSystem.GetEnv("I_HATE_ZED") != "1") {
-                // [Zed Editor]
-                exe = HyperOperatingSystem.FindExePath("Zed.exe");
-                if (exe != null) {
-                    //Log(exe, "⁅markup⁆[green]Zed Editor is installed...opening the location with it[/]", dontShowLineNumbers: true);
-                    //Log(exe, "⁅markup⁆[green]Zed Editor is installed...opening the location with it[/]", dontShowLineNumbers: true);
-                    if (_lineNumber == null) {
-                        if (wait)
-                            p = HyperOperatingSystem.LaunchProcess(exe, ["--wait", _filePath]);
-                        else
-                            p = HyperOperatingSystem.LaunchProcess(exe, [_filePath]);
-                        DelayForEditorStart(p);
-                        if (p != null && wait) p.WaitForExit();
-                        return;
-                    }
-                    if (wait)
-                        p = HyperOperatingSystem.LaunchProcess(exe, ["--wait", $"{_filePath}:{_lineNumber}"]);
-                    else
-                        p = HyperOperatingSystem.LaunchProcess(exe, [$"{_filePath}:{_lineNumber}"]);
-                    DelayForEditorStart(p);
-                    if (p != null && wait) p.WaitForExit();
-                    return;
-                }
-            }
-            if (HyperOperatingSystem.GetEnv("I_HATE_NOTEPAD_3") != "1") {
-                // [Notepad3.exe]
-                exe = HyperOperatingSystem.FindExePath("Notepad3.exe");
-                if (exe != null) {
-                    //Log(exe, "⁅markup⁆[green]Notepad3.exe is installed...opening the location with it[/]", dontShowLineNumbers: true);
-                    //Log(exe, "⁅markup⁆[green]Notepad3.exe is installed...opening the location with it[/]", dontShowLineNumbers: true);
-                    if (_lineNumber == null) {
-                        p = HyperOperatingSystem.LaunchProcess(exe, ["/g", "1", _filePath]);
-                        DelayForEditorStart(p);
-                        if (p != null && wait) p.WaitForExit();
-                        return;
-                    }
-                    p = HyperOperatingSystem.LaunchProcess(exe, ["/g", _lineNumber, _filePath]);
-                    DelayForEditorStart(p);
-                    if (p != null && wait) p.WaitForExit();
-                    return;
-                }
-            }
-            if (exe == null) {
-                Log(
-                    "⁅markup⁆[green]Emacs Edtor was not found in PATH; automatic source code viewing canelled![/]"
-                );
-                Log(
-                    "⁅markup⁆[green]Zed Edtor was not found in PATH; automatic source code viewing canelled![/]"
-                );
-                Log(
-                    "⁅markup⁆[green]Visual Studio Code (code.cmd) was not found in PATH; automatic source code viewing canelled![/]"
-                );
-                Log(
-                    "⁅markup⁆[green]Notepad++.exe was not found in PATH; automatic source code viewing canelled![/]"
-                );
-                Log(
-                    "⁅markup⁆[green]Notepad3.exe was not found in PATH; automatic source code viewing canelled![/]"
-                );
-            }
-        }
+    ) {
+        EasyObjectDetails._ViewInFavoriteEditor(currFrame, wait);
+        // if (!HyperOperatingSystem.IsWindowsPlatform()) return;
+        // string? _filePath = null;
+        // string? _lineNumber = null;
+        // if (currFrame != null) {
+        //     _filePath = currFrame.GetFileName();
+        //     _lineNumber = currFrame.GetFileLineNumber().ToString();
+        // }
+        // if (_filePath != null && File.Exists(_filePath)) {
+        //     void DelayForEditorStart(Process? p, int msec = 200) {
+        //         if (p == null) return;
+        //         try {
+        //             var isReady = p.WaitForInputIdle(5000);
+        //             if (isReady) {
+        //                 p.Refresh(); // Refresh to ensure MainWindowHandle is updated
+        //                 if (p.MainWindowHandle != IntPtr.Zero) Console.WriteLine("Window successfully opened.");
+        //             }
+        //         }
+        //         catch {
+        //             ;
+        //         }
+        //         HyperOperatingSystem.Sleep(msec);
+        //     }
+        //     if (_lineNumber == null) _lineNumber = "1";
+        //     //UseAnsiConsole = true;
+        //     //ShowDetail = false;
+        //     string? exe = null;
+        //     Process? p /*= null*/;
+        //     if (HyperOperatingSystem.GetEnv("I_HATE_VSCODE") != "1") {
+        //         // [Visual Studio Code]
+        //         exe = HyperOperatingSystem.FindExePath("code.cmd");
+        //         if (exe != null) {
+        //             //Log(exe, "⁅markup⁆[green]Visual Studio Code is installed...opening the location with it[/]", dontShowLineNumbers: true);
+        //             //Log(exe, "⁅markup⁆[green]Visual Studio Code is installed...opening the location with it[/]", dontShowLineNumbers: true);
+        //             if (_lineNumber == null) {
+        //                 if (wait)
+        //                     p = HyperOperatingSystem.LaunchProcess(exe, ["--wait", _filePath]);
+        //                 else
+        //                     p = HyperOperatingSystem.LaunchProcess(exe, [_filePath]);
+        //                 DelayForEditorStart(p);
+        //                 if (p != null && wait) p.WaitForExit();
+        //                 return;
+        //             }
+        //             if (wait)
+        //                 p = HyperOperatingSystem.LaunchProcess(exe, [
+        //                     "--wait", "-g", $"{_filePath}:{_lineNumber}"
+        //                 ]);
+        //             else
+        //                 p = HyperOperatingSystem.LaunchProcess(exe, ["-g", $"{_filePath}:{_lineNumber}"]);
+        //             DelayForEditorStart(p);
+        //             if (p != null && wait) p.WaitForExit();
+        //             return;
+        //         }
+        //     }
+        //     if (HyperOperatingSystem.GetEnv("I_HATE_NOTEPAD_PP") != "1") {
+        //         // [Notepad++]
+        //         exe = HyperOperatingSystem.FindExePath("Notepad++.exe");
+        //         if (exe != null) {
+        //             //Log(exe, "⁅markup⁆[green]Notepad++.exe is installed...opening the location with it[/]", dontShowLineNumbers: true);
+        //             //Log(exe, "⁅markup⁆[green]Notepad++.exe is installed...opening the location with it[/]", dontShowLineNumbers: true);
+        //             if (_lineNumber == null) {
+        //                 p = HyperOperatingSystem.LaunchProcess(exe, [_filePath, "-n1"]);
+        //                 DelayForEditorStart(p);
+        //                 if (p != null && wait) p.WaitForExit();
+        //                 return;
+        //             }
+        //             p = HyperOperatingSystem.LaunchProcess(exe, [_filePath, $"-n{_lineNumber}"]);
+        //             DelayForEditorStart(p);
+        //             if (p != null && wait) p.WaitForExit();
+        //             return;
+        //         }
+        //     }
+        //     if (HyperOperatingSystem.GetEnv("I_HATE_EMACS") != "1") {
+        //         exe = HyperOperatingSystem.FindExePath("emacsclient.exe");
+        //         if (exe != null) {
+        //             //Log(exe, "⁅markup⁆[green]Emacs Client is installed...opening the location with it[/]", dontShowLineNumbers: true);
+        //             //Log(exe, "⁅markup⁆[green]Emacs Client is installed...opening the location with it[/]", dontShowLineNumbers: true);
+        //             if (wait) {
+        //                 p = HyperOperatingSystem.LaunchProcess(exe,
+        //                 [
+        //                     "-nw", "-a", "\"\"", $"+{_lineNumber}", _filePath, "--eval" /*, "(recenter-top-bottom)"*/
+        //                 ]);
+        //                 DelayForEditorStart(p);
+        //                 if (p != null) p.WaitForExit();
+        //                 return;
+        //             }
+        //             p = HyperOperatingSystem.LaunchProcess(exe,
+        //             [
+        //                 "-r", "-n", "-a", "\"\"", $"+{_lineNumber}",
+        //                 _filePath /*, "--eval", "(recenter-top-bottom)"*/
+        //             ]);
+        //             DelayForEditorStart(p);
+        //             return;
+        //         }
+        //     }
+        //     if (HyperOperatingSystem.GetEnv("I_HATE_ZED") != "1") {
+        //         // [Zed Editor]
+        //         exe = HyperOperatingSystem.FindExePath("Zed.exe");
+        //         if (exe != null) {
+        //             //Log(exe, "⁅markup⁆[green]Zed Editor is installed...opening the location with it[/]", dontShowLineNumbers: true);
+        //             //Log(exe, "⁅markup⁆[green]Zed Editor is installed...opening the location with it[/]", dontShowLineNumbers: true);
+        //             if (_lineNumber == null) {
+        //                 if (wait)
+        //                     p = HyperOperatingSystem.LaunchProcess(exe, ["--wait", _filePath]);
+        //                 else
+        //                     p = HyperOperatingSystem.LaunchProcess(exe, [_filePath]);
+        //                 DelayForEditorStart(p);
+        //                 if (p != null && wait) p.WaitForExit();
+        //                 return;
+        //             }
+        //             if (wait)
+        //                 p = HyperOperatingSystem.LaunchProcess(exe, ["--wait", $"{_filePath}:{_lineNumber}"]);
+        //             else
+        //                 p = HyperOperatingSystem.LaunchProcess(exe, [$"{_filePath}:{_lineNumber}"]);
+        //             DelayForEditorStart(p);
+        //             if (p != null && wait) p.WaitForExit();
+        //             return;
+        //         }
+        //     }
+        //     if (HyperOperatingSystem.GetEnv("I_HATE_NOTEPAD_3") != "1") {
+        //         // [Notepad3.exe]
+        //         exe = HyperOperatingSystem.FindExePath("Notepad3.exe");
+        //         if (exe != null) {
+        //             //Log(exe, "⁅markup⁆[green]Notepad3.exe is installed...opening the location with it[/]", dontShowLineNumbers: true);
+        //             //Log(exe, "⁅markup⁆[green]Notepad3.exe is installed...opening the location with it[/]", dontShowLineNumbers: true);
+        //             if (_lineNumber == null) {
+        //                 p = HyperOperatingSystem.LaunchProcess(exe, ["/g", "1", _filePath]);
+        //                 DelayForEditorStart(p);
+        //                 if (p != null && wait) p.WaitForExit();
+        //                 return;
+        //             }
+        //             p = HyperOperatingSystem.LaunchProcess(exe, ["/g", _lineNumber, _filePath]);
+        //             DelayForEditorStart(p);
+        //             if (p != null && wait) p.WaitForExit();
+        //             return;
+        //         }
+        //     }
+        //     if (exe == null) {
+        //         Log(
+        //             "⁅markup⁆[green]Emacs Edtor was not found in PATH; automatic source code viewing canelled![/]"
+        //         );
+        //         Log(
+        //             "⁅markup⁆[green]Zed Edtor was not found in PATH; automatic source code viewing canelled![/]"
+        //         );
+        //         Log(
+        //             "⁅markup⁆[green]Visual Studio Code (code.cmd) was not found in PATH; automatic source code viewing canelled![/]"
+        //         );
+        //         Log(
+        //             "⁅markup⁆[green]Notepad++.exe was not found in PATH; automatic source code viewing canelled![/]"
+        //         );
+        //         Log(
+        //             "⁅markup⁆[green]Notepad3.exe was not found in PATH; automatic source code viewing canelled![/]"
+        //         );
+        //     }
+        // }
     }
     public static void TerminateOnFailure(Exception ex, object? hint, int exitCode = 1) {
         var _StackTrace_ = new System.Diagnostics.StackTrace(true);
-        StackFrame? CuurentStackFrame()
-        {
+        StackFrame? CuurentStackFrame() {
             // Author: ❝Gemini (Google Large Language Model)❞さん
             // See: https://gemini.google.com/share/9377a3e5f18f
             var frame = _StackTrace_.GetFrame(1);
             return frame;
         }
-        string CurrentSourceCodeLine()
-        {
+        string CurrentSourceCodeLine() {
             // Author: ❝Gemini (Google Large Language Model)❞さん
             // See: https://gemini.google.com/share/9377a3e5f18f
             var frame = CuurentStackFrame();
@@ -1458,15 +1419,13 @@ public class
     }
     public static void Line() {
         var _StackTrace_ = new System.Diagnostics.StackTrace(true);
-        StackFrame? CuurentStackFrame()
-        {
+        StackFrame? CuurentStackFrame() {
             // Author: ❝Gemini (Google Large Language Model)❞さん
             // See: https://gemini.google.com/share/9377a3e5f18f
             var frame = _StackTrace_.GetFrame(1);
             return frame;
         }
-        string CurrentSourceCodeLine()
-        {
+        string CurrentSourceCodeLine() {
             // Author: ❝Gemini (Google Large Language Model)❞さん
             // See: https://gemini.google.com/share/9377a3e5f18f
             var frame = CuurentStackFrame();
@@ -1482,8 +1441,7 @@ public class
         Echo(CurrentSourceCodeLine(), "⁅markup⁆[white]✅❝▶▶▶ 𝑷𝑨𝑺𝑺𝑬𝑫 ﴾𝑪𝑶𝑫𝑬 𝑳𝑰𝑵𝑬﴿ ▶▶▶❞✅[/]");
         ShowLineNumbers = showLineNumbers;
     }
-    private static class NativeMethods
-    {
+    private static class NativeMethods {
         [DllImport("user32.dll", CharSet = CharSet.Unicode)]
         internal static extern int MessageBoxW(
             IntPtr hWnd, string lpText, string lpCaption, uint uType);
