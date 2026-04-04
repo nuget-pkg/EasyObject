@@ -10,6 +10,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using NUnit.Framework;
+using Universal;
 #if USE_SPECTRE_CONSOLE
 using Spectre.Console;
 // ReSharper disable ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
@@ -445,6 +446,7 @@ public class
     }
     private static string? _DecorateTitle(string? title) {
         if (title == null) return null;
+        title = UniversalTransformer.GeminiSuperSerifBoldItalicTransform(title); /* !! MY NEW SPECIAL WEAPON !!*/
         if (!UseAnsiConsole) title = title.Replace("⁅markup⁆", "");
         if (!title.Contains("𝑷𝑨𝑺𝑺𝑬𝑫") && !title.Contains("⁅🌐DUMP🌐⁆") &&
             !title.Contains("﴾FROM PopupStackTrace()﴿"))
