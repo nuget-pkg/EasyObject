@@ -526,13 +526,17 @@ public class
             if (name == null) continue;
             if (!____InternalDebugOutput____) {
                 if (name.Contains(@"\nuget.org\EasyObject\EasyObject\")) {
-                    //Log(name, "⭕️System-Internal-File⭕️"); /* DON'T USE Log() HERE; CAUSES STACK OVERFLOW !! */
-                    Console.Error.WriteLine($"⭕️System-Internal-File⭕️ {name}");
+                    if (false) {
+                        //Log(name, "⭕️System-Internal-File⭕️"); /* DON'T USE Log() HERE; CAUSES STACK OVERFLOW !! */
+                        Console.Error.WriteLine($"⭕️System-Internal-File⭕️ {name}");
+                    }
                     continue;
                 }
             }
-            //Log(name, "⭕️User-File located⭕️"); /* DON'T USE Log() HERE; CAUSES STACK OVERFLOW !! */
-            Console.Error.WriteLine($"⭕️User--File⭕️ {name}");
+            if (false) {
+                //Log(name, "⭕️User-File located⭕️"); /* DON'T USE Log() HERE; CAUSES STACK OVERFLOW !! */
+                Console.Error.WriteLine($"⭕️User--File⭕️ {name}");
+            }
             return frame;
         }
         return null;
