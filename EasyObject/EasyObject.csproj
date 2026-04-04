@@ -27,8 +27,10 @@
   <PropertyGroup>
     <!-- https://gemini.google.com/share/62f63a243809 -->
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
-    <!--<DebugType>full</DebugType>-->
+    <DebugType>full</DebugType>
+    <!--
     <DebugType>portable</DebugType>
+    -->
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
   </PropertyGroup>

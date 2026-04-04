@@ -444,7 +444,8 @@ public class
     private static string? _DecorateTitle(string? title) {
         if (title == null) return null;
         if (!UseAnsiConsole) title = title.Replace("⁅markup⁆", "");
-        if (!title.Contains("𝑷𝑨𝑺𝑺𝑬𝑫") && !title.Contains("⁅🌐DUMP🌐⁆"))
+        if (!title.Contains("𝑷𝑨𝑺𝑺𝑬𝑫") && !title.Contains("⁅🌐DUMP🌐⁆") &&
+            !title.Contains("﴾FROM PopupStackTrace()﴿"))
             title = $"✅❝𝑪𝒉𝒆𝒄𝒌：{title}❞✅";
         return title;
     }
@@ -1098,6 +1099,33 @@ public class
         Message(message, "||◣ABORT(UNTITLED)◥||", msgBoxFlag: /*MB_ICONERROR*/ 0x00000010);
         Environment.Exit(exitCode);
     }
+    public static void PopupStackTrace(object? message = null) {
+        var _StackTrace_ = new System.Diagnostics.StackTrace(true);
+        StackFrame? CuurentStackFrame() {
+            // Author: ❝Gemini (Google Large Language Model)❞さん
+            // See: https://gemini.google.com/share/9377a3e5f18f
+            var frame = _StackTrace_.GetFrame(1);
+            return frame;
+        }
+        string CurrentSourceCodeLine() {
+            // Author: ❝Gemini (Google Large Language Model)❞さん
+            // See: https://gemini.google.com/share/9377a3e5f18f
+            var frame = CuurentStackFrame();
+            var file = frame?.GetFileName();
+            var line = frame?.GetFileLineNumber();
+            // PDB があれば、ファイル名と行番号がメッセージに乗る
+            string location = (file != null) ? $"at {file}:{line}" : "";
+            return $"{location}";
+        }
+        if (message != null) {
+            Log(message, title: "✅MESSAGE ﴾FROM PopupStackTrace()﴿✅");
+            Message(message, title: "✅MESSAGE ﴾FROM PopupStackTrace()﴿✅");
+        }
+        var st = new StackTrace(true);
+        var trace = _StackTrace_.ToString();
+        Log(trace, "✅STACK TRACE ﴾FROM PopupStackTrace()﴿✅");
+        Message(trace, "✅STACK TRACE ﴾FROM PopupStackTrace()﴿✅");
+    }
     public static void Break(object? x = null, string? title = null) {
         var _StackTrace_ = new System.Diagnostics.StackTrace(true);
         StackFrame? CuurentStackFrame() {
@@ -1131,6 +1159,7 @@ public class
     }
     public static void TerminateOnFailure(Exception ex, object? hint, int exitCode = 1,
         StackFrame? currentStackFrame = null) {
+        PopupStackTrace("I WANT STACKTACE HERE...");
         var _StackTrace_ = new System.Diagnostics.StackTrace(true);
         StackFrame? CuurentStackFrame() {
             // Author: ❝Gemini (Google Large Language Model)❞さん
