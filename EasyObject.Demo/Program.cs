@@ -5,6 +5,7 @@
 // ReSharper disable EmptyForStatement
 // ReSharper disable ConvertToConstant.Local
 // ReSharper disable InconsistentNaming
+#pragma warning disable CS0219 // 変数は割り当てられていますが、その値は使用されていません
 #pragma warning disable CS0162 // 到達できないコードが検出されました
 #if MINIMAL
 namespace Misc;
