@@ -12,7 +12,6 @@ using System.Text.RegularExpressions;
 using NUnit.Framework;
 #if USE_SPECTRE_CONSOLE
 using Spectre.Console;
-//using Spectre.Console.Rendering;
 // ReSharper disable ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
 // ReSharper disable EmptyStatement
 // ReSharper disable MemberCanBePrivate.Global
@@ -67,7 +66,7 @@ public class
     public static EasyConsole StandardError;
 #endif
     public const bool SHOW_LINE_NUMBER_DEFAUTLT = true;
-    public static bool ShowLineNumbers = SHOW_LINE_NUMBER_DEFAUTLT; /**/
+    public static bool ShowLineNumbers = SHOW_LINE_NUMBER_DEFAUTLT;
 #if MINIMAL
     static MiniEasyObject()
 #else
@@ -86,8 +85,8 @@ public class
         ShowDetail = false;
         ForceAscii = false;
         UseAnsiConsole = false;
-        ShowLineNumbers = SHOW_LINE_NUMBER_DEFAUTLT; /**/
-        SetupConsoleEncoding(Encoding.UTF8); /**/
+        ShowLineNumbers = SHOW_LINE_NUMBER_DEFAUTLT;
+        SetupConsoleEncoding(Encoding.UTF8);
     }
     public static void SetupConsoleEncoding(Encoding? encoding = null) {
         encoding ??= Encoding.UTF8;
