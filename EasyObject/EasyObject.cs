@@ -50,7 +50,7 @@ internal class EasyObjectConverter : IConvertParsedResult
     {
         if (x is Dictionary<string, object> dict)
         {
-            var keys = dict!.Keys;
+            var keys = dict.Keys;
             var result = new Dictionary<string, EasyObject>();
             foreach (var key in keys)
             {
