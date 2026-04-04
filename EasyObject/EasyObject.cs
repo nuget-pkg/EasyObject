@@ -1185,9 +1185,10 @@ public class
         Log("⁅markup⁆[red][[!! TERMINATING PROGRAM ON FAILURE !!]][/]");
         Log($"⁅markup⁆[red]{MarkupSafeString(CurrentSourceCodeLine())}[/]");
         if (hint != null) {
-            Log(hint, "HINT 𝑴𝑬𝑺𝑺𝑨𝑮𝑬 (REGARDING THIS FAILURE)");
+            Log(hint, "HINT 𝑴𝑬𝑺𝑺𝑨𝑮𝑬 (𝑹𝑬𝑮𝑨𝑹𝑫𝑰𝑵𝑮 THIS FAILURE)");
             _ViewInFavoriteEditor(currFrame: (currentStackFrame != null ? currentStackFrame : CuurentStackFrame()));
-            Message(hint, "HINT 𝑴𝑬𝑺𝑺𝑨𝑮𝑬 (REGARDING THIS FAILURE)", msgBoxFlag: /*MB_ICONERROR*/ 0x00000010);
+            Message(hint, "HINT 𝑴𝑬𝑺𝑺𝑨𝑮𝑬 (𝑹𝑬𝑮𝑨𝑹𝑫𝑰𝑵𝑮 THIS FAILURE)",
+                msgBoxFlag: /*MB_ICONERROR*/ 0x00000010);
         }
         WriteLine(
             $"⁅markup⁆[blue]{MarkupSafeString(ReplacePathsWithUrls(ex.ToString()))}[/]",

@@ -8,7 +8,7 @@
         <RootNamespace>MiniEasyObject</RootNamespace>
         <PlatformTarget>AnyCPU</PlatformTarget>
         <WarningsAsErrors>nullable</WarningsAsErrors>
-        <!--<NoWarn></NoWarn>-->
+        <NoWarn>CS8321</NoWarn>
         <Authors>JavaCommons</Authors>
         <Company>JavaCommons Technologies</Company>
         <Product>MiniEasyObject</Product>

@@ -9,7 +9,7 @@
         <RootNamespace>EasyObject.Demo</RootNamespace>
         <PlatformTarget>AnyCPU</PlatformTarget>
         <WarningsAsErrors>nullable</WarningsAsErrors>
-        <!--<NoWarn></NoWarn>-->
+        <NoWarn>CS0162</NoWarn>
         <Authors>JavaCommons</Authors>
         <Company>JavaCommons Technologies</Company>
     </PropertyGroup>
