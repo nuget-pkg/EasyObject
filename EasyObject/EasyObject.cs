@@ -297,7 +297,7 @@ public class
             result = Null;
             return true;
         }
-        EasyObject? eo /*= Null*/;
+        EasyObject? eo;
         RealDictionary.TryGetValue((string)idx, out eo);
         if (eo == null) eo = Null;
         result = eo;
@@ -426,43 +426,6 @@ public class
         return poc.Stringify(RealData, indent, sortKeys, keyAsSymbol,
             removeSurrogatePair);
     }
-#if USE_WINCONSOLExxx
-    public static bool HasConsole() {
-        try {
-            // Attempt to get a console property
-            int left = Console.CursorLeft;
-            return true;
-        }
-        catch (IOException) {
-            // If an exception is caught, no console is available
-            return false;
-        }
-    }
-// コンソールを割り当てるためのWin32 API
-    [DllImport("kernel32.dll", SetLastError = true)]
-    [return: MarshalAs(UnmanagedType.Bool)]
-    private static extern bool AllocConsole();
-
-    // コンソールを解放するためのWin32 API
-    [DllImport("kernel32.dll", SetLastError = true)]
-    [return: MarshalAs(UnmanagedType.Bool)]
-    private static extern bool FreeConsole();
-    public static void ConsoleAlloc() {
-        //if (IsConsoleApplication) return;
-        if (!HyperOperatingSystem.IsWindowsPlatform()) return;
-        AllocConsole();
-    }
-    public static void ConsoleFree() {
-        //if (IsConsoleApplication) return;
-        if (!HyperOperatingSystem.IsWindowsPlatform()) return;
-        FreeConsole();
-    }
-    public static void ReallocConsole() {
-        //if (IsConsoleApplication) return;
-        ConsoleFree();
-        ConsoleAlloc();
-    }
-#endif
     public static string ToPrintable(object? x, string? title = null, bool compact = false, uint maxDepth = 0,
         bool removeSurrogatePair = false) {
         var poc = new PlainObjectConverter(JsonParser, ForceAscii);
