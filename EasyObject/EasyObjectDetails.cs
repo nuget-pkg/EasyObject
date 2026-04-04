@@ -47,6 +47,11 @@ internal static class EasyObjectDetails {
             isWindoes = HyperOperatingSystem.IsWindowsPlatform(),
             isBoundCurrFrame = currFrame != null,
         });
+        EasyObject.ExpectBound(currFrame);
+        EasyObject.Message(new {
+            fn = currFrame!.GetFileName(),
+            ln = currFrame.GetFileLineNumber().ToString(),
+        });
         if (!HyperOperatingSystem.IsWindowsPlatform()) return;
         string? _filePath = null;
         string? _lineNumber = null;
