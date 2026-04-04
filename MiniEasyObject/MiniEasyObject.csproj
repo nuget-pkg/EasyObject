@@ -28,14 +28,14 @@
     </PropertyGroup>
     <PropertyGroup>
         <!--<DebugType>full</DebugType>-->
-		<!-- https://gemini.google.com/share/62f63a243809 -->
-		<AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
-		<DebugType>portable</DebugType>
-		<PublishRepositoryUrl>true</PublishRepositoryUrl>
-		<EmbedUntrackedSources>true</EmbedUntrackedSources>
-	</PropertyGroup>
+        <!-- https://gemini.google.com/share/62f63a243809 -->
+        <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+        <DebugType>portable</DebugType>
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    </PropertyGroup>
 
-	<PropertyGroup>
+    <PropertyGroup>
         <!--needef for project using xunit-->
         <IsPackable>true</IsPackable>
     </PropertyGroup>
@@ -71,6 +71,9 @@
         </Compile>
         <Compile Include="..\EasyObject\EasyObject.cs">
             <Link>EasyObject.cs</Link>
+        </Compile>
+        <Compile Include="..\EasyObject\EasyObjectDetails.cs">
+            <Link>EasyObjectDetails.cs</Link>
         </Compile>
         <Compile Include="..\EasyObject\EasyObjectEditor.cs">
             <Link>EasyObjectEditor.cs</Link>
