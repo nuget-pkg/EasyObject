@@ -522,12 +522,19 @@ public class
         bool removeSurrogatePair = false,
         bool dontShowLineNumbers = false
     ) {
-        string CurrentSourceCodeLine() {
+        var _StackTrace_ = new System.Diagnostics.StackTrace(true);
+        StackFrame? CuurentStackFrame()
+        {
             // Author: ❝Gemini (Google Large Language Model)❞さん
             // See: https://gemini.google.com/share/9377a3e5f18f
-            // 呼び出し元の情報を取得 (1つ前のスタックフレーム)
-            var st = new System.Diagnostics.StackTrace(true);
-            var frame = st.GetFrame(2); /**/ // 2つ前のスタックフレームを取得しているのは、Line()メソッド自体とその呼び出し元の両方をスキップするため
+            var frame = _StackTrace_.GetFrame(1);
+            return frame;
+        }
+        string CurrentSourceCodeLine()
+        {
+            // Author: ❝Gemini (Google Large Language Model)❞さん
+            // See: https://gemini.google.com/share/9377a3e5f18f
+            var frame = CuurentStackFrame();
             var file = frame?.GetFileName();
             var line = frame?.GetFileLineNumber();
             // PDB があれば、ファイル名と行番号がメッセージに乗る
@@ -580,13 +587,19 @@ public class
         List<string>? hideKeys = null,
         bool removeSurrogatePair = false
     ) {
+        var _StackTrace_ = new System.Diagnostics.StackTrace(true);
+        StackFrame? CuurentStackFrame()
+        {
+            // Author: ❝Gemini (Google Large Language Model)❞さん
+            // See: https://gemini.google.com/share/9377a3e5f18f
+            var frame = _StackTrace_.GetFrame(1);
+            return frame;
+        }
         string CurrentSourceCodeLine()
         {
             // Author: ❝Gemini (Google Large Language Model)❞さん
             // See: https://gemini.google.com/share/9377a3e5f18f
-            // 呼び出し元の情報を取得 (1つ前のスタックフレーム)
-            var st = new System.Diagnostics.StackTrace(true);
-            var frame = st.GetFrame(2); /**/ // 2つ前のスタックフレームを取得しているのは、Line()メソッド自体とその呼び出し元の両方をスキップするため
+            var frame = CuurentStackFrame();
             var file = frame?.GetFileName();
             var line = frame?.GetFileLineNumber();
             // PDB があれば、ファイル名と行番号がメッセージに乗る
@@ -989,25 +1002,6 @@ public class
         }
         return lines;
     }
-    //public static string CurrentSourceCodeLine(bool rawString = false, bool summaryOnly = false) {
-    //    var st = new StackTrace(true);
-    //    var trace = st.ToString();
-    //    var lines = TextToLines(trace);
-    //    if (lines.Count == 0) return "[!! UNKNOWN SOURCE CODE LINE !!]";
-    //    string? lastLine = null;
-    //    for (var i = lines.Count - 1; i >= 0; i--) {
-    //        var line = lines[i];
-    //        var m = HyperOperatingSystem.FindFirstMatch(line, " ([0-9]+)$");
-    //        if (m != null) {
-    //            if (summaryOnly) return $"{m[1]}行目";
-    //            lastLine = line;
-    //            break;
-    //        }
-    //    }
-    //    if (lastLine == null) return "!! LINE INFO NOT FOUND !!";
-    //    if (rawString) return lastLine.Trim();
-    //    return ReplacePathsWithUrls(lastLine).Trim();
-    //}
     public static string ReplacePathsWithUrls(string stackTrace) {
 #if true
         //return stackTrace;
@@ -1049,13 +1043,19 @@ public class
         return result;
     }
     public static void Abort(object? message = null, int exitCode = 1) {
+        var _StackTrace_ = new System.Diagnostics.StackTrace(true);
+        StackFrame? CuurentStackFrame()
+        {
+            // Author: ❝Gemini (Google Large Language Model)❞さん
+            // See: https://gemini.google.com/share/9377a3e5f18f
+            var frame = _StackTrace_.GetFrame(1);
+            return frame;
+        }
         string CurrentSourceCodeLine()
         {
             // Author: ❝Gemini (Google Large Language Model)❞さん
             // See: https://gemini.google.com/share/9377a3e5f18f
-            // 呼び出し元の情報を取得 (1つ前のスタックフレーム)
-            var st = new System.Diagnostics.StackTrace(true);
-            var frame = st.GetFrame(2); /**/ // 2つ前のスタックフレームを取得しているのは、Line()メソッド自体とその呼び出し元の両方をスキップするため
+            var frame = CuurentStackFrame();
             var file = frame?.GetFileName();
             var line = frame?.GetFileLineNumber();
             // PDB があれば、ファイル名と行番号がメッセージに乗る
@@ -1105,13 +1105,19 @@ public class
         Environment.Exit(exitCode);
     }
     public static void Break(object? x = null, string? title = null) {
+        var _StackTrace_ = new System.Diagnostics.StackTrace(true);
+        StackFrame? CuurentStackFrame()
+        {
+            // Author: ❝Gemini (Google Large Language Model)❞さん
+            // See: https://gemini.google.com/share/9377a3e5f18f
+            var frame = _StackTrace_.GetFrame(1);
+            return frame;
+        }
         string CurrentSourceCodeLine()
         {
             // Author: ❝Gemini (Google Large Language Model)❞さん
             // See: https://gemini.google.com/share/9377a3e5f18f
-            // 呼び出し元の情報を取得 (1つ前のスタックフレーム)
-            var st = new System.Diagnostics.StackTrace(true);
-            var frame = st.GetFrame(2); /**/ // 2つ前のスタックフレームを取得しているのは、Line()メソッド自体とその呼び出し元の両方をスキップするため
+            var frame = CuurentStackFrame();
             var file = frame?.GetFileName();
             var line = frame?.GetFileLineNumber();
             // PDB があれば、ファイル名と行番号がメッセージに乗る
@@ -1306,13 +1312,19 @@ public class
         }
     }
     public static void TerminateOnFailure(Exception ex, object? hint, int exitCode = 1) {
+        var _StackTrace_ = new System.Diagnostics.StackTrace(true);
+        StackFrame? CuurentStackFrame()
+        {
+            // Author: ❝Gemini (Google Large Language Model)❞さん
+            // See: https://gemini.google.com/share/9377a3e5f18f
+            var frame = _StackTrace_.GetFrame(1);
+            return frame;
+        }
         string CurrentSourceCodeLine()
         {
             // Author: ❝Gemini (Google Large Language Model)❞さん
             // See: https://gemini.google.com/share/9377a3e5f18f
-            // 呼び出し元の情報を取得 (1つ前のスタックフレーム)
-            var st = new System.Diagnostics.StackTrace(true);
-            var frame = st.GetFrame(2); /**/ // 2つ前のスタックフレームを取得しているのは、Line()メソッド自体とその呼び出し元の両方をスキップするため
+            var frame = CuurentStackFrame();
             var file = frame?.GetFileName();
             var line = frame?.GetFileLineNumber();
             // PDB があれば、ファイル名と行番号がメッセージに乗る
