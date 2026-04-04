@@ -1436,13 +1436,19 @@ public class
         }
     }
     public static void Line() {
+        var _StackTrace_ = new System.Diagnostics.StackTrace(true);
+        StackFrame? CuurentStackFrame()
+        {
+            // Author: ❝Gemini (Google Large Language Model)❞さん
+            // See: https://gemini.google.com/share/9377a3e5f18f
+            var frame = _StackTrace_.GetFrame(1);
+            return frame;
+        }
         string CurrentSourceCodeLine()
         {
             // Author: ❝Gemini (Google Large Language Model)❞さん
             // See: https://gemini.google.com/share/9377a3e5f18f
-            // 呼び出し元の情報を取得 (1つ前のスタックフレーム)
-            var st = new System.Diagnostics.StackTrace(true);
-            var frame = st.GetFrame(2); /**/ // 2つ前のスタックフレームを取得しているのは、Line()メソッド自体とその呼び出し元の両方をスキップするため
+            var frame = CuurentStackFrame();
             var file = frame?.GetFileName();
             var line = frame?.GetFileLineNumber();
             // PDB があれば、ファイル名と行番号がメッセージに乗る
@@ -1452,7 +1458,7 @@ public class
         // Serif Bold Italic: ⁅𝑶𝑹𝑰𝑮𝑰𝑵𝑨𝑳 𝑨𝑺𝑪𝑰𝑰 𝑪𝑶𝑫𝑬⁆ 𝑨𝑩𝑪𝑫𝑬𝑭𝑮𝑯𝑰𝑱𝑲𝑳𝑴𝑵𝑶𝑷𝑸𝑹𝑺𝑻𝑼𝑽𝑾𝑿𝒀𝒁 𝒂𝒃𝒄𝒅𝒆𝒇𝒈𝒉𝒊𝒋𝒌𝒍𝒎𝒏𝒐𝒑𝒒𝒓𝒔𝒕𝒖𝒗𝒘𝒙𝒚𝒛 0123456789
         var showLineNumbers = ShowLineNumbers;
         ShowLineNumbers = true;
-        Echo(CurrentSourceCodeLine(), "⁅markup⁆[white]✅❝▶▸▶𝑷𝑨𝑺𝑺𝑬𝑫 ﴾𝑪𝑶𝑫𝑬 𝑳𝑰𝑵𝑬﴿▸▶▶❞✅[/]");
+        Echo(CurrentSourceCodeLine(), "⁅markup⁆[white]✅❝▶▶▶ 𝑷𝑨𝑺𝑺𝑬𝑫 ﴾𝑪𝑶𝑫𝑬 𝑳𝑰𝑵𝑬﴿ ▶▶▶❞✅[/]");
         ShowLineNumbers = showLineNumbers;
     }
     private static class NativeMethods
