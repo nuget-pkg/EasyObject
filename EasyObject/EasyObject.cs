@@ -1129,7 +1129,8 @@ public class
     ) {
         EasyObjectDetails._ViewInFavoriteEditor(currFrame, wait);
     }
-    public static void TerminateOnFailure(Exception ex, object? hint, int exitCode = 1) {
+    public static void TerminateOnFailure(Exception ex, object? hint, int exitCode = 1,
+        StackFrame? currentStackFrame = null) {
         var _StackTrace_ = new System.Diagnostics.StackTrace(true);
         StackFrame? CuurentStackFrame() {
             // Author: ❝Gemini (Google Large Language Model)❞さん
@@ -1154,14 +1155,14 @@ public class
         Log($"⁅markup⁆[red]{MarkupSafeString(CurrentSourceCodeLine())}[/]");
         if (hint != null) {
             Log(hint, "HINT MESSAGE (REGARDING THIS FAILURE)");
-            _ViewInFavoriteEditor(CuurentStackFrame());
+            _ViewInFavoriteEditor(currFrame: (currentStackFrame != null ? currentStackFrame : CuurentStackFrame()));
             Message(hint, "HINT MESSAGE (REGARDING THIS FAILURE)", msgBoxFlag: /*MB_ICONERROR*/ 0x00000010);
         }
         WriteLine(
             $"⁅markup⁆[blue]{MarkupSafeString(ReplacePathsWithUrls(ex.ToString()))}[/]",
             "⁅markup⁆[blue]EXCEPTION[/]");
         Log($"⁅markup⁆[red][[!! TERMINATING PROGRAM ON FAILURE...WITH EXIT CODE {exitCode} !!]][/]");
-        _ViewInFavoriteEditor(CuurentStackFrame());
+        _ViewInFavoriteEditor(currFrame: (currentStackFrame != null ? currentStackFrame : CuurentStackFrame()));
         Message($"!! TERMINATING PROGRAM ON FAILURE...WITH EXIT CODE {exitCode} !!",
             msgBoxFlag: /*MB_ICONERROR*/ 0x00000010);
         Environment.Exit(exitCode);
@@ -1170,6 +1171,23 @@ public class
         Assert.IsTrue(condition, ToPrintable(hint));
     }
     public static void ExpectTrue(bool condition, object? hint = null, int exitCode = 1) {
+        var _StackTrace_ = new System.Diagnostics.StackTrace(true);
+        StackFrame? CuurentStackFrame() {
+            // Author: ❝Gemini (Google Large Language Model)❞さん
+            // See: https://gemini.google.com/share/9377a3e5f18f
+            var frame = _StackTrace_.GetFrame(1);
+            return frame;
+        }
+        string CurrentSourceCodeLine() {
+            // Author: ❝Gemini (Google Large Language Model)❞さん
+            // See: https://gemini.google.com/share/9377a3e5f18f
+            var frame = CuurentStackFrame();
+            var file = frame?.GetFileName();
+            var line = frame?.GetFileLineNumber();
+            // PDB があれば、ファイル名と行番号がメッセージに乗る
+            string location = (file != null) ? $"at {file}:{line}" : "";
+            return $"{location}";
+        }
         try {
             Assert.IsTrue(condition);
         }
@@ -1184,6 +1202,23 @@ public class
             Assert.IsFalse(condition);
     }
     public static void ExpectFalse(bool condition, object? hint = null, int exitCode = 1) {
+        var _StackTrace_ = new System.Diagnostics.StackTrace(true);
+        StackFrame? CuurentStackFrame() {
+            // Author: ❝Gemini (Google Large Language Model)❞さん
+            // See: https://gemini.google.com/share/9377a3e5f18f
+            var frame = _StackTrace_.GetFrame(1);
+            return frame;
+        }
+        string CurrentSourceCodeLine() {
+            // Author: ❝Gemini (Google Large Language Model)❞さん
+            // See: https://gemini.google.com/share/9377a3e5f18f
+            var frame = CuurentStackFrame();
+            var file = frame?.GetFileName();
+            var line = frame?.GetFileLineNumber();
+            // PDB があれば、ファイル名と行番号がメッセージに乗る
+            string location = (file != null) ? $"at {file}:{line}" : "";
+            return $"{location}";
+        }
         try {
             Assert.IsFalse(condition);
         }
@@ -1198,6 +1233,23 @@ public class
             Assert.AreEqual(expected, actual);
     }
     public static void ExpectIdentical(object? expected, object? actual, object? hint = null, int exitCode = 1) {
+        var _StackTrace_ = new System.Diagnostics.StackTrace(true);
+        StackFrame? CuurentStackFrame() {
+            // Author: ❝Gemini (Google Large Language Model)❞さん
+            // See: https://gemini.google.com/share/9377a3e5f18f
+            var frame = _StackTrace_.GetFrame(1);
+            return frame;
+        }
+        string CurrentSourceCodeLine() {
+            // Author: ❝Gemini (Google Large Language Model)❞さん
+            // See: https://gemini.google.com/share/9377a3e5f18f
+            var frame = CuurentStackFrame();
+            var file = frame?.GetFileName();
+            var line = frame?.GetFileLineNumber();
+            // PDB があれば、ファイル名と行番号がメッセージに乗る
+            string location = (file != null) ? $"at {file}:{line}" : "";
+            return $"{location}";
+        }
         try {
             Assert.AreEqual(expected, actual);
         }
@@ -1209,6 +1261,23 @@ public class
         AssertIdentical(FromObject(expected).ToObject(), FromObject(actual).ToObject(), hint: hint);
     }
     public static void ExpectEquivalent(object? expected, object? actual, object? hint = null, int exitCode = 1) {
+        var _StackTrace_ = new System.Diagnostics.StackTrace(true);
+        StackFrame? CuurentStackFrame() {
+            // Author: ❝Gemini (Google Large Language Model)❞さん
+            // See: https://gemini.google.com/share/9377a3e5f18f
+            var frame = _StackTrace_.GetFrame(1);
+            return frame;
+        }
+        string CurrentSourceCodeLine() {
+            // Author: ❝Gemini (Google Large Language Model)❞さん
+            // See: https://gemini.google.com/share/9377a3e5f18f
+            var frame = CuurentStackFrame();
+            var file = frame?.GetFileName();
+            var line = frame?.GetFileLineNumber();
+            // PDB があれば、ファイル名と行番号がメッセージに乗る
+            string location = (file != null) ? $"at {file}:{line}" : "";
+            return $"{location}";
+        }
         try {
             AssertEquivalent(expected, actual);
         }
@@ -1223,6 +1292,23 @@ public class
             Assert.AreNotEqual(expected, actual);
     }
     public static void ExpectNotIdentical(object? expected, object? actual, object? hint = null, int exitCode = 1) {
+        var _StackTrace_ = new System.Diagnostics.StackTrace(true);
+        StackFrame? CuurentStackFrame() {
+            // Author: ❝Gemini (Google Large Language Model)❞さん
+            // See: https://gemini.google.com/share/9377a3e5f18f
+            var frame = _StackTrace_.GetFrame(1);
+            return frame;
+        }
+        string CurrentSourceCodeLine() {
+            // Author: ❝Gemini (Google Large Language Model)❞さん
+            // See: https://gemini.google.com/share/9377a3e5f18f
+            var frame = CuurentStackFrame();
+            var file = frame?.GetFileName();
+            var line = frame?.GetFileLineNumber();
+            // PDB があれば、ファイル名と行番号がメッセージに乗る
+            string location = (file != null) ? $"at {file}:{line}" : "";
+            return $"{location}";
+        }
         try {
             Assert.AreNotEqual(expected, actual);
         }
@@ -1234,6 +1320,23 @@ public class
         AssertNotIdentical(FromObject(expected).ToObject(), FromObject(actual).ToObject(), hint: hint);
     }
     public static void ExpectNotEquivalent(object? expected, object? actual, object? hint = null, int exitCode = 1) {
+        var _StackTrace_ = new System.Diagnostics.StackTrace(true);
+        StackFrame? CuurentStackFrame() {
+            // Author: ❝Gemini (Google Large Language Model)❞さん
+            // See: https://gemini.google.com/share/9377a3e5f18f
+            var frame = _StackTrace_.GetFrame(1);
+            return frame;
+        }
+        string CurrentSourceCodeLine() {
+            // Author: ❝Gemini (Google Large Language Model)❞さん
+            // See: https://gemini.google.com/share/9377a3e5f18f
+            var frame = CuurentStackFrame();
+            var file = frame?.GetFileName();
+            var line = frame?.GetFileLineNumber();
+            // PDB があれば、ファイル名と行番号がメッセージに乗る
+            string location = (file != null) ? $"at {file}:{line}" : "";
+            return $"{location}";
+        }
         try {
             AssertNotEquivalent(expected, actual);
         }
@@ -1245,6 +1348,23 @@ public class
         Assert.IsNotNull(x, ToPrintable(hint));
     }
     public static void ExpectBound(object? x, object? hint = null, int exitCode = 1) {
+        var _StackTrace_ = new System.Diagnostics.StackTrace(true);
+        StackFrame? CuurentStackFrame() {
+            // Author: ❝Gemini (Google Large Language Model)❞さん
+            // See: https://gemini.google.com/share/9377a3e5f18f
+            var frame = _StackTrace_.GetFrame(1);
+            return frame;
+        }
+        string CurrentSourceCodeLine() {
+            // Author: ❝Gemini (Google Large Language Model)❞さん
+            // See: https://gemini.google.com/share/9377a3e5f18f
+            var frame = CuurentStackFrame();
+            var file = frame?.GetFileName();
+            var line = frame?.GetFileLineNumber();
+            // PDB があれば、ファイル名と行番号がメッセージに乗る
+            string location = (file != null) ? $"at {file}:{line}" : "";
+            return $"{location}";
+        }
         try {
             AssertBound(x);
         }
@@ -1256,6 +1376,23 @@ public class
         Assert.IsNull(x, ToPrintable(hint));
     }
     public static void ExpectNotBound(object? x, object? hint = null, int exitCode = 1) {
+        var _StackTrace_ = new System.Diagnostics.StackTrace(true);
+        StackFrame? CuurentStackFrame() {
+            // Author: ❝Gemini (Google Large Language Model)❞さん
+            // See: https://gemini.google.com/share/9377a3e5f18f
+            var frame = _StackTrace_.GetFrame(1);
+            return frame;
+        }
+        string CurrentSourceCodeLine() {
+            // Author: ❝Gemini (Google Large Language Model)❞さん
+            // See: https://gemini.google.com/share/9377a3e5f18f
+            var frame = CuurentStackFrame();
+            var file = frame?.GetFileName();
+            var line = frame?.GetFileLineNumber();
+            // PDB があれば、ファイル名と行番号がメッセージに乗る
+            string location = (file != null) ? $"at {file}:{line}" : "";
+            return $"{location}";
+        }
         try {
             AssertNotBound(x);
         }
