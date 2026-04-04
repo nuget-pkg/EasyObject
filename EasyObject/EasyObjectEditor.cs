@@ -26,6 +26,7 @@ namespace Global {
             bool always = true
         ) {
             //if (x == null) return Null;
+            //Debug(new {x, maxDepth, maxCount, hideKeys }, "At beginning of Clone()");
             hideKeys = hideKeys ?? new List<string>();
             if (!always) {
                 if (maxDepth == 0 && maxCount == 0 && hideKeys.Count == 0) {
@@ -33,8 +34,10 @@ namespace Global {
                 }
             }
             x = FromObject(x);
+            //Debug(x, "before Trim()");
             Trim(x, maxDepth: maxDepth, maxCount: maxCount, hideKeys: hideKeys);
-            return x;
+            //Debug(x, "after Trim()");
+            return x; /**/
         }
         public static void Trim(
             EasyObject x,

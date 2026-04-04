@@ -3,7 +3,7 @@
     <TargetFrameworks>net462;net8.0</TargetFrameworks>
     <IsPackable>true</IsPackable>
     <LangVersion>latest</LangVersion>
-    <Version>2026.0403.0606.27</Version>
+    <Version>2026.0404.1451.54</Version>
     <Nullable>enable</Nullable>
     <ImplicitUsings>disable</ImplicitUsings>
     <RootNamespace>EasyObject</RootNamespace>
@@ -25,9 +25,9 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
   <PropertyGroup>
-    <!--<DebugType>full</DebugType>-->
     <!-- https://gemini.google.com/share/62f63a243809 -->
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+    <!--<DebugType>full</DebugType>-->
     <DebugType>portable</DebugType>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>

@@ -55,6 +55,7 @@ internal class AssertCapabilitiesTest {
     public void Test902()
     {
         ShowDetail = true;
+        DebugOutput = true;
         Line();
         EasyObject eo = NewArray("a", "b", "c");
         Line();

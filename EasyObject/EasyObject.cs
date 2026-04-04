@@ -787,8 +787,8 @@ public class
         bool removeSurrogatePair = false
     ) {
         //title = _DecorateTitle(title); /* DumpObject() covers this. */
-        DebugOutput = true;
-        Debug(FullName(this.RealData));
+        //DebugOutput = true;
+        //Debug(FullName(this.RealData));
         EasyObject.Dump(this, title: title, compact: compact, maxDepth: maxDepth, maxCount: maxCount, hideKeys: hideKeys,
             removeSurrogatePair: removeSurrogatePair);
     }
@@ -930,6 +930,7 @@ public class
         List<string>? hideKeys = null,
         bool always = true
     ) {
+        Line();
         return EasyObjectEditor.Clone(this, maxDepth: maxDepth, maxCount: maxCount, hideKeys: hideKeys, always: always);
     }
     public EasyObject? Shift() {
@@ -1408,27 +1409,23 @@ public class
             }
         }
     }
-    public static void HandleBetrayedExpectation(Exception ex, object? hint, int exitCode = 1) {
+    public static void TerminateOnFailure(Exception ex, object? hint, int exitCode = 1) {
         ShowDetail = false;
         ShowLineNumbers = false;
         UseAnsiConsole = true;
-        Log("⁅markup⁆[red][[!! EXPECTATION BETRAYED !!]][/]");
+        Log("⁅markup⁆[red][[!! TERMINATING PROGRAM ON FAILURE !!]][/]");
         Log($"⁅markup⁆[red]{MarkupSafeString(CurrentSourceCodeLine())}[/]");
-        //UseAnsiConsole = false;
         if (hint != null) {
-            Log(hint, "HINT MESSAGE (FOR THIS EXPECTATION)");
+            Log(hint, "HINT MESSAGE (REGARDING THIS FAILURE)");
             _ViewInFavoriteEditor(CurrentSourceCodeLine(rawString: true), wait: false);
-            Message(hint, title: "HINT MESSAGE (FOR THIS EXPECTATION)", msgBoxFlag: /*MB_ICONERROR*/ 0x00000010);
+            Message(hint, title: "HINT MESSAGE (REGARDING THIS FAILURE)", msgBoxFlag: /*MB_ICONERROR*/ 0x00000010);
         }
-        //UseAnsiConsole = true;
-        //if (ex != null) {
         WriteLine(
             $"⁅markup⁆[blue]{MarkupSafeString(ReplacePathsWithUrls(ex.ToString()))}[/]",
             "⁅markup⁆[blue]EXCEPTION[/]");
-        //}
-        Log($"⁅markup⁆[red][[!! ABORTING FOR BETRAYED EXPECTATION...WITH EXIT CODE {exitCode} !!]][/]");
+        Log($"⁅markup⁆[red][[!! TERMINATING PROGRAM ON FAILURE...WITH EXIT CODE {exitCode} !!]][/]");
         _ViewInFavoriteEditor(CurrentSourceCodeLine(rawString: true), wait: false);
-        Message($"!! ABORTING FOR BETRAYED EXPECTATION...WITH EXIT CODE {exitCode} !!",
+        Message($"!! TERMINATING PROGRAM ON FAILURE...WITH EXIT CODE {exitCode} !!",
             msgBoxFlag: /*MB_ICONERROR*/ 0x00000010);
         Environment.Exit(exitCode);
     }
@@ -1440,7 +1437,7 @@ public class
             Assert.IsTrue(condition);
         }
         catch (Exception ex) {
-            HandleBetrayedExpectation(ex, hint, exitCode);
+            TerminateOnFailure(ex, hint, exitCode);
         }
     }
     public static void AssertFalse(bool condition, object? hint = null) {
@@ -1456,7 +1453,7 @@ public class
             Assert.IsFalse(condition);
         }
         catch (Exception ex) {
-            HandleBetrayedExpectation(ex, hint, exitCode);
+            TerminateOnFailure(ex, hint, exitCode);
         }
     }
     public static void AssertIdentical(object? expected, object? actual, object? hint = null) {
@@ -1472,7 +1469,7 @@ public class
             Assert.AreEqual(expected, actual);
         }
         catch (Exception ex) {
-            HandleBetrayedExpectation(ex, hint, exitCode);
+            TerminateOnFailure(ex, hint, exitCode);
         }
     }
     public static void AssertEquivalent(object? expected, object? actual, object? hint = null) {
@@ -1483,7 +1480,7 @@ public class
             EasyObject.AssertEquivalent(expected, actual);
         }
         catch (Exception ex) {
-            HandleBetrayedExpectation(ex, hint, exitCode);
+            TerminateOnFailure(ex, hint, exitCode);
         }
     }
     public static void AssertNotIdentical(object? expected, object? actual, object? hint = null) {
@@ -1499,7 +1496,7 @@ public class
             Assert.AreNotEqual(expected, actual);
         }
         catch (Exception ex) {
-            HandleBetrayedExpectation(ex, hint, exitCode);
+            TerminateOnFailure(ex, hint, exitCode);
         }
     }
     public static void AssertNotEquivalent(object? expected, object? actual, object? hint = null) {
@@ -1510,7 +1507,29 @@ public class
             EasyObject.AssertNotEquivalent(expected, actual);
         }
         catch (Exception ex) {
-            HandleBetrayedExpectation(ex, hint, exitCode);
+            TerminateOnFailure(ex, hint, exitCode);
+        }
+    }
+    public static void AssertBound(object? x, object? hint = null) {
+        Assert.IsNotNull(x, ToPrintable(hint));
+    }
+    public static void ExpectBound(object? x, object? hint = null, int exitCode = 1) {
+        try {
+            EasyObject.AssertBound(x);
+        }
+        catch (Exception ex) {
+            TerminateOnFailure(ex, hint, exitCode);
+        }
+    }
+    public static void AssertNotBound(object? x, object? hint = null) {
+        Assert.IsNull(x, ToPrintable(hint));
+    }
+    public static void ExpectNotBound(object? x, object? hint = null, int exitCode = 1) {
+        try {
+            EasyObject.AssertNotBound(x);
+        }
+        catch (Exception ex) {
+            TerminateOnFailure(ex, hint, exitCode);
         }
     }
     public static void Line() {

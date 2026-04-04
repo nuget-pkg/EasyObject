@@ -32,6 +32,8 @@ public class Program {
             UseAnsiConsole = true;
             DebugOutput = true;
             Log("⭕️ハロー©⭕️");
+            string? notBound = null;
+            //ExpectBound(notBound, new { notBound });
             //Break("after ⭕️ハロー©⭕️");
             //ExitOnTrustViolation(new Exception("I FOUND A PROBLEM"), hint: new { TOM = "FOOLISH !!" }, 777);
             WriteLine("(1)");
