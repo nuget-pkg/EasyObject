@@ -48,9 +48,8 @@ internal class EasyObjectConverter : IConvertParsedResult
 {
     public object? ConvertParsedResult(object? x, string origTypeName)
     {
-        if (x is Dictionary<string, object>)
+        if (x is Dictionary<string, object> dict)
         {
-            var dict = x as Dictionary<string, object>;
             var keys = dict!.Keys;
             var result = new Dictionary<string, EasyObject>();
             foreach (var key in keys)
@@ -61,9 +60,8 @@ internal class EasyObjectConverter : IConvertParsedResult
             }
             return result;
         }
-        if (x is List<object>)
+        if (x is List<object> list)
         {
-            var list = x as List<object>;
             var result = new List<EasyObject>();
             foreach (var e in list!)
             {
