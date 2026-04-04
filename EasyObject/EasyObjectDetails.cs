@@ -42,6 +42,10 @@ internal static class EasyObjectDetails {
         StackFrame? currFrame,
         bool wait = false
     ) {
+        EasyObject.Message(new {
+            method = "EasyObjectDetails#_ViewInFavoriteEditor()", wait,
+            isWindoes = HyperOperatingSystem.IsWindowsPlatform()
+        });
         if (!HyperOperatingSystem.IsWindowsPlatform()) return;
         string? _filePath = null;
         string? _lineNumber = null;

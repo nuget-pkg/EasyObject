@@ -34,7 +34,7 @@ public class Program {
             DebugOutput = true;
             Log("⭕️ハロー©⭕️");
             string? notBound = null;
-            //ExpectBound(notBound, new { notBound });
+            ExpectBound(notBound, new { notBound });
             //Break("after ⭕️ハロー©⭕️");
             //ExitOnTrustViolation(new Exception("I FOUND A PROBLEM"), hint: new { TOM = "FOOLISH !!" }, 777);
             WriteLine("(1)");
@@ -401,12 +401,10 @@ public class Program {
             //var youtubePlaylists = NewtonsoftJsonUtil.DeserializeFromJson(File.ReadAllText(playlistJsonPath));
             var youtubePlaylists = NewtonsoftJsonUtil.FromJsonFile(playlistJsonPath);
 #endif
-
             var tmpList = youtubePlaylists["PLTvSv0jkjbk8SOhwrGhDxHY3gbqN-rzB7"];
             var tmpVideos = tmpList["videos"];
             Log(tmpList.Count, "tmpList.Count");
             //Abort();
-
             youtubePlaylists
                 .Shuffle() /* !! THIS STEP (PIPELINE) IS NOT NECESSARY FOR DEBUGGING PURPOSE; JUST DEMONSTRATING EasyObject#Shuffle() !! */
                 .Take(5) /*!! TAKE FIRST FIVEs BECAUSE THIS JSON IS TOO LONG; EasyObject#Take(5) DOEST NOT DESTOY ORIGINAL JSON Object or ORIGINAL JSON Array !!*/
@@ -421,7 +419,8 @@ public class Program {
             for (var p = 0; p < playlistIdsOf5.Count; p++) {
                 var playlistId = playlistIdsOf5[p];
                 var playlistObject = youtubePlaylists[playlistId.Cast<string>()];
-                playlistObject.Dump(title: playlistId.Cast<string>(), maxDepth: 0, maxCount: 5 /*!! MAINLY FOR LIMITTING playlist['videos'] length to 5 !!*/);
+                playlistObject.Dump(title: playlistId.Cast<string>(), maxDepth: 0,
+                    maxCount: 5 /*!! MAINLY FOR LIMITTING playlist['videos'] length to 5 !!*/);
                 string playlistTitle = playlistObject.Dynamic.title;
                 int videoCount = playlistObject.Dynamic.videos.Count;
                 Log(new { id = playlistId, title = playlistTitle, videoCount }, compact: true);
