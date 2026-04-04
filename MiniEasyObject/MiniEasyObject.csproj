@@ -40,30 +40,30 @@
         <IsPackable>true</IsPackable>
     </PropertyGroup>
     <ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789`))' == 'net'">
-        <Reference Include="Microsoft.CSharp"/>
-        <Reference Include="System"/>
-        <Reference Include="System.Core"/>
-        <Reference Include="System.Data"/>
-        <Reference Include="System.Data.DataSetExtensions"/>
-        <Reference Include="System.IO.Compression"/>
-        <Reference Include="System.Linq"/>
-        <Reference Include="System.Net.Http"/>
-        <Reference Include="System.Web"/>
-        <Reference Include="System.Xml"/>
-        <Reference Include="System.Xml.Linq"/>
+        <Reference Include="Microsoft.CSharp" />
+        <Reference Include="System" />
+        <Reference Include="System.Core" />
+        <Reference Include="System.Data" />
+        <Reference Include="System.Data.DataSetExtensions" />
+        <Reference Include="System.IO.Compression" />
+        <Reference Include="System.Linq" />
+        <Reference Include="System.Net.Http" />
+        <Reference Include="System.Web" />
+        <Reference Include="System.Xml" />
+        <Reference Include="System.Xml.Linq" />
     </ItemGroup>
     <ItemGroup>
-        <None Include=".\README.md" Pack="true" PackagePath=""/>
+        <None Include=".\README.md" Pack="true" PackagePath="" />
     </ItemGroup>
     <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-        <PackageReference Include="Microsoft.CSharp" Version="4.7.0"/>
-        <PackageReference Include="System.Dynamic.Runtime" Version="4.3.0"/>
+        <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+        <PackageReference Include="System.Dynamic.Runtime" Version="4.3.0" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="HyperOperatingSystem" Version="2026.402.1806.57"/>
-        <PackageReference Include="NUnit" Version="4.5.1"/>
-        <PackageReference Include="PlainObjectInterface" Version="2026.122.1836.32"/>
-        <PackageReference Include="PlainObjectConverter" Version="2026.402.700"/>
+        <PackageReference Include="HyperOperatingSystem" Version="2026.405.634.54" />
+        <PackageReference Include="NUnit" Version="4.5.1" />
+        <PackageReference Include="PlainObjectInterface" Version="2026.122.1836.32" />
+        <PackageReference Include="PlainObjectConverter" Version="2026.402.700" />
     </ItemGroup>
     <ItemGroup>
         <Compile Include="..\EasyObject\EasyExtensions.cs">

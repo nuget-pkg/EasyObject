@@ -16,6 +16,7 @@ using Spectre.Console;
 // ReSharper disable EmptyStatement
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable ForCanBeConvertedToForeach
+// ReSharper disable All
 #endif
 
 // ReSharper disable InconsistentNaming
@@ -54,6 +55,7 @@ public class
     IExportToCommonJson,
     IImportFromCommonJson {
     public object? RealData /*= null*/;
+    public static bool ____InternalDebugOutput____ = false;
     //public static readonly IParseJson DefaultJsonParser = new CSharpEasyLanguageHandler(true);
     public static readonly IParseJson DefaultJsonParser = new NewtonsoftJsonHandler();
     public static IParseJson? JsonParser /*= null*/;
@@ -513,6 +515,28 @@ public class
             removeSurrogatePair);
         Console.WriteLine(s);
     }
+    private static StackFrame? _EasyObject_StackFrame_Finder_(StackTrace stackTrace) {
+        var frames = stackTrace.GetFrames();
+        if (frames == null) return null;
+        int len = frames.Length;
+        for (int i = 1; i < len; i++) { /**/ /* !! SKIPs FIRST FRAME !! */
+            var frame = frames[i];
+            if (frame == null) continue;
+            var name = frame.GetFileName();
+            if (name == null) continue;
+            if (!____InternalDebugOutput____) {
+                if (name.Contains(@"\nuget.org\EasyObject\EasyObject\")) {
+                    //Log(name, "⭕️System-Internal-File⭕️"); /* DON'T USE Log() HERE; CAUSES STACK OVERFLOW !! */
+                    Console.Error.WriteLine($"⭕️System-Internal-File⭕️ {name}");
+                    continue;
+                }
+            }
+            //Log(name, "⭕️User-File located⭕️"); /* DON'T USE Log() HERE; CAUSES STACK OVERFLOW !! */
+            Console.Error.WriteLine($"⭕️User--File⭕️ {name}");
+            return frame;
+        }
+        return null;
+    }
     public static void Log(
         object? x,
         string? title = null,
@@ -527,8 +551,9 @@ public class
         StackFrame? CuurentStackFrame() {
             // Author: ❝Gemini (Google Large Language Model)❞さん
             // See: https://gemini.google.com/share/9377a3e5f18f
-            var frame = _StackTrace_.GetFrame(1);
-            return frame;
+            //var frame = _StackTrace_.GetFrame(1);
+            //return frame;
+            return _EasyObject_StackFrame_Finder_(_StackTrace_);
         }
         string CurrentSourceCodeLine() {
             // Author: ❝Gemini (Google Large Language Model)❞さん
@@ -590,8 +615,9 @@ public class
         StackFrame? CuurentStackFrame() {
             // Author: ❝Gemini (Google Large Language Model)❞さん
             // See: https://gemini.google.com/share/9377a3e5f18f
-            var frame = _StackTrace_.GetFrame(1);
-            return frame;
+            // var frame = _StackTrace_.GetFrame(1);
+            // return frame;
+            return _EasyObject_StackFrame_Finder_(_StackTrace_);
         }
         string CurrentSourceCodeLine() {
             // Author: ❝Gemini (Google Large Language Model)❞さん
@@ -1044,8 +1070,9 @@ public class
         StackFrame? CuurentStackFrame() {
             // Author: ❝Gemini (Google Large Language Model)❞さん
             // See: https://gemini.google.com/share/9377a3e5f18f
-            var frame = _StackTrace_.GetFrame(1);
-            return frame;
+            // var frame = _StackTrace_.GetFrame(1);
+            // return frame;
+            return _EasyObject_StackFrame_Finder_(_StackTrace_);
         }
         string CurrentSourceCodeLine() {
             // Author: ❝Gemini (Google Large Language Model)❞さん
@@ -1105,8 +1132,9 @@ public class
         StackFrame? CuurentStackFrame() {
             // Author: ❝Gemini (Google Large Language Model)❞さん
             // See: https://gemini.google.com/share/9377a3e5f18f
-            var frame = _StackTrace_.GetFrame(1);
-            return frame;
+            // var frame = _StackTrace_.GetFrame(1);
+            // return frame;
+            return _EasyObject_StackFrame_Finder_(_StackTrace_);
         }
         string CurrentSourceCodeLine() {
             // Author: ❝Gemini (Google Large Language Model)❞さん
@@ -1133,8 +1161,9 @@ public class
         StackFrame? CuurentStackFrame() {
             // Author: ❝Gemini (Google Large Language Model)❞さん
             // See: https://gemini.google.com/share/9377a3e5f18f
-            var frame = _StackTrace_.GetFrame(1);
-            return frame;
+            // var frame = _StackTrace_.GetFrame(1);
+            // return frame;
+            return _EasyObject_StackFrame_Finder_(_StackTrace_);
         }
         string CurrentSourceCodeLine() {
             // Author: ❝Gemini (Google Large Language Model)❞さん
@@ -1166,8 +1195,9 @@ public class
         StackFrame? CuurentStackFrame() {
             // Author: ❝Gemini (Google Large Language Model)❞さん
             // See: https://gemini.google.com/share/9377a3e5f18f
-            var frame = _StackTrace_.GetFrame(1);
-            return frame;
+            // var frame = _StackTrace_.GetFrame(1);
+            // return frame;
+            return _EasyObject_StackFrame_Finder_(_StackTrace_);
         }
         string CurrentSourceCodeLine() {
             // Author: ❝Gemini (Google Large Language Model)❞さん
@@ -1207,8 +1237,9 @@ public class
         StackFrame? CuurentStackFrame() {
             // Author: ❝Gemini (Google Large Language Model)❞さん
             // See: https://gemini.google.com/share/9377a3e5f18f
-            var frame = _StackTrace_.GetFrame(1);
-            return frame;
+            // var frame = _StackTrace_.GetFrame(1);
+            // return frame;
+            return _EasyObject_StackFrame_Finder_(_StackTrace_);
         }
         string CurrentSourceCodeLine() {
             // Author: ❝Gemini (Google Large Language Model)❞さん
@@ -1238,8 +1269,9 @@ public class
         StackFrame? CuurentStackFrame() {
             // Author: ❝Gemini (Google Large Language Model)❞さん
             // See: https://gemini.google.com/share/9377a3e5f18f
-            var frame = _StackTrace_.GetFrame(1);
-            return frame;
+            // var frame = _StackTrace_.GetFrame(1);
+            // return frame;
+            return _EasyObject_StackFrame_Finder_(_StackTrace_);
         }
         string CurrentSourceCodeLine() {
             // Author: ❝Gemini (Google Large Language Model)❞さん
@@ -1269,8 +1301,9 @@ public class
         StackFrame? CuurentStackFrame() {
             // Author: ❝Gemini (Google Large Language Model)❞さん
             // See: https://gemini.google.com/share/9377a3e5f18f
-            var frame = _StackTrace_.GetFrame(1);
-            return frame;
+            // var frame = _StackTrace_.GetFrame(1);
+            // return frame;
+            return _EasyObject_StackFrame_Finder_(_StackTrace_);
         }
         string CurrentSourceCodeLine() {
             // Author: ❝Gemini (Google Large Language Model)❞さん
@@ -1297,8 +1330,9 @@ public class
         StackFrame? CuurentStackFrame() {
             // Author: ❝Gemini (Google Large Language Model)❞さん
             // See: https://gemini.google.com/share/9377a3e5f18f
-            var frame = _StackTrace_.GetFrame(1);
-            return frame;
+            // var frame = _StackTrace_.GetFrame(1);
+            // return frame;
+            return _EasyObject_StackFrame_Finder_(_StackTrace_);
         }
         string CurrentSourceCodeLine() {
             // Author: ❝Gemini (Google Large Language Model)❞さん
@@ -1328,8 +1362,9 @@ public class
         StackFrame? CuurentStackFrame() {
             // Author: ❝Gemini (Google Large Language Model)❞さん
             // See: https://gemini.google.com/share/9377a3e5f18f
-            var frame = _StackTrace_.GetFrame(1);
-            return frame;
+            // var frame = _StackTrace_.GetFrame(1);
+            // return frame;
+            return _EasyObject_StackFrame_Finder_(_StackTrace_);
         }
         string CurrentSourceCodeLine() {
             // Author: ❝Gemini (Google Large Language Model)❞さん
@@ -1356,8 +1391,9 @@ public class
         StackFrame? CuurentStackFrame() {
             // Author: ❝Gemini (Google Large Language Model)❞さん
             // See: https://gemini.google.com/share/9377a3e5f18f
-            var frame = _StackTrace_.GetFrame(1);
-            return frame;
+            // var frame = _StackTrace_.GetFrame(1);
+            // return frame;
+            return _EasyObject_StackFrame_Finder_(_StackTrace_);
         }
         string CurrentSourceCodeLine() {
             // Author: ❝Gemini (Google Large Language Model)❞さん
@@ -1384,8 +1420,9 @@ public class
         StackFrame? CuurentStackFrame() {
             // Author: ❝Gemini (Google Large Language Model)❞さん
             // See: https://gemini.google.com/share/9377a3e5f18f
-            var frame = _StackTrace_.GetFrame(1);
-            return frame;
+            // var frame = _StackTrace_.GetFrame(1);
+            // return frame;
+            return _EasyObject_StackFrame_Finder_(_StackTrace_);
         }
         string CurrentSourceCodeLine() {
             // Author: ❝Gemini (Google Large Language Model)❞さん
@@ -1412,8 +1449,9 @@ public class
         StackFrame? CuurentStackFrame() {
             // Author: ❝Gemini (Google Large Language Model)❞さん
             // See: https://gemini.google.com/share/9377a3e5f18f
-            var frame = _StackTrace_.GetFrame(1);
-            return frame;
+            // var frame = _StackTrace_.GetFrame(1);
+            // return frame;
+            return _EasyObject_StackFrame_Finder_(_StackTrace_);
         }
         string CurrentSourceCodeLine() {
             // Author: ❝Gemini (Google Large Language Model)❞さん
@@ -1437,8 +1475,9 @@ public class
         StackFrame? CuurentStackFrame() {
             // Author: ❝Gemini (Google Large Language Model)❞さん
             // See: https://gemini.google.com/share/9377a3e5f18f
-            var frame = _StackTrace_.GetFrame(1);
-            return frame;
+            // var frame = _StackTrace_.GetFrame(1);
+            // return frame;
+            return _EasyObject_StackFrame_Finder_(_StackTrace_);
         }
         string CurrentSourceCodeLine() {
             // Author: ❝Gemini (Google Large Language Model)❞さん
