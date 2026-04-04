@@ -1075,17 +1075,17 @@ public class
                 Console.Error.WriteLine(
                     exTrace
                 );
-                _ViewInFavoriteEditor(CurrentSourceCodeLine(/*true*/));
+                _ViewInFavoriteEditor(CuurentStackFrame());
                 Message(exTrace, "EXCEPTION (FOR ABORTING PROGRAM)", msgBoxFlag: /*MB_ICONERROR*/ 0x00000010);
             }
             catch (Exception ex) {
                 Console.Error.WriteLine(ex.ToString());
-                _ViewInFavoriteEditor(CurrentSourceCodeLine(/*true*/));
+                _ViewInFavoriteEditor(CuurentStackFrame());
                 Message(ex.ToString(), "EXCEPTION (FOR ABORTING PROGRAM)", msgBoxFlag: /*MB_ICONERROR*/ 0x00000010);
             }
             //UseAnsiConsole = true;
             Log($"⁅markup⁆[red][[!! ABORTING...WITH EXIT CODE {exitCode} !!]][/]");
-            _ViewInFavoriteEditor(CurrentSourceCodeLine(/*true*/));
+            _ViewInFavoriteEditor(CuurentStackFrame());
             Message(new { message, exitCode }, $"!! ABORTING...WITH EXIT CODE {exitCode} !!",
                 msgBoxFlag: /*MB_ICONERROR*/ 0x00000010);
             Environment.Exit(exitCode);
@@ -1100,7 +1100,7 @@ public class
         Log(trace, "STACK TRACE");
         //UseAnsiConsole = true;
         Log($"⁅markup⁆[red][[!! ABORTING...WITH EXIT CODE {exitCode} !!]][/]");
-        _ViewInFavoriteEditor(CurrentSourceCodeLine(/*true*/));
+        _ViewInFavoriteEditor(CuurentStackFrame());
         Message(message, "||◣ABORT(UNTITLED)◥||", msgBoxFlag: /*MB_ICONERROR*/ 0x00000010);
         Environment.Exit(exitCode);
     }
@@ -1128,41 +1128,50 @@ public class
         var currLine = CurrentSourceCodeLine(/*true*/);
         var message = currLine.Trim();
         if (x != null) message += "\n" + ToPrintable(x);
-        _ViewInFavoriteEditor(currLine);
+        _ViewInFavoriteEditor(CuurentStackFrame());
         Message(message, title);
     }
-    private static void _ViewInFavoriteEditor(string currLine, bool wait = false) {
+    private static void _ViewInFavoriteEditor(/*string currLine, */
+        StackFrame? currFrame,
+        bool wait = false
+        )
+    {
         if (!HyperOperatingSystem.IsWindowsPlatform()) return;
         string? _filePath = null;
         string? _lineNumber = null;
-        var filePathRegex =
-            new Regex(
-                @"(?<path>[a-zA-Z]:\\(?:[^<>:""/\\|?*]+\\)*[^<>:""/\\|?*]+):.+\s+(?<line_num>\d+)$",
-                RegexOptions.Multiline | RegexOptions.IgnoreCase);
-        // Use a MatchEvaluator delegate for the replacement to apply the Uri conversion logic to each match.
-        // ReSharper disable once UnusedVariable
-        var result = filePathRegex.Replace(currLine, match => {
-            var filePath = match.Groups["path"].Value;
-            //Console.WriteLine($"filePath={filePath}");
-            _filePath = filePath;
-            var line_num = match.Groups["line_num"].Value;
-            //line_num = line_num.Replace(":line ", "");
-            _lineNumber = line_num;
-            try {
-                // The System.Uri constructor handles the specific formatting requirements for file URIs,
-                // including correct handling of slashes and special characters like spaces.
-                var fileUri = new Uri(filePath);
-                // We use AbsoluteUri which correctly formats the scheme (file://) and path for a URL.
-                //Console.WriteLine($"line_num(3)={line_num}");
-                var result = $"in {fileUri.AbsoluteUri} : line {line_num}";
-                //Console.WriteLine($"result={result}");
-                return result;
-            }
-            catch (UriFormatException) {
-                // Fallback for paths that the Uri class might not handle correctly (e.g., highly unusual formats)
-                return match.Value;
-            }
-        });
+        if (currFrame != null)
+        {
+            _filePath = currFrame.GetFileName();
+            _lineNumber = currFrame.GetFileLineNumber().ToString();
+        }
+        //var filePathRegex =
+        //    new Regex(
+        //        @"(?<path>[a-zA-Z]:\\(?:[^<>:""/\\|?*]+\\)*[^<>:""/\\|?*]+):.+\s+(?<line_num>\d+)$",
+        //        RegexOptions.Multiline | RegexOptions.IgnoreCase);
+        //// Use a MatchEvaluator delegate for the replacement to apply the Uri conversion logic to each match.
+        //// ReSharper disable once UnusedVariable
+        //var result = filePathRegex.Replace(currLine, match => {
+        //    var filePath = match.Groups["path"].Value;
+        //    //Console.WriteLine($"filePath={filePath}");
+        //    _filePath = filePath;
+        //    var line_num = match.Groups["line_num"].Value;
+        //    //line_num = line_num.Replace(":line ", "");
+        //    _lineNumber = line_num;
+        //    try {
+        //        // The System.Uri constructor handles the specific formatting requirements for file URIs,
+        //        // including correct handling of slashes and special characters like spaces.
+        //        var fileUri = new Uri(filePath);
+        //        // We use AbsoluteUri which correctly formats the scheme (file://) and path for a URL.
+        //        //Console.WriteLine($"line_num(3)={line_num}");
+        //        var result = $"in {fileUri.AbsoluteUri} : line {line_num}";
+        //        //Console.WriteLine($"result={result}");
+        //        return result;
+        //    }
+        //    catch (UriFormatException) {
+        //        // Fallback for paths that the Uri class might not handle correctly (e.g., highly unusual formats)
+        //        return match.Value;
+        //    }
+        //});
         if (_filePath != null && File.Exists(_filePath)) {
             void DelayForEditorStart(Process? p, int msec = 200) {
                 if (p == null) return;
@@ -1338,14 +1347,14 @@ public class
         Log($"⁅markup⁆[red]{MarkupSafeString(CurrentSourceCodeLine())}[/]");
         if (hint != null) {
             Log(hint, "HINT MESSAGE (REGARDING THIS FAILURE)");
-            _ViewInFavoriteEditor(CurrentSourceCodeLine(/*true*/));
+            _ViewInFavoriteEditor(CuurentStackFrame());
             Message(hint, "HINT MESSAGE (REGARDING THIS FAILURE)", msgBoxFlag: /*MB_ICONERROR*/ 0x00000010);
         }
         WriteLine(
             $"⁅markup⁆[blue]{MarkupSafeString(ReplacePathsWithUrls(ex.ToString()))}[/]",
             "⁅markup⁆[blue]EXCEPTION[/]");
         Log($"⁅markup⁆[red][[!! TERMINATING PROGRAM ON FAILURE...WITH EXIT CODE {exitCode} !!]][/]");
-        _ViewInFavoriteEditor(CurrentSourceCodeLine(/*true*/));
+        _ViewInFavoriteEditor(CuurentStackFrame());
         Message($"!! TERMINATING PROGRAM ON FAILURE...WITH EXIT CODE {exitCode} !!",
             msgBoxFlag: /*MB_ICONERROR*/ 0x00000010);
         Environment.Exit(exitCode);
