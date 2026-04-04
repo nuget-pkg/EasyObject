@@ -164,7 +164,7 @@ public class
     public static EasyObjectType @string => EasyObjectType.@string;
     public static EasyObjectType boolean => EasyObjectType.boolean;
     public static EasyObjectType @object => EasyObjectType.@object;
-    public static EasyObjectType array => EasyObjectType.array;
+    public static EasyObjectType @array => EasyObjectType.array;
     public static EasyObjectType @null => EasyObjectType.@null;
     public bool IsString => TypeValue == EasyObjectType.@string;
     public bool IsNumber => TypeValue == EasyObjectType.number;
