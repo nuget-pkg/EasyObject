@@ -167,10 +167,10 @@ public class
     public static EasyObjectType @array => EasyObjectType.array;
     public static EasyObjectType @null => EasyObjectType.@null;
     public bool IsString => TypeValue == EasyObjectType.@string;
-    public bool IsNumber => TypeValue == EasyObjectType.number;
-    public bool IsBoolean => TypeValue == EasyObjectType.boolean;
+    public bool IsNumber => TypeValue == EasyObjectType.@number;
+    public bool IsBoolean => TypeValue == EasyObjectType.@boolean;
     public bool IsObject => TypeValue == EasyObjectType.@object;
-    public bool IsArray => TypeValue == EasyObjectType.array;
+    public bool IsArray => TypeValue == EasyObjectType.@array;
     public bool IsNull => TypeValue == EasyObjectType.@null;
     private static object? ExposeInternalObjectHelper(object? x) {
         while (x is EasyObject) x = ((EasyObject)x).RealData;
