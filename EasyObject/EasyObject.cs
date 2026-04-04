@@ -12,7 +12,7 @@ using System.Text.RegularExpressions;
 using NUnit.Framework;
 #if USE_SPECTRE_CONSOLE
 using Spectre.Console;
-using Spectre.Console.Rendering;
+//using Spectre.Console.Rendering;
 #endif
 
 // ReSharper disable InconsistentNaming
