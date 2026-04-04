@@ -127,9 +127,8 @@ public class
         ShowLineNumbers = SHOW_LINE_NUMBER_DEFAUTLT; /**/
         SetupConsoleEncoding(Encoding.UTF8); /**/
     }
-    public static void SetupConsoleEncoding(Encoding? encoding = null)
-    {
-        if (encoding == null) encoding = Encoding.UTF8;
+    public static void SetupConsoleEncoding(Encoding? encoding = null) {
+        encoding ??= Encoding.UTF8;
         try
         {
             Console.OutputEncoding = encoding;
