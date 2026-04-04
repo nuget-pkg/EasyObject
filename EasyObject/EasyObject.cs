@@ -54,8 +54,9 @@ internal class EasyObjectConverter : IConvertParsedResult
             var result = new Dictionary<string, EasyObject>();
             foreach (var key in keys)
             {
-                var eo = new EasyObject();
-                eo.RealData = dict[key];
+                var eo = new EasyObject {
+                    RealData = dict[key]
+                };
                 result[key] = eo;
             }
             return result;
@@ -65,8 +66,9 @@ internal class EasyObjectConverter : IConvertParsedResult
             var result = new List<EasyObject>();
             foreach (var e in list)
             {
-                var eo = new EasyObject();
-                eo.RealData = e;
+                var eo = new EasyObject {
+                    RealData = e
+                };
                 result.Add(eo);
             }
             return result;
