@@ -1393,7 +1393,7 @@ public class
             //UseAnsiConsole = true;
             //ShowDetail = false;
             string? exe = null;
-            Process? p = null;
+            Process? p /*= null*/;
             if (HyperOperatingSystem.GetEnv("I_HATE_VSCODE") != "1")
             {
                 // [Visual Studio Code]
