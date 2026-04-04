@@ -444,7 +444,7 @@ public class
     private static string? _DecorateTitle(string? title) {
         if (title == null) return null;
         if (!UseAnsiConsole) title = title.Replace("⁅markup⁆", "");
-        if (!title.Contains("||◣") && !title.Contains("◥||") && !title.Contains("⁅🌐DUMP🌐⁆"))
+        if (!title.Contains("𝑷𝑨𝑺𝑺𝑬𝑫") && !title.Contains("⁅🌐DUMP🌐⁆"))
             title = $"✅❝𝑪𝒉𝒆𝒄𝒌：{title}❞✅";
         return title;
     }
@@ -522,6 +522,18 @@ public class
         bool removeSurrogatePair = false,
         bool dontShowLineNumbers = false
     ) {
+        string CurrentSourceCodeLine() {
+            // Author: ❝Gemini (Google Large Language Model)❞さん
+            // See: https://gemini.google.com/share/9377a3e5f18f
+            // 呼び出し元の情報を取得 (1つ前のスタックフレーム)
+            var st = new System.Diagnostics.StackTrace(true);
+            var frame = st.GetFrame(2); /**/ // 2つ前のスタックフレームを取得しているのは、Line()メソッド自体とその呼び出し元の両方をスキップするため
+            var file = frame?.GetFileName();
+            var line = frame?.GetFileLineNumber();
+            // PDB があれば、ファイル名と行番号がメッセージに乗る
+            string location = (file != null) ? $"at {file}:{line}" : "";
+            return $"{location}";
+        }
         title = _DecorateTitle(title);
         _EnsureCursorLeft();
         hideKeys ??= new List<string>();
@@ -568,6 +580,19 @@ public class
         List<string>? hideKeys = null,
         bool removeSurrogatePair = false
     ) {
+        string CurrentSourceCodeLine()
+        {
+            // Author: ❝Gemini (Google Large Language Model)❞さん
+            // See: https://gemini.google.com/share/9377a3e5f18f
+            // 呼び出し元の情報を取得 (1つ前のスタックフレーム)
+            var st = new System.Diagnostics.StackTrace(true);
+            var frame = st.GetFrame(2); /**/ // 2つ前のスタックフレームを取得しているのは、Line()メソッド自体とその呼び出し元の両方をスキップするため
+            var file = frame?.GetFileName();
+            var line = frame?.GetFileLineNumber();
+            // PDB があれば、ファイル名と行番号がメッセージに乗る
+            string location = (file != null) ? $"at {file}:{line}" : "";
+            return $"{location}";
+        }
         if (!DebugOutput) return;
         title = _DecorateTitle(title);
         _EnsureCursorLeft();
@@ -964,25 +989,25 @@ public class
         }
         return lines;
     }
-    public static string CurrentSourceCodeLine(bool rawString = false, bool summaryOnly = false) {
-        var st = new StackTrace(true);
-        var trace = st.ToString();
-        var lines = TextToLines(trace);
-        if (lines.Count == 0) return "[!! UNKNOWN SOURCE CODE LINE !!]";
-        string? lastLine = null;
-        for (var i = lines.Count - 1; i >= 0; i--) {
-            var line = lines[i];
-            var m = HyperOperatingSystem.FindFirstMatch(line, " ([0-9]+)$");
-            if (m != null) {
-                if (summaryOnly) return $"{m[1]}行目";
-                lastLine = line;
-                break;
-            }
-        }
-        if (lastLine == null) return "!! LINE INFO NOT FOUND !!";
-        if (rawString) return lastLine.Trim();
-        return ReplacePathsWithUrls(lastLine).Trim();
-    }
+    //public static string CurrentSourceCodeLine(bool rawString = false, bool summaryOnly = false) {
+    //    var st = new StackTrace(true);
+    //    var trace = st.ToString();
+    //    var lines = TextToLines(trace);
+    //    if (lines.Count == 0) return "[!! UNKNOWN SOURCE CODE LINE !!]";
+    //    string? lastLine = null;
+    //    for (var i = lines.Count - 1; i >= 0; i--) {
+    //        var line = lines[i];
+    //        var m = HyperOperatingSystem.FindFirstMatch(line, " ([0-9]+)$");
+    //        if (m != null) {
+    //            if (summaryOnly) return $"{m[1]}行目";
+    //            lastLine = line;
+    //            break;
+    //        }
+    //    }
+    //    if (lastLine == null) return "!! LINE INFO NOT FOUND !!";
+    //    if (rawString) return lastLine.Trim();
+    //    return ReplacePathsWithUrls(lastLine).Trim();
+    //}
     public static string ReplacePathsWithUrls(string stackTrace) {
 #if true
         //return stackTrace;
@@ -1024,6 +1049,19 @@ public class
         return result;
     }
     public static void Abort(object? message = null, int exitCode = 1) {
+        string CurrentSourceCodeLine()
+        {
+            // Author: ❝Gemini (Google Large Language Model)❞さん
+            // See: https://gemini.google.com/share/9377a3e5f18f
+            // 呼び出し元の情報を取得 (1つ前のスタックフレーム)
+            var st = new System.Diagnostics.StackTrace(true);
+            var frame = st.GetFrame(2); /**/ // 2つ前のスタックフレームを取得しているのは、Line()メソッド自体とその呼び出し元の両方をスキップするため
+            var file = frame?.GetFileName();
+            var line = frame?.GetFileLineNumber();
+            // PDB があれば、ファイル名と行番号がメッセージに乗る
+            string location = (file != null) ? $"at {file}:{line}" : "";
+            return $"{location}";
+        }
         ShowDetail = false;
         ShowLineNumbers = false;
         UseAnsiConsole = true;
@@ -1037,17 +1075,17 @@ public class
                 Console.Error.WriteLine(
                     exTrace
                 );
-                _ViewInFavoriteEditor(CurrentSourceCodeLine(true));
+                _ViewInFavoriteEditor(CurrentSourceCodeLine(/*true*/));
                 Message(exTrace, "EXCEPTION (FOR ABORTING PROGRAM)", msgBoxFlag: /*MB_ICONERROR*/ 0x00000010);
             }
             catch (Exception ex) {
                 Console.Error.WriteLine(ex.ToString());
-                _ViewInFavoriteEditor(CurrentSourceCodeLine(true));
+                _ViewInFavoriteEditor(CurrentSourceCodeLine(/*true*/));
                 Message(ex.ToString(), "EXCEPTION (FOR ABORTING PROGRAM)", msgBoxFlag: /*MB_ICONERROR*/ 0x00000010);
             }
             //UseAnsiConsole = true;
             Log($"⁅markup⁆[red][[!! ABORTING...WITH EXIT CODE {exitCode} !!]][/]");
-            _ViewInFavoriteEditor(CurrentSourceCodeLine(true));
+            _ViewInFavoriteEditor(CurrentSourceCodeLine(/*true*/));
             Message(new { message, exitCode }, $"!! ABORTING...WITH EXIT CODE {exitCode} !!",
                 msgBoxFlag: /*MB_ICONERROR*/ 0x00000010);
             Environment.Exit(exitCode);
@@ -1062,13 +1100,26 @@ public class
         Log(trace, "STACK TRACE");
         //UseAnsiConsole = true;
         Log($"⁅markup⁆[red][[!! ABORTING...WITH EXIT CODE {exitCode} !!]][/]");
-        _ViewInFavoriteEditor(CurrentSourceCodeLine(true));
+        _ViewInFavoriteEditor(CurrentSourceCodeLine(/*true*/));
         Message(message, "||◣ABORT(UNTITLED)◥||", msgBoxFlag: /*MB_ICONERROR*/ 0x00000010);
         Environment.Exit(exitCode);
     }
     public static void Break(object? x = null, string? title = null) {
+        string CurrentSourceCodeLine()
+        {
+            // Author: ❝Gemini (Google Large Language Model)❞さん
+            // See: https://gemini.google.com/share/9377a3e5f18f
+            // 呼び出し元の情報を取得 (1つ前のスタックフレーム)
+            var st = new System.Diagnostics.StackTrace(true);
+            var frame = st.GetFrame(2); /**/ // 2つ前のスタックフレームを取得しているのは、Line()メソッド自体とその呼び出し元の両方をスキップするため
+            var file = frame?.GetFileName();
+            var line = frame?.GetFileLineNumber();
+            // PDB があれば、ファイル名と行番号がメッセージに乗る
+            string location = (file != null) ? $"at {file}:{line}" : "";
+            return $"{location}";
+        }
         if (title == null) title = "||◣BREAK(UNTITLED)◥||";
-        var currLine = CurrentSourceCodeLine(true);
+        var currLine = CurrentSourceCodeLine(/*true*/);
         var message = currLine.Trim();
         if (x != null) message += "\n" + ToPrintable(x);
         _ViewInFavoriteEditor(currLine);
@@ -1255,6 +1306,19 @@ public class
         }
     }
     public static void TerminateOnFailure(Exception ex, object? hint, int exitCode = 1) {
+        string CurrentSourceCodeLine()
+        {
+            // Author: ❝Gemini (Google Large Language Model)❞さん
+            // See: https://gemini.google.com/share/9377a3e5f18f
+            // 呼び出し元の情報を取得 (1つ前のスタックフレーム)
+            var st = new System.Diagnostics.StackTrace(true);
+            var frame = st.GetFrame(2); /**/ // 2つ前のスタックフレームを取得しているのは、Line()メソッド自体とその呼び出し元の両方をスキップするため
+            var file = frame?.GetFileName();
+            var line = frame?.GetFileLineNumber();
+            // PDB があれば、ファイル名と行番号がメッセージに乗る
+            string location = (file != null) ? $"at {file}:{line}" : "";
+            return $"{location}";
+        }
         ShowDetail = false;
         ShowLineNumbers = false;
         UseAnsiConsole = true;
@@ -1262,14 +1326,14 @@ public class
         Log($"⁅markup⁆[red]{MarkupSafeString(CurrentSourceCodeLine())}[/]");
         if (hint != null) {
             Log(hint, "HINT MESSAGE (REGARDING THIS FAILURE)");
-            _ViewInFavoriteEditor(CurrentSourceCodeLine(true));
+            _ViewInFavoriteEditor(CurrentSourceCodeLine(/*true*/));
             Message(hint, "HINT MESSAGE (REGARDING THIS FAILURE)", msgBoxFlag: /*MB_ICONERROR*/ 0x00000010);
         }
         WriteLine(
             $"⁅markup⁆[blue]{MarkupSafeString(ReplacePathsWithUrls(ex.ToString()))}[/]",
             "⁅markup⁆[blue]EXCEPTION[/]");
         Log($"⁅markup⁆[red][[!! TERMINATING PROGRAM ON FAILURE...WITH EXIT CODE {exitCode} !!]][/]");
-        _ViewInFavoriteEditor(CurrentSourceCodeLine(true));
+        _ViewInFavoriteEditor(CurrentSourceCodeLine(/*true*/));
         Message($"!! TERMINATING PROGRAM ON FAILURE...WITH EXIT CODE {exitCode} !!",
             msgBoxFlag: /*MB_ICONERROR*/ 0x00000010);
         Environment.Exit(exitCode);
@@ -1372,9 +1436,23 @@ public class
         }
     }
     public static void Line() {
+        string CurrentSourceCodeLine()
+        {
+            // Author: ❝Gemini (Google Large Language Model)❞さん
+            // See: https://gemini.google.com/share/9377a3e5f18f
+            // 呼び出し元の情報を取得 (1つ前のスタックフレーム)
+            var st = new System.Diagnostics.StackTrace(true);
+            var frame = st.GetFrame(2); /**/ // 2つ前のスタックフレームを取得しているのは、Line()メソッド自体とその呼び出し元の両方をスキップするため
+            var file = frame?.GetFileName();
+            var line = frame?.GetFileLineNumber();
+            // PDB があれば、ファイル名と行番号がメッセージに乗る
+            string location = (file != null) ? $"at {file}:{line}" : "";
+            return $"{location}";
+        }
+        // Serif Bold Italic: ⁅𝑶𝑹𝑰𝑮𝑰𝑵𝑨𝑳 𝑨𝑺𝑪𝑰𝑰 𝑪𝑶𝑫𝑬⁆ 𝑨𝑩𝑪𝑫𝑬𝑭𝑮𝑯𝑰𝑱𝑲𝑳𝑴𝑵𝑶𝑷𝑸𝑹𝑺𝑻𝑼𝑽𝑾𝑿𝒀𝒁 𝒂𝒃𝒄𝒅𝒆𝒇𝒈𝒉𝒊𝒋𝒌𝒍𝒎𝒏𝒐𝒑𝒒𝒓𝒔𝒕𝒖𝒗𝒘𝒙𝒚𝒛 0123456789
         var showLineNumbers = ShowLineNumbers;
         ShowLineNumbers = true;
-        Echo(CurrentSourceCodeLine(summaryOnly: true), "||◣LINE()◥||");
+        Echo(CurrentSourceCodeLine(), "⁅markup⁆[white]✅❝▶▸▶𝑷𝑨𝑺𝑺𝑬𝑫 ﴾𝑪𝑶𝑫𝑬 𝑳𝑰𝑵𝑬﴿▸▶▶❞✅[/]");
         ShowLineNumbers = showLineNumbers;
     }
     private static class NativeMethods
