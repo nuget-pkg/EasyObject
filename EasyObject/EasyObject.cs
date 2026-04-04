@@ -15,6 +15,8 @@ using Spectre.Console;
 //using Spectre.Console.Rendering;
 // ReSharper disable ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
 // ReSharper disable EmptyStatement
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable ForCanBeConvertedToForeach
 #endif
 
 // ReSharper disable InconsistentNaming
