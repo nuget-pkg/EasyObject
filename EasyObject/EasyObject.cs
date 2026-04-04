@@ -63,7 +63,7 @@ internal class EasyObjectConverter : IConvertParsedResult
         if (x is List<object> list)
         {
             var result = new List<EasyObject>();
-            foreach (var e in list!)
+            foreach (var e in list)
             {
                 var eo = new EasyObject();
                 eo.RealData = e;
