@@ -13,6 +13,8 @@ using NUnit.Framework;
 #if USE_SPECTRE_CONSOLE
 using Spectre.Console;
 //using Spectre.Console.Rendering;
+// ReSharper disable ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
+// ReSharper disable EmptyStatement
 #endif
 
 // ReSharper disable InconsistentNaming
@@ -1338,6 +1340,7 @@ public class
                 @"(?<path>[a-zA-Z]:\\(?:[^<>:""/\\|?*]+\\)*[^<>:""/\\|?*]+):.+\s+(?<line_num>\d+)$",
                 RegexOptions.Multiline | RegexOptions.IgnoreCase);
         // Use a MatchEvaluator delegate for the replacement to apply the Uri conversion logic to each match.
+        // ReSharper disable once UnusedVariable
         var result = filePathRegex.Replace(currLine, match =>
         {
             var filePath = match.Groups["path"].Value;
