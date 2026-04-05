@@ -17,6 +17,7 @@ public class DynamicTest
     [Test]
     public void Test01()
     {
+        Pass();
         ShowDetail = true;
         EasyObject eo = "abc";
         Echo(eo, "eo");
@@ -36,5 +37,6 @@ public class DynamicTest
             Assert.That(ss, Is.EqualTo("AAA"));
             Assert.That((string)(e.Value.Dynamic), Is.EqualTo("AAA"));
         }
+        Pass();
     }
 }

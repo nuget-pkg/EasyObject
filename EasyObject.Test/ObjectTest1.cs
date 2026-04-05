@@ -17,10 +17,12 @@ public class ObjectTest
     [Test]
     public void Test01()
     {
+        Pass();
         ShowDetail = true;
         EasyObject eo = EasyObject.FromObject(new { a=1, b=2 });
         Echo(eo, "eo");
         Assert.That(eo.ContainsKey("a"), Is.True);
         Assert.That(eo.ContainsKey("c"), Is.False);
+        Pass();
     }
 }

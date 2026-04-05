@@ -13,6 +13,7 @@ public class ToPrintableTest {
 
     [Test]
     public void Test01() {
+        Pass();
         ShowDetail = true;
         var @do = FromObject(new { a = 123, b = "abc" }).ExportToDynamicObject();
         Echo(@do, compact: true);
@@ -20,5 +21,6 @@ public class ToPrintableTest {
         Assert.That(@printable, Is.EqualTo("<System.Dynamic.ExpandoObject> {\n  a: 123,\n  b: \"abc\"\n}"));
         @printable = ToPrintable(@do, compact: true);
         Assert.That(@printable, Is.EqualTo("<System.Dynamic.ExpandoObject> {a:123,b:\"abc\"}"));
+        Pass();
     }
 }

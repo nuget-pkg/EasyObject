@@ -16,12 +16,15 @@ public class JSON読み出しテスト
 
     protected string RenderJson(EasyObject eo)
     {
+        Pass();
         return eo.ToJson(indent: false, sortKeys: true);
+        Pass();
     }
 
     [Test]
     public void 単純な辞書()
     {
+        Pass();
         ShowDetail = true;
         var eo = FromJson("""{ a: 123, b: "abc" }""");
         Assert.That(RenderJson(eo), Is.EqualTo("""
@@ -40,10 +43,12 @@ public class JSON読み出しテスト
         Assert.That(RenderJson(eo), Is.EqualTo("""
             [null,null,111]
             """));
+        Pass();
     }
     [Test]
     public void 単純なリスト()
     {
+        Pass();
         ShowDetail = true;
         var eo = FromJson("""[123, "abc"]""");
         Assert.That(RenderJson(eo), Is.EqualTo("""
@@ -57,5 +62,6 @@ public class JSON読み出しテスト
         Assert.That(RenderJson(eo), Is.EqualTo("""
             {"c":777}
             """));
+        Pass();
     }
 }

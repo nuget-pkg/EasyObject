@@ -28,11 +28,12 @@ public class Program {
         // ReSharper disable HeuristicUnreachableCode
         try {
             //SetupConsoleEncoding(); /* Default is UTF8: (Since 2026.04.02) */
-            //ShowLineNumbers = false;
-            ShowDetail = true;
+            //ShowDetail = true;
             //EmojiCompatibleEnvironment = true; /* !! NEW FEATURE !! */
             UseAnsiConsole = true;
             DebugOutput = true;
+            Pass("⭕️ハロー©Pass()⭕️");
+            return; // !! EARLY RETURN TO TEST Pass() !!
             Log("⭕️ハロー©⭕️");
             string? notBound = null;
             //ExpectBound(notBound, new { notBound });
@@ -469,7 +470,7 @@ public class Program {
             //
             DebugOutput = true;
             Debug("Hello Debug", "DEBUG TITLE");
-            Line();
+            Pass();
             //
             if (false) {
                 Abort();
@@ -494,6 +495,8 @@ public class Program {
                 });
             //
             if (false) throw new NotImplementedException();
+            //
+            Pass();
         }
         catch (Exception ex) {
             Abort(ex); // !! throw new NotImplementedException(); GOES HERE !!

@@ -10,11 +10,11 @@ internal class AssertCapabilitiesTest {
         UseAnsiConsole = true;
         Echo("abc", "def");
         Log(FullName(this));
-        //NUnitLog(TestContext.CurrentContext.Test.FullName);
     }
     [Test]
     public void Test901()
     {
+        Pass();
         ShowDetail = true;
         EasyObject eo = "abc";
         Echo(eo, "eo");
@@ -50,15 +50,17 @@ internal class AssertCapabilitiesTest {
         Log("pass-02");
         // /*⁅FAILS⁆*/ AssertIdentical(dict1, new { A = 11, B = 22, C = Null });
         //Log("pass-03");
+        Pass();
     }
     [Test]
     public void Test902()
     {
+        Pass();
         ShowDetail = true;
         DebugOutput = true;
-        Line();
+        Pass();
         EasyObject eo = NewArray("a", "b", "c");
-        Line();
+        Pass();
         Echo(eo, maxCount: 2, title: "1");
         //Line();
         //eo.Dump(maxCount: 2);
@@ -66,7 +68,8 @@ internal class AssertCapabilitiesTest {
         //EasyObject.Dump(eo, maxCount: 2);
         //Line();
         eo.Trim(maxCount: 2);
-        Line();
+        Pass();
         Echo(eo);
+        Pass();
     }
 }

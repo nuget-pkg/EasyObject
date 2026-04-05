@@ -17,16 +17,19 @@ public class Tests
     [Test]
     public void Test01()
     {
+        Pass();
         ShowDetail = true;
         var eo = EasyObject.FromObject(new { a = 123 });
         Echo(eo, "eo");
         Assert.That(eo.ToJson(), Is.EqualTo("""
             {"a":123}
             """));
+        Pass();
     }
     [Test]
     public void Test02()
     {
+        Pass();
         ShowDetail = true;
         var eo = EasyObject.FromObject("helloハロー©");
         Echo(eo, "eo");
@@ -38,10 +41,12 @@ public class Tests
         Assert.That(eo.ToJson(), Is.EqualTo("""
             "hello\u30CF\u30ED\u30FC\u00A9"
             """));
+        Pass();
     }
     [Test]
     public void Test03()
     {
+        Pass();
         ShowDetail = true;
 
         var ary = Null.Add(11).Add("abc");
@@ -126,10 +131,12 @@ public class Tests
         {
             Echo(e);
         }
+        Pass();
     }
     [Test]
     public void Test04()
     {
+        Pass();
         ShowDetail = true;
         EasyObject eo = new DateTime(0);
         Assert.That(eo.TypeValue, Is.EqualTo(EasyObject.@string));
@@ -157,10 +164,12 @@ public class Tests
         Assert.That(s, Is.EqualTo("""
             00:00:00.0001000
             """));
+        Pass();
     }
     [Test]
     public void Test05()
     {
+        Pass();
         ShowDetail = true;
         Echo(Null);
         Echo(DateTime.Now);
@@ -168,10 +177,12 @@ public class Tests
         Echo(FromObject(Null));
         Echo(FromObject(DateTime.Now));
         Echo(FromObject(new { a = 123 }));
+        Pass();
     }
     [Test]
     public void Test06()
     {
+        Pass();
         ShowDetail = true;
         var eo = EasyObject.FromJson("""
             { "a": 123 }
@@ -187,5 +198,6 @@ public class Tests
         Assert.That(eo.ToJson(), Is.EqualTo("""
             [11,22,"33"]
             """));
+        Pass();
     }
 }

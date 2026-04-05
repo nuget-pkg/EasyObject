@@ -22,6 +22,7 @@ public class JSON書き出しテスト
     [Test]
     public void 単純な辞書()
     {
+        Pass();
         ShowDetail = true;
         var eo = FromObject(new { a = 123, b = "abc" });
         Assert.That(RenderJson(eo), Is.EqualTo("""
@@ -40,10 +41,12 @@ public class JSON書き出しテスト
         Assert.That(RenderJson(eo), Is.EqualTo("""
             [null,null,111]
             """));
+        Pass();
     }
     [Test]
     public void 単純なリスト()
     {
+        Pass();
         ShowDetail = true;
         var eo = FromObject(new object[] { 123, "abc" });
         Assert.That(RenderJson(eo), Is.EqualTo("""
@@ -57,5 +60,6 @@ public class JSON書き出しテスト
         Assert.That(RenderJson(eo), Is.EqualTo("""
             {"c":777}
             """));
+        Pass();
     }
 }

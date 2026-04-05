@@ -106,19 +106,21 @@ public class
             StandardOutput = new EasyConsole(Console.Out);
             StandardError = new EasyConsole(Console.Error);
 #endif
+            Console.Error.WriteLine();
+            Console.Error.WriteLine($"✅❝▶▶▶CONSOLE ENCODING SET TO {encoding.WebName}▶▶▶❞✅");
         }
         catch {
             // Ignore exceptions related to console encoding
         }
     }
-    private static void _EnsureCursorLeft() {
-        try {
-            Console.CursorLeft = 0;
-        }
-        catch
-        {
-        }
-    }
+    //private static void _EnsureCursorLeft() {
+    //    try {
+    //        Console.CursorLeft = 0;
+    //    }
+    //    catch
+    //    {
+    //    }
+    //}
 #if MINIMAL
     public MiniEasyObject()
 #else
@@ -451,8 +453,10 @@ public class
             ////title = UniversalTransformer.ReplaceSurrogatePair(title, replaceSurrogate: "@");
             return title;
         }
-        if (!UseAnsiConsole) title = title.Replace("⁅markup⁆", "");
-        if (!title.Contains("PASSED ﴾CODE LINE﴿") && !title.Contains("⁅🌐DUMP🌐⁆") &&
+        ////if (!UseAnsiConsole) title = title.Replace("⁅markup⁆", "");
+        if (!title.Contains("⁅markup⁆")
+            &&!title.Contains("PASSED ﴾CODE LINE﴿")
+            && !title.Contains("⁅🌐DUMP🌐⁆") &&
             !title.Contains("﴾FROM PopupStackTrace()﴿"))
             title = $"✅❝𝑪𝒉𝒆𝒄𝒌：{title}❞✅";
         if (!title.Contains("⁅markup⁆")) {
@@ -496,7 +500,7 @@ public class
         bool removeSurrogatePair = false
     ) {
         title = _DecorateTitle(title);
-        _EnsureCursorLeft();
+        ////_EnsureCursorLeft();
         hideKeys ??= new List<string>();
         if (maxDepth > 0 || hideKeys.Count > 0) {
             var eo = FromObject(x);
@@ -575,11 +579,11 @@ public class
             var file = frame?.GetFileName();
             var line = frame?.GetFileLineNumber();
             // PDB があれば、ファイル名と行番号がメッセージに乗る
-            string location = (file != null) ? $"at {file}:{line}" : "";
+            string location = (file != null) ? $"at {ToClickableUri(file)} : {line}" : "";
             return $"{location}";
         }
         title = _DecorateTitle(title);
-        _EnsureCursorLeft();
+        ////_EnsureCursorLeft();
         hideKeys ??= new List<string>();
         if (maxDepth > 0 || hideKeys.Count > 0) {
             var eo = FromObject(x);
@@ -639,12 +643,12 @@ public class
             var file = frame?.GetFileName();
             var line = frame?.GetFileLineNumber();
             // PDB があれば、ファイル名と行番号がメッセージに乗る
-            string location = (file != null) ? $"at {file}:{line}" : "";
+            string location = (file != null) ? $"at {ToClickableUri(file)} : {line}" : "";
             return $"{location}";
         }
         if (!DebugOutput) return;
         title = _DecorateTitle(title);
-        _EnsureCursorLeft();
+        ////_EnsureCursorLeft();
         hideKeys ??= new List<string>();
         if (maxDepth > 0 || hideKeys.Count > 0) {
             var eo = FromObject(x);
@@ -713,7 +717,7 @@ public class
     ) {
         if (title != null) title = $"⁅markup⁆[yellow]⁅🌐DUMP🌐⁆{MarkupSafeString(title)}[/]";
         title = _DecorateTitle(title);
-        _EnsureCursorLeft();
+        ////_EnsureCursorLeft();
         Echo(
             x,
             title,
@@ -869,7 +873,7 @@ public class
         List<string>? hideKeys = null,
         bool always = true
     ) {
-        Line();
+        Pass();
         return EasyObjectEditor.Clone(this, maxDepth, maxCount, hideKeys, always);
     }
     public EasyObject? Shift() {
@@ -1094,7 +1098,7 @@ public class
             var file = frame?.GetFileName();
             var line = frame?.GetFileLineNumber();
             // PDB があれば、ファイル名と行番号がメッセージに乗る
-            string location = (file != null) ? $"at {file}:{line}" : "";
+            string location = (file != null) ? $"at {ToClickableUri(file)} : {line}" : "";
             return $"{location}";
         }
         ShowDetail = false;
@@ -1156,7 +1160,7 @@ public class
             var file = frame?.GetFileName();
             var line = frame?.GetFileLineNumber();
             // PDB があれば、ファイル名と行番号がメッセージに乗る
-            string location = (file != null) ? $"at {file}:{line}" : "";
+            string location = (file != null) ? $"at {ToClickableUri(file)} : {line}" : "";
             return $"{location}";
         }
         // Serif Bold Italic: ⁅𝑶𝑹𝑰𝑮𝑰𝑵𝑨𝑳 𝑨𝑺𝑪𝑰𝑰 𝑪𝑶𝑫𝑬⁆ 𝑨 𝑩 𝑪 𝑫 𝑬 𝑭 𝑮 𝑯 𝑰 𝑱 𝑲 𝑳 𝑴 𝑵 𝑶 𝑷 𝑸 𝑹 𝑺 𝑻 𝑼 𝑽 𝑾 𝑿 𝒀 𝒁 𝒂𝒃𝒄𝒅𝒆𝒇𝒈𝒉𝒊𝒋𝒌𝒍𝒎𝒏𝒐𝒑𝒒𝒓𝒔𝒕𝒖𝒗𝒘𝒙𝒚𝒛 0123456789
@@ -1185,7 +1189,7 @@ public class
             var file = frame?.GetFileName();
             var line = frame?.GetFileLineNumber();
             // PDB があれば、ファイル名と行番号がメッセージに乗る
-            string location = (file != null) ? $"at {file}:{line}" : "";
+            string location = (file != null) ? $"at {ToClickableUri(file)} : {line}" : "";
             return $"{location}";
         }
         if (title == null) title = "||◣BREAK(UNTITLED)◥||";
@@ -1218,7 +1222,7 @@ public class
             var file = frame?.GetFileName();
             var line = frame?.GetFileLineNumber();
             // PDB があれば、ファイル名と行番号がメッセージに乗る
-            string location = (file != null) ? $"at {file}:{line}" : "";
+            string location = (file != null) ? $"at {ToClickableUri(file)} : {line}" : "";
             return $"{location}";
         }
         ShowDetail = false;
@@ -1260,7 +1264,7 @@ public class
             var file = frame?.GetFileName();
             var line = frame?.GetFileLineNumber();
             // PDB があれば、ファイル名と行番号がメッセージに乗る
-            string location = (file != null) ? $"at {file}:{line}" : "";
+            string location = (file != null) ? $"at {ToClickableUri(file)} : {line}" : "";
             return $"{location}";
         }
         try {
@@ -1292,7 +1296,7 @@ public class
             var file = frame?.GetFileName();
             var line = frame?.GetFileLineNumber();
             // PDB があれば、ファイル名と行番号がメッセージに乗る
-            string location = (file != null) ? $"at {file}:{line}" : "";
+            string location = (file != null) ? $"at {ToClickableUri(file)} : {line}" : "";
             return $"{location}";
         }
         try {
@@ -1324,7 +1328,7 @@ public class
             var file = frame?.GetFileName();
             var line = frame?.GetFileLineNumber();
             // PDB があれば、ファイル名と行番号がメッセージに乗る
-            string location = (file != null) ? $"at {file}:{line}" : "";
+            string location = (file != null) ? $"at {ToClickableUri(file)} : {line}" : "";
             return $"{location}";
         }
         try {
@@ -1353,7 +1357,7 @@ public class
             var file = frame?.GetFileName();
             var line = frame?.GetFileLineNumber();
             // PDB があれば、ファイル名と行番号がメッセージに乗る
-            string location = (file != null) ? $"at {file}:{line}" : "";
+            string location = (file != null) ? $"at {ToClickableUri(file)} : {line}" : "";
             return $"{location}";
         }
         try {
@@ -1385,7 +1389,7 @@ public class
             var file = frame?.GetFileName();
             var line = frame?.GetFileLineNumber();
             // PDB があれば、ファイル名と行番号がメッセージに乗る
-            string location = (file != null) ? $"at {file}:{line}" : "";
+            string location = (file != null) ? $"at {ToClickableUri(file)} : {line}" : "";
             return $"{location}";
         }
         try {
@@ -1414,7 +1418,7 @@ public class
             var file = frame?.GetFileName();
             var line = frame?.GetFileLineNumber();
             // PDB があれば、ファイル名と行番号がメッセージに乗る
-            string location = (file != null) ? $"at {file}:{line}" : "";
+            string location = (file != null) ? $"at {ToClickableUri(file)} : {line}" : "";
             return $"{location}";
         }
         try {
@@ -1443,7 +1447,7 @@ public class
             var file = frame?.GetFileName();
             var line = frame?.GetFileLineNumber();
             // PDB があれば、ファイル名と行番号がメッセージに乗る
-            string location = (file != null) ? $"at {file}:{line}" : "";
+            string location = (file != null) ? $"at {ToClickableUri(file)} : {line}" : "";
             return $"{location}";
         }
         try {
@@ -1472,7 +1476,7 @@ public class
             var file = frame?.GetFileName();
             var line = frame?.GetFileLineNumber();
             // PDB があれば、ファイル名と行番号がメッセージに乗る
-            string location = (file != null) ? $"at {file}:{line}" : "";
+            string location = (file != null) ? $"at {ToClickableUri(file)} : {line}" : "";
             return $"{location}";
         }
         try {
@@ -1482,7 +1486,7 @@ public class
             TerminateOnFailure(ex, hint, exitCode);
         }
     }
-    public static void Line() {
+    public static void Pass(object? message = null) {
         var _StackTrace_ = new System.Diagnostics.StackTrace(true);
         StackFrame? CuurentStackFrame() {
             // Author: ❝Gemini (Google Large Language Model)❞さん
@@ -1498,14 +1502,22 @@ public class
             var file = frame?.GetFileName();
             var line = frame?.GetFileLineNumber();
             // PDB があれば、ファイル名と行番号がメッセージに乗る
-            string location = (file != null) ? $"at {file}:{line}" : "";
+            string location = (file != null) ? $"at {ToClickableUri(file)} : {line}" : "";
             return $"{location}";
         }
+        string testName = TestContext.CurrentContext.Test.Name;
         // Serif Bold Italic: ⁅𝑶𝑹𝑰𝑮𝑰𝑵𝑨𝑳 𝑨𝑺𝑪𝑰𝑰 𝑪𝑶𝑫𝑬⁆ 𝑨𝑩𝑪𝑫𝑬𝑭𝑮𝑯𝑰𝑱𝑲𝑳𝑴𝑵𝑶𝑷𝑸𝑹𝑺𝑻𝑼𝑽𝑾𝑿𝒀𝒁 𝒂𝒃𝒄𝒅𝒆𝒇𝒈𝒉𝒊𝒋𝒌𝒍𝒎𝒏𝒐𝒑𝒒𝒓𝒔𝒕𝒖𝒗𝒘𝒙𝒚𝒛 0123456789
-        var showLineNumbers = ShowLineNumbers;
-        ShowLineNumbers = true;
-        Echo(CurrentSourceCodeLine(), "⁅markup⁆[white]✅❝▶▶▶ PASSED ﴾CODE LINE﴿ ▶▶▶❞✅[/]");
-        ShowLineNumbers = showLineNumbers;
+        if (testName == "AdhocTestMethod")
+        {
+            if (message == null) message = "";
+            Echo(message, title: $"⁅markup⁆[cyan]✅❝▶▶▶ REACHED ﴾CODE LINE﴿ ▶▶▶❞✅ {MarkupSafeString(CurrentSourceCodeLine())}[/]");
+        }
+        else
+        {
+            if (message == null) message = "";
+            Echo(message,  $"⁅markup⁆[cyan]✅❝▶▶▶ REACHED ﴾TEST METHOD：{MarkupSafeString(TestContext.CurrentContext.Test.Name)}﴿ ▶▶▶❞✅ {MarkupSafeString(CurrentSourceCodeLine())}[/]");
+            var filePath = CuurentStackFrame()?.GetFileName();
+        }
     }
     private static class NativeMethods {
         [DllImport("user32.dll", CharSet = CharSet.Unicode)]

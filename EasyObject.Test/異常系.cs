@@ -22,11 +22,13 @@ public class 異常系
     [Test]
     public void Test01()
     {
+        Pass();
         ShowDetail = true;
         EasyObject eo = Null;
         Echo(eo);
         Assert.That(eo[2].IsNull, Is.True);
         var a = eo["a"];
         Assert.That(eo["a"].IsNull, Is.True);
+        Pass();
     }
 }
