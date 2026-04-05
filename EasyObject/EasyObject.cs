@@ -57,6 +57,7 @@ public class
     IImportFromCommonJson {
     public object? RealData /*= null*/;
     public static bool ____InternalDebugOutput____ = false;
+    public static bool EmojiCompatibleEnvironment = false;
     //public static readonly IParseJson DefaultJsonParser = new CSharpEasyLanguageHandler(true);
     public static readonly IParseJson DefaultJsonParser = new NewtonsoftJsonHandler();
     public static IParseJson? JsonParser /*= null*/;
@@ -446,6 +447,10 @@ public class
     }
     private static string? _DecorateTitle(string? title) {
         if (title == null) return null;
+        if (!EmojiCompatibleEnvironment) {
+            ////title = UniversalTransformer.ReplaceSurrogatePair(title, replaceSurrogate: "@");
+            return title;
+        }
         title = UniversalTransformer.GeminiSuperSerifBoldItalicTransform(title); /* !! MY NEW SPECIAL WEAPON !!*/
         if (!UseAnsiConsole) title = title.Replace("⁅markup⁆", "");
         if (!title.Contains("𝑷𝑨𝑺𝑺𝑬𝑫") && !title.Contains("⁅🌐DUMP🌐⁆") &&

@@ -2,34 +2,33 @@
 using System.IO;
 using Spectre.Console;
 using Spectre.Console.Rendering;
+using Universal;
+// ReSharper disable All
 namespace Global;
-
 public class EasyConsole //: IAnsiConsole
 {
-    public EasyConsole(TextWriter writer)
-    {
+    public EasyConsole(TextWriter writer) {
         _writer = writer;
-        _ansiConsole = AnsiConsole.Create(new AnsiConsoleSettings
-        {
+        _ansiConsole = AnsiConsole.Create(new AnsiConsoleSettings {
             Out = new AnsiConsoleOutput(writer)
         });
     }
     public TextWriter _writer { get; set; }
     public IAnsiConsole _ansiConsole { get; }
-    public static string MarkupSafeString(string str)
-    {
+    public static string MarkupSafeString(string str) {
 #if USE_SPECTRE_CONSOLE
         return Markup.Escape(str);
 #else
         return str;
 #endif
     }
-    public void Write(IRenderable renderable)
-    {
+    public void Write(IRenderable renderable) {
         _ansiConsole.Write(renderable);
     }
-    public void Render(string s)
-    {
+    public void Render(string s) {
+        if (!EasyObject.EmojiCompatibleEnvironment) {
+            s = UniversalTransformer.ReplaceSurrogatePair(s, "❗");
+        }
 #if !USE_SPECTRE_CONSOLE
         this._writer.WriteLine(s);
 #else
@@ -42,8 +41,10 @@ public class EasyConsole //: IAnsiConsole
         }
 #endif
     }
-    public void RenderLine(string s = "")
-    {
+    public void RenderLine(string s = "") {
+        if (!EasyObject.EmojiCompatibleEnvironment) {
+            s = UniversalTransformer.ReplaceSurrogatePair(s, "❗");
+        }
 #if !USE_SPECTRE_CONSOLE
         this._writer.Write(s);
 #else
@@ -56,16 +57,19 @@ public class EasyConsole //: IAnsiConsole
         }
 #endif
     }
-    public bool IsMarkupString(string str)
-    {
+    public bool IsMarkupString(string str) {
         return str.Contains("⁅markup⁆");
     }
-    public void Write(string s)
-    {
+    public void Write(string s) {
+        if (!EasyObject.EmojiCompatibleEnvironment) {
+            s = UniversalTransformer.ReplaceSurrogatePair(s, "❗");
+        }
         _writer.Write(s);
     }
-    public void WriteLine(string s)
-    {
+    public void WriteLine(string s) {
+        if (!EasyObject.EmojiCompatibleEnvironment) {
+            s = UniversalTransformer.ReplaceSurrogatePair(s, "❗");
+        }
         _writer.WriteLine(s);
     }
 }
