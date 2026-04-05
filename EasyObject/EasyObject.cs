@@ -455,7 +455,9 @@ public class
         if (!title.Contains("PASSED ﴾CODE LINE﴿") && !title.Contains("⁅🌐DUMP🌐⁆") &&
             !title.Contains("﴾FROM PopupStackTrace()﴿"))
             title = $"✅❝𝑪𝒉𝒆𝒄𝒌：{title}❞✅";
-        title = UniversalTransformer.GeminiSuperSerifBoldItalicTransform(title); /* !! MY NEW SPECIAL WEAPON !!*/
+        if (!title.Contains("⁅markup⁆")) {
+            title = UniversalTransformer.GeminiSuperSerifBoldItalicTransform(title); /* !! MY NEW SPECIAL WEAPON !!*/
+        }
         return title;
     }
     public static void Write(
