@@ -1486,7 +1486,7 @@ public class
             TerminateOnFailure(ex, hint, exitCode);
         }
     }
-    public static void Pass(object? message = null) {
+    public static void Pass(/*object? message = null*/) {
         var _StackTrace_ = new System.Diagnostics.StackTrace(true);
         StackFrame? CuurentStackFrame() {
             // Author: ❝Gemini (Google Large Language Model)❞さん
@@ -1507,16 +1507,20 @@ public class
         }
         string testName = TestContext.CurrentContext.Test.Name;
         // Serif Bold Italic: ⁅𝑶𝑹𝑰𝑮𝑰𝑵𝑨𝑳 𝑨𝑺𝑪𝑰𝑰 𝑪𝑶𝑫𝑬⁆ 𝑨𝑩𝑪𝑫𝑬𝑭𝑮𝑯𝑰𝑱𝑲𝑳𝑴𝑵𝑶𝑷𝑸𝑹𝑺𝑻𝑼𝑽𝑾𝑿𝒀𝒁 𝒂𝒃𝒄𝒅𝒆𝒇𝒈𝒉𝒊𝒋𝒌𝒍𝒎𝒏𝒐𝒑𝒒𝒓𝒔𝒕𝒖𝒗𝒘𝒙𝒚𝒛 0123456789
+        var filePath = CuurentStackFrame()?.GetFileName();
+        if (filePath == null) filePath = "UNKNOWN FILE"; else filePath = HyperOperatingSystem.GetBaseName(filePath, strongAlgorithm: true);
+        var lineNum = CuurentStackFrame()?.GetFileLineNumber();
+        if (lineNum == null) lineNum = 0;
+
         if (testName == "AdhocTestMethod")
         {
-            if (message == null) message = "";
-            Echo(message, title: $"⁅markup⁆[cyan]✅❝▶▶▶ REACHED ﴾CODE LINE﴿ ▶▶▶❞✅ {MarkupSafeString(CurrentSourceCodeLine())}[/]");
+            //if (message == null) message = "";
+            Echo(CurrentSourceCodeLine(), title: $"⁅markup⁆[cyan]✅❝▶▶▶ REACHED ﴾ {filePath} : {lineNum}﴿ ▶▶▶❞✅[/]");
         }
         else
         {
-            if (message == null) message = "";
-            Echo(message,  $"⁅markup⁆[cyan]✅❝▶▶▶ REACHED ﴾TEST METHOD：{MarkupSafeString(TestContext.CurrentContext.Test.Name)}﴿ ▶▶▶❞✅ {MarkupSafeString(CurrentSourceCodeLine())}[/]");
-            var filePath = CuurentStackFrame()?.GetFileName();
+            //if (message == null) message = "";
+            Echo(CurrentSourceCodeLine(), title: $"✅❝▶▶▶ REACHED ﴾{filePath} # {testName} : {lineNum}﴿ ▶▶▶❞✅");
         }
     }
     private static class NativeMethods {

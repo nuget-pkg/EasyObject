@@ -5,8 +5,8 @@
         <TargetFrameworks>net462</TargetFrameworks>
         <ImplicitUsings>disable</ImplicitUsings>
         <Nullable>disable</Nullable>
-
-        <IsPackable>false</IsPackable>
+		<NoWarn>CS0162</NoWarn>
+		<IsPackable>false</IsPackable>
         <IsTestProject>true</IsTestProject>
     </PropertyGroup>
 

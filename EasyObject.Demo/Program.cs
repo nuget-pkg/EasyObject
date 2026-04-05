@@ -32,7 +32,7 @@ public class Program {
             //EmojiCompatibleEnvironment = true; /* !! NEW FEATURE !! */
             UseAnsiConsole = true;
             DebugOutput = true;
-            Pass("⭕️ハロー©Pass()⭕️");
+            Pass();
             return; // !! EARLY RETURN TO TEST Pass() !!
             Log("⭕️ハロー©⭕️");
             string? notBound = null;
