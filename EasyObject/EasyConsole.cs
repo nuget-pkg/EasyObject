@@ -27,7 +27,7 @@ public class EasyConsole //: IAnsiConsole
     }
     public void Render(string s) {
         if (!EasyObject.EmojiCompatibleEnvironment) {
-            s = UniversalTransformer.ReplaceSurrogatePair(s, "❗");
+            s = GeminiSuperTransformer.ReplaceSurrogatePair(s, "❗");
         }
 #if !USE_SPECTRE_CONSOLE
         this._writer.WriteLine(s);
@@ -43,7 +43,7 @@ public class EasyConsole //: IAnsiConsole
     }
     public void RenderLine(string s = "") {
         if (!EasyObject.EmojiCompatibleEnvironment) {
-            s = UniversalTransformer.ReplaceSurrogatePair(s, "❗");
+            s = GeminiSuperTransformer.ReplaceSurrogatePair(s, "❗");
         }
 #if !USE_SPECTRE_CONSOLE
         this._writer.Write(s);
@@ -62,13 +62,13 @@ public class EasyConsole //: IAnsiConsole
     }
     public void Write(string s) {
         if (!EasyObject.EmojiCompatibleEnvironment) {
-            s = UniversalTransformer.ReplaceSurrogatePair(s, "❗");
+            s = GeminiSuperTransformer.ReplaceSurrogatePair(s, "❗");
         }
         _writer.Write(s);
     }
     public void WriteLine(string s) {
         if (!EasyObject.EmojiCompatibleEnvironment) {
-            s = UniversalTransformer.ReplaceSurrogatePair(s, "❗");
+            s = GeminiSuperTransformer.ReplaceSurrogatePair(s, "❗");
         }
         _writer.WriteLine(s);
     }

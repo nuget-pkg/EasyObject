@@ -2,7 +2,7 @@
     <PropertyGroup>
         <LangVersion>latest</LangVersion>
         <TargetFrameworks>net462;net8.0</TargetFrameworks>
-        <Version>2026.0405.0952.13</Version>
+        <Version>2026.0405.1344.52</Version>
         <Nullable>enable</Nullable>
         <ImplicitUsings>disable</ImplicitUsings>
         <RootNamespace>MiniEasyObject</RootNamespace>
@@ -60,7 +60,7 @@
         <PackageReference Include="System.Dynamic.Runtime" Version="4.3.0" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="HyperOperatingSystem" Version="2026.405.634.54" />
+        <PackageReference Include="HyperOperatingSystem" Version="2026.405.1331.24" />
         <PackageReference Include="NUnit" Version="4.5.1" />
         <PackageReference Include="PlainObjectInterface" Version="2026.122.1836.32" />
         <PackageReference Include="PlainObjectConverter" Version="2026.402.700" />

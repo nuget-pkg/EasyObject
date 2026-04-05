@@ -456,7 +456,7 @@ public class
             !title.Contains("﴾FROM PopupStackTrace()﴿"))
             title = $"✅❝𝑪𝒉𝒆𝒄𝒌：{title}❞✅";
         if (!title.Contains("⁅markup⁆")) {
-            title = UniversalTransformer.GeminiSuperSerifBoldItalicTransform(title); /* !! MY NEW SPECIAL WEAPON !!*/
+            title = GeminiSuperTransformer.GeminiSuperSerifBoldItalicTransform(title); /* !! MY NEW SPECIAL WEAPON !!*/
         }
         return title;
     }

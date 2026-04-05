@@ -35,9 +35,9 @@ public class Program {
             DebugOutput = true;
             Log("⭕️ハロー©⭕️");
             string? notBound = null;
-            ExpectBound(notBound, new { notBound });
+            //ExpectBound(notBound, new { notBound });
             //Break("after ⭕️ハロー©⭕️");
-            //ExitOnTrustViolation(new Exception("I FOUND A PROBLEM"), hint: new { TOM = "FOOLISH !!" }, 777);
+            //TerminateOnFailure(new Exception("I FOUND A PROBLEM"), hint: new { TOM = "FOOLISH !!" }, 777);
             WriteLine("(1)");
             var eoNull = Null;
             Log(eoNull.ToJson());
@@ -304,17 +304,17 @@ public class Program {
                     }
                 }
                 """;
-            string safeCode = Universal.UniversalTransformer.SafeSourceCode(code);
+            string safeCode = Universal.GeminiSuperTransformer.SafeSourceCode(code);
             //Break(safeCode, "safeCode");
-            string restoredCode = Universal.UniversalTransformer.RestoreSourceCode(safeCode);
+            string restoredCode = Universal.GeminiSuperTransformer.RestoreSourceCode(safeCode);
             //Break(restoredCode, "restoredCode");
             //
             var fname =
                 """[1080p] ✅ 👀 🫧 💻 🌐 🎵 <xml>aaa</xml> ; {Title}!? x=11+22-33; ,(🔥引火帝国🔥):"name1" 'name2'?.txt""";
-            Log(Universal.UniversalTransformer.SafeFileName(fname), "⁅markup⁆[blue]adjusted file name[/]");
-            Log(Universal.UniversalTransformer.SafeFileName(fname, replaceSurrogate: ""),
+            Log(Universal.GeminiSuperTransformer.SafeFileName(fname), "⁅markup⁆[blue]adjusted file name[/]");
+            Log(Universal.GeminiSuperTransformer.SafeFileName(fname, replaceSurrogate: ""),
                 "⁅markup⁆[green]adjusted file name (keeping surrogate pairs)[/]");
-            Log(Universal.UniversalTransformer.SafeFileName(fname, replaceSurrogate: "@"),
+            Log(Universal.GeminiSuperTransformer.SafeFileName(fname, replaceSurrogate: "@"),
                 "⁅markup⁆[purple]adjusted file name (spicifying surrogate pairs' replacement)[/]");
 
             //Log("This is unicode(echo): ⭕️ ☢ ☃☃☃ ☮");
