@@ -455,7 +455,7 @@ public class
         }
         ////if (!UseAnsiConsole) title = title.Replace("⁅markup⁆", "");
         if (!title.Contains("⁅markup⁆")
-            &&!title.Contains("PASSED ﴾CODE LINE﴿")
+            &&!title.Contains("▶▶▶ REACHED ")
             && !title.Contains("⁅🌐DUMP🌐⁆") &&
             !title.Contains("﴾FROM PopupStackTrace()﴿"))
             title = $"✅❝𝑪𝒉𝒆𝒄𝒌：{title}❞✅";
@@ -1515,12 +1515,12 @@ public class
         if (testName == "AdhocTestMethod")
         {
             //if (message == null) message = "";
-            Echo(CurrentSourceCodeLine(), title: $"⁅markup⁆[cyan]✅❝▶▶▶ REACHED ﴾ {filePath} : {lineNum}﴿ ▶▶▶❞✅[/]");
+            Echo(CurrentSourceCodeLine(), title: $"⁅markup⁆[cyan]✅❝▶▶▶ REACHED ﴾{filePath}:{lineNum}﴿ ▶▶▶❞✅[/]");
         }
         else
         {
             //if (message == null) message = "";
-            Echo(CurrentSourceCodeLine(), title: $"✅❝▶▶▶ REACHED ﴾{filePath} # {testName} : {lineNum}﴿ ▶▶▶❞✅");
+            Echo(CurrentSourceCodeLine(), title: $"✅❝▶▶▶ REACHED {testName}﴾{filePath}:{lineNum}﴿ ▶▶▶❞✅");
         }
     }
     private static class NativeMethods {
