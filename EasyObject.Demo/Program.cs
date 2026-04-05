@@ -30,6 +30,7 @@ public class Program {
             //SetupConsoleEncoding(); /* Default is UTF8: (Since 2026.04.02) */
             //ShowLineNumbers = false;
             ShowDetail = true;
+            EmojiCompatibleEnvironment = true; /* !! NEW FEATURE !! */
             UseAnsiConsole = true;
             DebugOutput = true;
             Log("⭕️ハロー©⭕️");

@@ -451,11 +451,11 @@ public class
             ////title = UniversalTransformer.ReplaceSurrogatePair(title, replaceSurrogate: "@");
             return title;
         }
-        title = UniversalTransformer.GeminiSuperSerifBoldItalicTransform(title); /* !! MY NEW SPECIAL WEAPON !!*/
         if (!UseAnsiConsole) title = title.Replace("⁅markup⁆", "");
-        if (!title.Contains("𝑷𝑨𝑺𝑺𝑬𝑫") && !title.Contains("⁅🌐DUMP🌐⁆") &&
+        if (!title.Contains("PASSED ﴾CODE LINE﴿") && !title.Contains("⁅🌐DUMP🌐⁆") &&
             !title.Contains("﴾FROM PopupStackTrace()﴿"))
-            title = $"✅❝Check：{title}❞✅";
+            title = $"✅❝𝑪𝒉𝒆𝒄𝒌：{title}❞✅";
+        title = UniversalTransformer.GeminiSuperSerifBoldItalicTransform(title); /* !! MY NEW SPECIAL WEAPON !!*/
         return title;
     }
     public static void Write(
