@@ -57,7 +57,7 @@ public class
     IImportFromCommonJson {
     public object? RealData /*= null*/;
     public static bool ____InternalDebugOutput____ = false;
-    public static bool EmojiCompatibleEnvironment = false;
+    public static bool EmojiCompatibleEnvironment = true; /**/
     //public static readonly IParseJson DefaultJsonParser = new CSharpEasyLanguageHandler(true);
     public static readonly IParseJson DefaultJsonParser = new NewtonsoftJsonHandler();
     public static IParseJson? JsonParser /*= null*/;
