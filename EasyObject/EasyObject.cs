@@ -1201,7 +1201,6 @@ public class
     }
     public static void TerminateOnFailure(Exception ex, object? hint, int exitCode = 1,
         StackFrame? currentStackFrame = null) {
-        PopupStackTrace("I WANT STACKTACE HERE...");
         var _StackTrace_ = new System.Diagnostics.StackTrace(true);
         StackFrame? CuurentStackFrame() {
             // Author: ❝Gemini (Google Large Language Model)❞さん

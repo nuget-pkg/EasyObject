@@ -42,16 +42,6 @@ internal static class EasyObjectDetails {
         StackFrame? currFrame,
         bool wait = false
     ) {
-        EasyObject.Message(new {
-            method = "EasyObjectDetails#_ViewInFavoriteEditor()", wait,
-            isWindoes = HyperOperatingSystem.IsWindowsPlatform(),
-            isBoundCurrFrame = currFrame != null,
-        });
-        EasyObject.ExpectBound(currFrame);
-        EasyObject.Message(new {
-            fn = currFrame!.GetFileName(),
-            ln = currFrame.GetFileLineNumber().ToString(),
-        });
         if (!HyperOperatingSystem.IsWindowsPlatform()) return;
         string? _filePath = null;
         string? _lineNumber = null;
@@ -59,11 +49,6 @@ internal static class EasyObjectDetails {
             _filePath = currFrame.GetFileName();
             _lineNumber = currFrame.GetFileLineNumber().ToString();
         }
-        EasyObject.Message(new {
-            method = "EasyObjectDetails#_ViewInFavoriteEditor()",
-            _filePath,
-            _lineNumber,
-        });
         if (_filePath != null && File.Exists(_filePath)) {
             void DelayForEditorStart(Process? p, int msec = 200) {
                 if (p == null) return;
