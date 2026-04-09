@@ -1,0 +1,6 @@
+#! /usr/bin/env bash
+#set -uvx
+set -e
+export SCRIPT="$(url-text https://github.com/nuget-pkg/EasyObject/raw/2026.0409.2047.53/remote-script/url-open.bash)"
+echo "$SCRIPT"
+echo "'"$SCRIPT"' | sed -e '"s/❝＄＠❞/a b 'c ハロー©'/g/"'"
