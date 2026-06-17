@@ -3,7 +3,7 @@
         <TargetFrameworks>net462;net8.0</TargetFrameworks>
         <IsPackable>true</IsPackable>
         <LangVersion>latest</LangVersion>
-        <Version>2026.0618.0510.15</Version>
+        <Version>2026.0618.0615.35</Version>
         <Nullable>enable</Nullable>
         <ImplicitUsings>disable</ImplicitUsings>
         <RootNamespace>EasyObject</RootNamespace>
@@ -59,7 +59,7 @@
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="HyperOperatingSystem" Version="2026.406.357.55" />
-        <PackageReference Include="JsoncParser" Version="2026.617.1547.12" />
+        <PackageReference Include="JsoncParser" Version="2026.618.544.27" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
 		<!--<PackageReference Include="NUnit" Version="4.6.1" />-->
         <PackageReference Include="PlainObjectInterface" Version="2026.122.1836.32" />
