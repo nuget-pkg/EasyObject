@@ -9,9 +9,7 @@ using System.Net;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
-//using NUnit.Framework;
 using Universal;
-using ObjectsComparator.Comparator.Helpers;
 
 #if USE_SPECTRE_CONSOLE
 using Spectre.Console;
@@ -120,14 +118,6 @@ public class
             // Ignore exceptions related to console encoding
         }
     }
-    //private static void _EnsureCursorLeft() {
-    //    try {
-    //        Console.CursorLeft = 0;
-    //    }
-    //    catch
-    //    {
-    //    }
-    //}
 #if MINIMAL
     public MiniEasyObject()
 #else
@@ -1268,7 +1258,6 @@ public class
         Environment.Exit(exitCode);
     }
     public static void AssertTrue(bool condition, object? hint = null) {
-        //Assert.IsTrue(condition, ToPrintable(hint));
         if (!condition)
         {
             hint ??= "Assertion failed: condition is false.";
@@ -1302,7 +1291,6 @@ public class
         }
     }
     public static void AssertFalse(bool condition, object? hint = null) {
-        //Assert.IsFalse(condition, ToPrintable(hint));
         if (!condition)
         {
             hint ??= "Assertion failed: condition is true.";
@@ -1336,7 +1324,8 @@ public class
         }
     }
     public static void AssertIdentical(object? expected, object? actual, object? hint = null) {
-        bool condition = expected.DeeplyEquals(actual);
+        //bool condition = expected.DeeplyEquals(actual);
+        bool condition = FromObject(expected).ToJson() == FromObject(actual).ToJson();
         if (!condition)
         {
             hint ??= "Assertion failed: not identical.";
@@ -1399,7 +1388,7 @@ public class
         }
     }
     public static void AssertNotIdentical(object? expected, object? actual, object? hint = null) {
-        bool condition = expected.DeeplyEquals(actual);
+        bool condition = FromObject(expected).ToJson() == FromObject(actual).ToJson();
         if (condition)
         {
             hint ??= "Assertion failed: identical.";
@@ -1427,35 +1416,6 @@ public class
         }
         try {
             AssertNotIdentical(expected, actual, hint);
-        }
-        catch (Exception ex) {
-            TerminateOnFailure(ex, hint, exitCode);
-        }
-    }
-    public static void AssertNotEquivalent(object? expected, object? actual, object? hint = null) {
-        AssertNotIdentical(FromObject(expected).ToObject(), FromObject(actual).ToObject(), hint: hint);
-    }
-    public static void ExpectNotEquivalent(object? expected, object? actual, object? hint = null, int exitCode = 1) {
-        var _StackTrace_ = new System.Diagnostics.StackTrace(true);
-        StackFrame? CuurentStackFrame() {
-            // Author: ❝Gemini (Google Large Language Model)❞さん
-            // See: https://gemini.google.com/share/9377a3e5f18f
-            // var frame = _StackTrace_.GetFrame(1);
-            // return frame;
-            return _EasyObject_StackFrame_Finder_(_StackTrace_);
-        }
-        string CurrentSourceCodeLine() {
-            // Author: ❝Gemini (Google Large Language Model)❞さん
-            // See: https://gemini.google.com/share/9377a3e5f18f
-            var frame = CuurentStackFrame();
-            var file = frame?.GetFileName();
-            var line = frame?.GetFileLineNumber();
-            // PDB があれば、ファイル名と行番号がメッセージに乗る
-            string location = (file != null) ? $"at {ToClickableUri(file)} : {line}" : "";
-            return $"{location}";
-        }
-        try {
-            AssertNotEquivalent(expected, actual);
         }
         catch (Exception ex) {
             TerminateOnFailure(ex, hint, exitCode);
