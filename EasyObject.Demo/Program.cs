@@ -33,7 +33,7 @@ public class Program {
             UseAnsiConsole = true;
             DebugOutput = true;
             Pass();
-            return; // !! EARLY RETURN TO TEST Pass() !!
+            //return; // !! EARLY RETURN TO TEST Pass() !!
             Log("⭕️ハロー©⭕️");
             string? notBound = null;
             //ExpectBound(notBound, new { notBound });

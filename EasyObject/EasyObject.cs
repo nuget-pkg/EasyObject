@@ -58,8 +58,11 @@ public class
     public object? RealData /*= null*/;
     public static bool ____InternalDebugOutput____ = false;
     public static bool EmojiCompatibleEnvironment = true; /**/
-    //public static readonly IParseJson DefaultJsonParser = new CSharpEasyLanguageHandler(true);
+#if true
+    public static readonly IParseJson DefaultJsonParser = new CSharpLispLanguageHandler(true);
+#else
     public static readonly IParseJson DefaultJsonParser = new NewtonsoftJsonHandler();
+#endif
     public static IParseJson? JsonParser /*= null*/;
     public static bool DebugOutput /*= false*/;
     public static bool ShowDetail = true;

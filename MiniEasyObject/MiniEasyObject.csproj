@@ -2,7 +2,7 @@
     <PropertyGroup>
         <LangVersion>latest</LangVersion>
         <TargetFrameworks>net462;net8.0</TargetFrameworks>
-        <Version>2026.0406.0332.20</Version>
+        <Version>2026.0617.1615.38</Version>
         <Nullable>enable</Nullable>
         <ImplicitUsings>disable</ImplicitUsings>
         <RootNamespace>MiniEasyObject</RootNamespace>
@@ -60,10 +60,12 @@
         <PackageReference Include="System.Dynamic.Runtime" Version="4.3.0" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="HyperOperatingSystem" Version="2026.405.1331.24" />
-        <PackageReference Include="NUnit" Version="4.5.1" />
+        <PackageReference Include="HyperOperatingSystem" Version="2026.406.357.55" />
+		<PackageReference Include="JsoncParser" Version="2026.617.1547.12" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+		<PackageReference Include="NUnit" Version="4.6.1" />
         <PackageReference Include="PlainObjectInterface" Version="2026.122.1836.32" />
-        <PackageReference Include="PlainObjectConverter" Version="2026.402.700" />
+        <PackageReference Include="PlainObjectConverter" Version="2026.617.1521.39" />
     </ItemGroup>
     <ItemGroup>
         <Compile Include="..\EasyObject\EasyExtensions.cs">
