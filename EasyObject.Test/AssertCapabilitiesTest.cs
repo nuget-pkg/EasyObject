@@ -59,6 +59,7 @@ internal class AssertCapabilitiesTest {
         DebugOutput = true;
         Pass();
         EasyObject eo = NewArray(NewArray(NewObject("a", 10, "b", 20, "c", 30), 11, 22, 33), "a", "b", "c");
+        //EasyObject eo = NewArray("a", "b", "c");
         Pass();
         Echo(eo, maxCount: 2, title: "1");
         //Line();

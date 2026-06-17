@@ -45,10 +45,11 @@ namespace Global {
             uint maxCount = 0,
             List<string>? hideKeys = null
         ) {
-            //if (x == null) return;
             hideKeys = (hideKeys ?? new List<string>());
-            x = TrimCount(x, hideKeys, maxCount: maxCount);
-            x = TrimDepth(1, x, hideKeys, maxDepth: maxDepth);
+            EasyObject y = x;
+            y = TrimDepth(1, x, hideKeys, maxDepth: maxDepth);
+            y = TrimCount(x, maxCount: maxCount);
+            x.RealData = y.RealData;
         }
         private static EasyObject TrimDepth(
             uint depth,
@@ -84,7 +85,6 @@ namespace Global {
         }
         private static EasyObject TrimCount(
             EasyObject x,
-            List<string> hideKeys,
             uint maxCount
         )
         {
@@ -92,24 +92,20 @@ namespace Global {
             {
                 if (x.IsArray)
                 {
-                    var newList = x.RealList!.Take((int)maxCount).ToList();
-                    Console.WriteLine($"newList.Count={newList.Count}");
-                    newList = newList.Select(x => TrimCount(x, hideKeys, maxCount: maxCount)).ToList();
-                    x.RealData = newList;
+                    var oldList = x.RealList!.Take((int)maxCount).ToList();
+                    var newList = oldList.Select(x => TrimCount(x, maxCount: maxCount)).ToList();
+                    return EasyObject.FromObject(newList);
                 }
                 else if (x.IsObject)
                 {
-                    Dictionary<string, EasyObject> dict = x.RealDictionary!;
-                    if (dict.Count > maxCount)
-                    {
-                        var keys = dict.Keys.Take((int)maxCount).ToList(); ;
+                    Dictionary<string, EasyObject> oldDict = x.RealDictionary!;
+                        var keys = oldDict.Keys.Take((int)maxCount).ToList(); ;
                         Dictionary<string, EasyObject> newDict = new Dictionary<string, EasyObject>();
-                        for (int i = 0; i < keys.Count; i++)
+                        for (int i = 0; i < Math.Min(keys.Count, maxCount); i++)
                         {
-                            newDict[keys[i]] = TrimCount(dict[keys[i]], hideKeys, maxCount: maxCount);
+                            newDict[keys[i]] = TrimCount(oldDict[keys[i]], maxCount: maxCount);
                         }
-                        x.RealData = newDict;
-                    }
+                        return EasyObject.FromObject(newDict);
                 }
             }
             return EasyObject.FromObject(x);
@@ -148,7 +144,6 @@ namespace Global {
             return Clone(x);
         }
         private static void Clear(EasyObject x) {
-            // (x == null) return;
             if (x.IsArray) {
                 x.RealList!.Clear();
             }
