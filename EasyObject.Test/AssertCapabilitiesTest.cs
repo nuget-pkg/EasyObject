@@ -63,10 +63,14 @@ internal class AssertCapabilitiesTest {
         Echo(eo, maxCount: 2, hideKeys: ["b"], title: "1");
         eo.Trim(maxCount: 2, hideKeys: ["b"], maxDepth: 3);
         Pass();
+        AssertIdentical(actual: eo.ToJson(), expected: """[[{"a":{},"c":30},11],"a"]""");
         Echo(eo);
         eo.Trim(maxCount: 2, hideKeys: ["b"], maxDepth: 2);
         Pass();
+        AssertIdentical(actual: eo.ToJson(), expected: """[[{},11],"a"]""");
+        eo.Trim(maxCount: 2, hideKeys: ["b"], maxDepth: 1);
         Echo(eo);
         Pass();
+        AssertIdentical(actual: eo.ToJson(), expected: """[[],"a"]""");
     }
 }
