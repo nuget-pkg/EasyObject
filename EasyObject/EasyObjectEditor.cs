@@ -34,9 +34,7 @@ namespace Global {
                 }
             }
             x = FromObject(x);
-            //Debug(x, "before Trim()");
             Trim(x, maxDepth: maxDepth, maxCount: maxCount, hideKeys: hideKeys);
-            //Debug(x, "after Trim()");
             return x; /**/
         }
         public static void Trim(
@@ -47,14 +45,14 @@ namespace Global {
         ) {
             hideKeys = (hideKeys ?? new List<string>());
             EasyObject y = x;
-            y = TrimDepth(1, x, hideKeys, maxDepth: maxDepth);
+            y = TrimDepth(1, x, maxDepth: maxDepth);
+            y = TrimKeys(x, hideKeys: hideKeys);
             y = TrimCount(x, maxCount: maxCount);
             x.RealData = y.RealData;
         }
         private static EasyObject TrimDepth(
             uint depth,
             EasyObject x,
-            List<string> hideKeys,
             uint maxDepth
         )
         {
@@ -79,6 +77,55 @@ namespace Global {
                             Clear(x.RealDictionary![key]);
                         }
                     }
+                }
+                else
+                {
+                    if (x.IsArray)
+                    {
+                        for (int i = 0; i < x.Count; i++)
+                        {
+                            TrimDepth(depth + 1, x.RealList![i], maxDepth: maxDepth);
+                        }
+                    }
+                    else if (x.IsObject)
+                    {
+                        var keys = x.Keys;
+                        for (int i = 0; i < keys.Count; i++)
+                        {
+                            string key = keys[i];
+                            TrimDepth(depth + 1, x.RealDictionary![key], maxDepth: maxDepth);
+                        }
+                    }
+                }
+            }
+            return EasyObject.FromObject(x);
+        }
+        private static EasyObject TrimKeys(
+            EasyObject x,
+            List<string> hideKeys
+        )
+        {
+            if (x.IsObject)
+            {
+                for (int i = 0; i < hideKeys.Count; i++)
+                {
+                    string key = hideKeys[i];
+                    if (x.RealDictionary!.ContainsKey(key))
+                    {
+                        x.RealDictionary.Remove(key);
+                    }
+                    var keys = x.Keys;
+                    for (int j = 0; j < keys.Count; j++)
+                    {
+                        TrimKeys(x.RealDictionary[keys[j]], hideKeys: hideKeys);
+                    }
+                }
+            }
+            else if (x.IsArray)
+            {
+                for (int i = 0; i < x.Count; i++)
+                {
+                    TrimKeys(x.RealList![i], hideKeys: hideKeys);
                 }
             }
             return EasyObject.FromObject(x);
