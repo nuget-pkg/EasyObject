@@ -171,7 +171,7 @@ public class
         return result;
     }
     public static EasyObjectType @string => EasyObjectType.@string;
-    public static EasyObjectType boolean => EasyObjectType.boolean;
+    public static EasyObjectType @boolean => EasyObjectType.boolean;
     public static EasyObjectType @object => EasyObjectType.@object;
     public static EasyObjectType @array => EasyObjectType.array;
     public static EasyObjectType @null => EasyObjectType.@null;
@@ -505,7 +505,7 @@ public class
         title = _DecorateTitle(title);
         ////_EnsureCursorLeft();
         hideKeys ??= new List<string>();
-        if (maxDepth > 0 || hideKeys.Count > 0) {
+        if (maxDepth > 0 || maxCount > 0 || hideKeys.Count > 0) {
             var eo = FromObject(x);
             x = eo.Clone(
                 maxDepth,
@@ -588,7 +588,7 @@ public class
         title = _DecorateTitle(title);
         ////_EnsureCursorLeft();
         hideKeys ??= new List<string>();
-        if (maxDepth > 0 || hideKeys.Count > 0) {
+        if (maxDepth > 0 || maxCount > 0 || hideKeys.Count > 0) {
             var eo = FromObject(x);
             x = eo.Clone(
                 maxDepth,
@@ -653,7 +653,7 @@ public class
         title = _DecorateTitle(title);
         ////_EnsureCursorLeft();
         hideKeys ??= new List<string>();
-        if (maxDepth > 0 || hideKeys.Count > 0) {
+        if (maxDepth > 0 || maxCount > 0 || hideKeys.Count > 0) {
             var eo = FromObject(x);
             x = eo.Clone(
                 maxDepth,
@@ -694,7 +694,7 @@ public class
         }
         if (title == null) title = "Message";
         hideKeys ??= new List<string>();
-        if (maxDepth > 0 || hideKeys.Count > 0) {
+        if (maxDepth > 0 || maxCount > 0 || hideKeys.Count > 0) {
             var eo = FromObject(x);
             x = eo.Clone(
                 maxDepth,
@@ -955,7 +955,8 @@ public class
         }
         return Clone();
     }
-    public EasyObject Take(int n) {
+    public EasyObject Take(int n, bool deep = false) {
+#if false
         if (RealList != null) {
             var list2 = RealList!.Select(i => i).Take(n).ToList();
             return FromObject(list2);
@@ -967,6 +968,16 @@ public class
             return result;
         }
         return Clone();
+#else
+        if (deep)
+        {
+            return EasyObjectEditor.DeepTake(this, n);
+        }
+        else
+        {
+            return EasyObjectEditor.ShallowTake(this, n);
+        }
+#endif
     }
     public string[] AsStringArray {
         get {

@@ -3,18 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using Global;
 using static Global.EasyObject;
-using NUnit.Framework;
+//using NUnit.Framework;
 
 public class DynamicTest
 {
-    [SetUp]
+    [NUnit.Framework.SetUp]
     public void Setup()
     {
         Console.WriteLine("Setup() called");
         ClearSettings();
     }
 
-    [Test]
+    [NUnit.Framework.Test]
     public void Test01()
     {
         Pass();
@@ -23,19 +23,19 @@ public class DynamicTest
         Echo(eo, "eo");
         string s = eo.Dynamic;
         Echo(s, "s");
-        Assert.That(s, Is.EqualTo("abc"));
+        AssertIdentical(s, "abc");
         eo.Dynamic.A = "AAA";
         Echo(eo, "eo");
-        Assert.That(eo.TypeValue, Is.EqualTo(@object));
+        AssertIdentical(eo.TypeValue, @object);
         Console.WriteLine(eo);
         foreach(var e in eo.Dynamic)
         {
             Echo(e, "e");
-            Assert.That(e.Key, Is.EqualTo("A"));
-            Assert.That(e.Value.Cast<string>(), Is.EqualTo("AAA"));
+            AssertIdentical(e.Key, "A");
+            AssertIdentical(e.Value.Cast<string>(), "AAA");
             string ss = e.Value.Dynamic;
-            Assert.That(ss, Is.EqualTo("AAA"));
-            Assert.That((string)(e.Value.Dynamic), Is.EqualTo("AAA"));
+            AssertIdentical(ss, "AAA");
+            AssertIdentical((string)(e.Value.Dynamic), "AAA");
         }
         Pass();
     }

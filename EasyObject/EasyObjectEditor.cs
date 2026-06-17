@@ -47,27 +47,54 @@ namespace Global {
         ) {
             //if (x == null) return;
             hideKeys = (hideKeys ?? new List<string>());
-            if (maxCount > 0)
-            {
-                TrimHelper(1, x, hideKeys, maxDepth: 0, maxCount: maxCount);
-            }
-            TrimHelper(1, x, hideKeys, maxDepth: maxDepth, maxCount: 0);
+            x = TrimCount(x, hideKeys, maxCount: maxCount);
+            x = TrimDepth(1, x, hideKeys, maxDepth: maxDepth);
         }
-        private static EasyObject TrimHelper(
+        private static EasyObject TrimDepth(
             uint depth,
             EasyObject x,
             List<string> hideKeys,
-            uint maxDepth,
-            uint maxCount = 0
-        ) {
-            //if (x == null) return;
+            uint maxDepth
+        )
+        {
+            if (maxDepth > 0)
+            {
+                if (depth >= maxDepth)
+                {
+                    if (x.IsArray)
+                    {
+                        for (int i = 0; i < x.Count; i++)
+                        {
+                            Clear(x.RealList![i]);
+                        }
+                        //return;
+                    }
+                    else if (x.IsObject)
+                    {
+                        var keys = x.Keys;
+                        for (int i = 0; i < keys.Count; i++)
+                        {
+                            string key = keys[i];
+                            Clear(x.RealDictionary![key]);
+                        }
+                    }
+                }
+            }
+            return EasyObject.FromObject(x);
+        }
+        private static EasyObject TrimCount(
+            EasyObject x,
+            List<string> hideKeys,
+            uint maxCount
+        )
+        {
             if (maxCount > 0)
             {
                 if (x.IsArray)
                 {
                     var newList = x.RealList!.Take((int)maxCount).ToList();
                     Console.WriteLine($"newList.Count={newList.Count}");
-                    newList = newList.Select(x => TrimHelper(depth + 1, x, hideKeys, maxDepth: maxDepth, maxCount: maxCount)).ToList();
+                    newList = newList.Select(x => TrimCount(x, hideKeys, maxCount: maxCount)).ToList();
                     x.RealData = newList;
                 }
                 else if (x.IsObject)
@@ -79,49 +106,46 @@ namespace Global {
                         Dictionary<string, EasyObject> newDict = new Dictionary<string, EasyObject>();
                         for (int i = 0; i < keys.Count; i++)
                         {
-                            newDict[keys[i]] = TrimHelper(depth + 1,dict[keys[i]], hideKeys, maxDepth: maxDepth, maxCount: maxCount);
+                            newDict[keys[i]] = TrimCount(dict[keys[i]], hideKeys, maxCount: maxCount);
                         }
                         x.RealData = newDict;
                     }
                 }
             }
-            if (maxDepth > 0) {
-                if (depth >= maxDepth) {
-                    if (x.IsArray) {
-                        for (int i = 0; i < x.Count; i++) {
-                            Clear(x.RealList![i]);
-                        }
-                        //return;
-                    }
-                    else if (x.IsObject) {
-                        var keys = x.Keys;
-                        for (int i = 0; i < keys.Count; i++) {
-                            string key = keys[i];
-                            Clear(x.RealDictionary![key]);
-                        }
-                    }
-                }
-            }
-            //if (x.IsArray) {
-            //    //for (int i = 0; i < x.Count; i++) {
-            //    //    TrimHelper(depth + 1, x.RealList![i], maxDepth: maxDepth, maxCount: maxCount, hideKeys: hideKeys);
-            //    //}
-            //    var newList = x.RealList!.Select(x => TrimHelper(depth + 1, x, maxDepth: maxDepth, maxCount: maxCount)).ToList();
-            //    return EasyObject.FromObject(newList);
-            //}
-            //else if (x.IsObject) {
-
-            //    var keys = x.Keys;
-            //    for (int i = 0; i < keys.Count; i++) {
-            //        string key = keys[i];
-            //        if (hideKeys.Contains(key)) {
-            //            x.RealDictionary!.Remove(key);
-            //            continue;
-            //        }
-            //        TrimHelper(depth + 1, x.RealDictionary![key], maxDepth: maxDepth, maxCount: maxCount, hideKeys: hideKeys);
-            //    }
-            //}
             return EasyObject.FromObject(x);
+        }
+        public static EasyObject ShallowTake(EasyObject x, int n)
+        {
+            if (x.RealList != null)
+            {
+                var result = x.RealList!.Select(i => i).Take(n).ToList();
+                return FromObject(result);
+            }
+            else if (x.RealDictionary != null)
+            {
+                var keys = x.RealDictionary.Keys.Select(i => i).Take(n).ToList();
+                var result = NewObject();
+                foreach (var key in keys) result[key] = x.RealDictionary[key];
+                return result;
+            }
+            return Clone(x);
+        }
+        public static EasyObject DeepTake(EasyObject x, int n)
+        {
+            if (x.RealList != null)
+            {
+                var result = x.RealList!.Select(i => i).Take(n).ToList();
+                result = result.Select(i => DeepTake(i, n)).ToList();
+                return FromObject(result);
+            }
+            else if (x.RealDictionary != null)
+            {
+                var keys = x.RealDictionary.Keys.Select(i => i).Take(n).ToList();
+                var result = NewObject();
+                foreach (var key in keys) result[key] = DeepTake(x.RealDictionary[key], n);
+                return result;
+            }
+            return Clone(x);
         }
         private static void Clear(EasyObject x) {
             // (x == null) return;

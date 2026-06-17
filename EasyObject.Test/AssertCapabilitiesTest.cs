@@ -1,17 +1,16 @@
-﻿using NUnit.Framework;
-using System;
+﻿using System;
 using static Global.EasyObject;
 // ReSharper disable CheckNamespace
 namespace Global.EasyObjectTest;
 internal class AssertCapabilitiesTest {
-    [SetUp]
+    [NUnit.Framework.SetUp]
     public void Setup() {
         ClearSettings();
         UseAnsiConsole = true;
         Echo("abc", "def");
         Log(FullName(this));
     }
-    [Test]
+    [NUnit.Framework.Test]
     public void Test901()
     {
         Pass();
@@ -52,14 +51,14 @@ internal class AssertCapabilitiesTest {
         //Log("pass-03");
         Pass();
     }
-    [Test]
+    [NUnit.Framework.Test]
     public void Test902()
     {
         Pass();
         ShowDetail = true;
         DebugOutput = true;
         Pass();
-        EasyObject eo = NewArray("a", "b", "c");
+        EasyObject eo = NewArray(NewArray(NewObject("a", 10, "b", 20, "c", 30), 11, 22, 33), "a", "b", "c");
         Pass();
         Echo(eo, maxCount: 2, title: "1");
         //Line();

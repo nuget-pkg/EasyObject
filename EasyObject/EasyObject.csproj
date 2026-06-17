@@ -3,7 +3,7 @@
         <TargetFrameworks>net462;net8.0</TargetFrameworks>
         <IsPackable>true</IsPackable>
         <LangVersion>latest</LangVersion>
-        <Version>2026.0617.1615.38</Version>
+        <Version>2026.0617.1743.03</Version>
         <Nullable>enable</Nullable>
         <ImplicitUsings>disable</ImplicitUsings>
         <RootNamespace>EasyObject</RootNamespace>
