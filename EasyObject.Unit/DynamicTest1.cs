@@ -1,28 +1,18 @@
 ﻿using System;
-using Xunit;
 using T = Global.EasyObject;
 using static Global.EasyObject;
 
+[TestClass]
 public class DynamicTest
 {
-    private readonly ITestOutputHelper Out;
-    public DynamicTest(ITestOutputHelper testOutputHelper)
-    {
-        Out = testOutputHelper;
-        T.ClearSettings();
-        T.ShowDetail = true;
-        T.EchoRedirector = Out.WriteLine;
-        T.LogRedirector = Out.WriteLine;
-        T.Log("Setup() called");
-    }
-    [Fact]
+    [TestMethod]
     public void Setup()
     {
         Console.WriteLine("Setup() called");
         ClearSettings();
     }
 
-    [Fact]
+    [TestMethod]
     public void Test01()
     {
         Pass();

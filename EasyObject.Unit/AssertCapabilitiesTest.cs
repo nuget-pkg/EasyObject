@@ -1,26 +1,20 @@
 ﻿using System;
-using Xunit;
 using T = Global.EasyObject;
 
 using static Global.EasyObject;
 // ReSharper disable CheckNamespace
 namespace Global.EasyObjectTest;
 
+[TestClass]
 public class AssertCapabilitiesTest {
-    private readonly ITestOutputHelper Out;
-    public AssertCapabilitiesTest(ITestOutputHelper testOutputHelper)
+    public AssertCapabilitiesTest()
     {
-        Out = testOutputHelper;
-        T.ClearSettings();
-        T.ShowDetail = true;
-        T.EchoRedirector = Out.WriteLine;
-        T.LogRedirector = Out.WriteLine;
-        T.Log("Setup() called");
+        LogRedirector = (s) => Console.WriteLine(s);
     }
-    [Fact]
+    [TestMethod]
     public void Test901()
     {
-        Pass();
+        Pass(System.Reflection.MethodBase.GetCurrentMethod().Name);
         ShowDetail = true;
         EasyObject eo = "abc";
         Echo(eo, "eo");
@@ -55,28 +49,28 @@ public class AssertCapabilitiesTest {
         Log("pass-02");
         // /*⁅FAILS⁆*/ AssertIdentical(dict1, new { A = 11, B = 22, C = Null });
         //Log("pass-03");
-        Pass();
+        Pass(System.Reflection.MethodBase.GetCurrentMethod().Name);
     }
-    [Fact]
+    [TestMethod]
     public void Test902()
     {
-        Pass();
+        Pass(System.Reflection.MethodBase.GetCurrentMethod().Name);
         ShowDetail = true;
         DebugOutput = true;
-        Pass();
+        Pass(System.Reflection.MethodBase.GetCurrentMethod().Name);
         EasyObject eo = NewArray(NewArray(NewObject("a", NewObject("b", 222, "d", 111), "b", 20, "c", 30), 11, 22, 33), "a", "b", "c");
-        Pass();
+        Pass(System.Reflection.MethodBase.GetCurrentMethod().Name);
         Echo(eo, maxCount: 2, hideKeys: ["b"], title: "1");
         eo.Trim(maxCount: 2, hideKeys: ["b"], maxDepth: 3);
-        Pass();
+        Pass(System.Reflection.MethodBase.GetCurrentMethod().Name);
         AssertIdentical(actual: eo.ToJson(), expected: """[[{"a":{},"c":30},11],"a"]""");
         Echo(eo);
         eo.Trim(maxCount: 2, hideKeys: ["b"], maxDepth: 2);
-        Pass();
+        Pass(System.Reflection.MethodBase.GetCurrentMethod().Name);
         AssertIdentical(actual: eo.ToJson(), expected: """[[{},11],"a"]""");
         eo.Trim(maxCount: 2, hideKeys: ["b"], maxDepth: 1);
         Echo(eo);
-        Pass();
+        Pass(System.Reflection.MethodBase.GetCurrentMethod().Name);
         AssertIdentical(actual: eo.ToJson(), expected: """[[],"a"]""");
     }
 }

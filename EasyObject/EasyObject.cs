@@ -1529,12 +1529,12 @@ public class
         if (testName == null)
         {
             //if (message == null) message = "";
-            Echo(CurrentSourceCodeLine(), title: $"✅❝▶▶▶ REACHED ﴾{filePath}:{lineNum}﴿ ▶▶▶❞✅");
+            Log(CurrentSourceCodeLine(), title: $"✅❝▶▶▶ REACHED ﴾{filePath}:{lineNum}﴿ ▶▶▶❞✅");
         }
         else
         {
             //if (message == null) message = "";
-            Echo(CurrentSourceCodeLine(), title: $"✅❝▶▶▶ REACHED {testName}﴾{filePath}:{lineNum}﴿ ▶▶▶❞✅");
+            Log(CurrentSourceCodeLine(), title: $"✅❝▶▶▶ REACHED {testName}﴾{filePath}:{lineNum}﴿ ▶▶▶❞✅");
         }
     }
     private static class NativeMethods {

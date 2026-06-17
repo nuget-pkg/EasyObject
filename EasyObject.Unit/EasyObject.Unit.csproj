@@ -1,0 +1,15 @@
+﻿<Project Sdk="MSTest.Sdk/4.0.2">
+
+	<PropertyGroup>
+		<TargetFramework>net462</TargetFramework>
+		<LangVersion>latest</LangVersion>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>disable</Nullable>
+		<UseVSTest>true</UseVSTest>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\EasyObject\EasyObject.csproj" />
+	</ItemGroup>
+
+</Project>
