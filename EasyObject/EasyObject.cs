@@ -37,10 +37,10 @@ public enum EasyObjectType
 #endif
 {
     @string,
-    number,
-    boolean,
+    @number,
+    @boolean,
     @object,
-    array,
+    @array,
     @null
 }
 #if MINIMAL
@@ -876,7 +876,6 @@ public class
         List<string>? hideKeys = null,
         bool always = true
     ) {
-        Pass();
         return EasyObjectEditor.Clone(this, maxDepth, maxCount, hideKeys, always);
     }
     public EasyObject? Shift() {
