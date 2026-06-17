@@ -68,6 +68,7 @@ public class
     public static bool ShowDetail = true;
     public static bool ForceAscii /*= false*/;
     public static bool UseAnsiConsole /*= false*/;
+    public static Action<string>? EchoRidirector = null;
 #if USE_SPECTRE_CONSOLE
     public static EasyConsole StandardOutput;
     public static EasyConsole StandardError;
@@ -530,6 +531,7 @@ public class
         var s = ToPrintable(x, title, compact, maxDepth,
             removeSurrogatePair);
         Console.WriteLine(s);
+        if (EchoRidirector != null) EchoRidirector(s);
     }
     private static StackFrame? _EasyObject_StackFrame_Finder_(StackTrace stackTrace) {
         var frames = stackTrace.GetFrames();

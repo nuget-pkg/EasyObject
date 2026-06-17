@@ -19,7 +19,7 @@ public class DynamicTest
     {
         Pass();
         ShowDetail = true;
-        EasyObject eo = "abc";
+        Global.EasyObject eo = "abc";
         Echo(eo, "eo");
         string s = eo.Dynamic;
         Echo(s, "s");

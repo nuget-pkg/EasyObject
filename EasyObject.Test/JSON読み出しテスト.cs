@@ -14,7 +14,7 @@ public class JSON読み出しテスト
         ClearSettings();
     }
 
-    protected string RenderJson(EasyObject eo)
+    protected string RenderJson(Global.EasyObject eo)
     {
         Pass();
         return eo.ToJson(indent: false, sortKeys: true);
@@ -34,7 +34,7 @@ public class JSON読み出しテスト
         Assert.That(RenderJson(eo), Is.EqualTo("""
             {"a":123,"b":"abc","c":777}
             """));
-        Dictionary<string, EasyObject> dict = eo.AsDictionary;
+        Dictionary<string, Global.EasyObject> dict = eo.AsDictionary;
         dict["d"] = 888;
         Assert.That(RenderJson(eo), Is.EqualTo("""
             {"a":123,"b":"abc","c":777,"d":888}

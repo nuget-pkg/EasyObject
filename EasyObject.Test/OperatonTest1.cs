@@ -18,7 +18,7 @@ public class OperationTest
     public void Test01()
     {
         ShowDetail = true;
-        EasyObject eo = EasyObject.FromObject(new int[] { 1, 2, 3, 4 });
+        Global.EasyObject eo = Global.EasyObject.FromObject(new int[] { 1, 2, 3, 4 });
         var list = eo.AsList;
         var even = list.Where(x => x.Cast<int>() % 2 == 0).ToList();
         Echo(even, "even");

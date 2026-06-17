@@ -19,7 +19,7 @@ public class Tests
     {
         Pass();
         ShowDetail = true;
-        var eo = EasyObject.FromObject(new { a = 123 });
+        var eo = Global.EasyObject.FromObject(new { a = 123 });
         Echo(eo, "eo");
         Assert.That(eo.ToJson(), Is.EqualTo("""
             {"a":123}
@@ -31,13 +31,13 @@ public class Tests
     {
         Pass();
         ShowDetail = true;
-        var eo = EasyObject.FromObject("helloハロー©");
+        var eo = Global.EasyObject.FromObject("helloハロー©");
         Echo(eo, "eo");
         Assert.That(eo.ToJson(), Is.EqualTo("""
             "helloハロー©"
             """));
         //EasyObject.JsonParser = new CSharpJsonHandler(numberAsDecimal: true); // ForceASCII
-        EasyObject.ForceAscii = true;
+        Global.EasyObject.ForceAscii = true;
         Assert.That(eo.ToJson(), Is.EqualTo("""
             "hello\u30CF\u30ED\u30FC\u00A9"
             """));
@@ -70,7 +70,7 @@ public class Tests
         Assert.That(dic.TypeValue, Is.EqualTo(@object));
         Assert.That(dic.Count, Is.EqualTo(0));
 
-        var eo = EasyObject.FromObject(new { a = 123 });
+        var eo = Global.EasyObject.FromObject(new { a = 123 });
         Echo(eo.TypeValue, "eo.TypeValue");
         Assert.That(eo.TypeValue, Is.EqualTo(@object));
         Console.WriteLine(eo["a"]);
@@ -106,8 +106,8 @@ public class Tests
         {
             Echo(e, "e");
         }
-        var eo2 = EasyObject.FromObject(eo);
-        EasyObject eo3 = EasyObject.FromJson("""
+        var eo2 = Global.EasyObject.FromObject(eo);
+        Global.EasyObject eo3 = Global.EasyObject.FromJson("""
             { a: 123, b: [11, 22, 33] }
             """);
         Echo(eo3, "eo3");
@@ -138,8 +138,8 @@ public class Tests
     {
         Pass();
         ShowDetail = true;
-        EasyObject eo = new DateTime(0);
-        Assert.That(eo.TypeValue, Is.EqualTo(EasyObject.@string));
+        Global.EasyObject eo = new DateTime(0);
+        Assert.That(eo.TypeValue, Is.EqualTo(Global.EasyObject.@string));
         string print = ToPrintable(eo);
         //Assert.That(print, Is.EqualTo("""
         //    `0001-01-01T00:00:00.0000000`
@@ -153,13 +153,13 @@ public class Tests
             0001-01-01T00:00:00.0000000
             """));
         eo = Guid.Empty;
-        Assert.That(eo.TypeValue, Is.EqualTo(EasyObject.@string));
+        Assert.That(eo.TypeValue, Is.EqualTo(Global.EasyObject.@string));
         s = eo.Cast<string>();
         Assert.That(s, Is.EqualTo("""
             00000000-0000-0000-0000-000000000000
             """));
         eo = new TimeSpan(1000);
-        Assert.That(eo.TypeValue, Is.EqualTo(EasyObject.@string));
+        Assert.That(eo.TypeValue, Is.EqualTo(Global.EasyObject.@string));
         s = eo.Cast<string>();
         Assert.That(s, Is.EqualTo("""
             00:00:00.0001000
@@ -184,14 +184,14 @@ public class Tests
     {
         Pass();
         ShowDetail = true;
-        var eo = EasyObject.FromJson("""
+        var eo = Global.EasyObject.FromJson("""
             { "a": 123 }
             """);
         Echo(eo, "eo");
         Assert.That(eo.ToJson(), Is.EqualTo("""
             {"a":123}
             """));
-        eo = EasyObject.FromJson("""
+        eo = Global.EasyObject.FromJson("""
             [11, 22, '33']
             """);
         Echo(eo, "eo");

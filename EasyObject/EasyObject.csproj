@@ -1,9 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFrameworks>net462;net8.0</TargetFrameworks>
+        <TargetFrameworks>net472;net8.0</TargetFrameworks>
         <IsPackable>true</IsPackable>
         <LangVersion>latest</LangVersion>
-        <Version>2026.0617.2129.45</Version>
+        <Version>2026.0618.0054.07</Version>
         <Nullable>enable</Nullable>
         <ImplicitUsings>disable</ImplicitUsings>
         <RootNamespace>EasyObject</RootNamespace>
@@ -65,5 +65,6 @@
         <PackageReference Include="PlainObjectInterface" Version="2026.122.1836.32" />
         <PackageReference Include="PlainObjectConverter" Version="2026.617.1521.39" />
         <PackageReference Include="Spectre.Console" Version="0.57.0" />
-    </ItemGroup>
+		<PackageReference Include="xunit.v3.extensibility.core" Version="3.2.2" />
+	</ItemGroup>
 </Project>

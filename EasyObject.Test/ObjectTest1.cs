@@ -19,7 +19,7 @@ public class ObjectTest
     {
         Pass();
         ShowDetail = true;
-        EasyObject eo = EasyObject.FromObject(new { a=1, b=2 });
+        Global.EasyObject eo = Global.EasyObject.FromObject(new { a=1, b=2 });
         Echo(eo, "eo");
         Assert.That(eo.ContainsKey("a"), Is.True);
         Assert.That(eo.ContainsKey("c"), Is.False);
