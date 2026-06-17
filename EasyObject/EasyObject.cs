@@ -68,7 +68,8 @@ public class
     public static bool ShowDetail = true;
     public static bool ForceAscii /*= false*/;
     public static bool UseAnsiConsole /*= false*/;
-    public static Action<string>? EchoRidirector = null;
+    public static Action<string>? EchoRedirector = null;
+    public static Action<string>? LogRedirector = null;
 #if USE_SPECTRE_CONSOLE
     public static EasyConsole StandardOutput;
     public static EasyConsole StandardError;
@@ -172,9 +173,9 @@ public class
         return result;
     }
     public static EasyObjectType @string => EasyObjectType.@string;
-    public static EasyObjectType @boolean => EasyObjectType.boolean;
+    public static EasyObjectType @boolean => EasyObjectType.@boolean;
     public static EasyObjectType @object => EasyObjectType.@object;
-    public static EasyObjectType @array => EasyObjectType.array;
+    public static EasyObjectType @array => EasyObjectType.@array;
     public static EasyObjectType @null => EasyObjectType.@null;
     public bool IsString => TypeValue == EasyObjectType.@string;
     public bool IsNumber => TypeValue == EasyObjectType.@number;
@@ -531,7 +532,7 @@ public class
         var s = ToPrintable(x, title, compact, maxDepth,
             removeSurrogatePair);
         Console.WriteLine(s);
-        if (EchoRidirector != null) EchoRidirector(s);
+        if (EchoRedirector != null) EchoRedirector(s);
     }
     private static StackFrame? _EasyObject_StackFrame_Finder_(StackTrace stackTrace) {
         var frames = stackTrace.GetFrames();
@@ -623,6 +624,10 @@ public class
             removeSurrogatePair);
         Console.Error.WriteLine("⁅🌐LOG🌐⁆ " + s);
         if (ShowLineNumbers) Console.Error.WriteLine($"  ➡️➡️ {CurrentSourceCodeLine()}");
+        if (LogRedirector != null) {
+            LogRedirector("⁅🌐LOG🌐⁆ " + s);
+            LogRedirector($"  ➡️➡️ {CurrentSourceCodeLine()}");
+        }
     }
     public static void Debug(
         object? x,
