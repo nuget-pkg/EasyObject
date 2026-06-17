@@ -1,28 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Global;
+﻿using Xunit;
+using T = Global.EasyObject;
 using static Global.EasyObject;
-using NUnit.Framework;
 
 public class ObjectTest
 {
-    [SetUp]
-    public void Setup()
+    private readonly ITestOutputHelper Out;
+    public ObjectTest(ITestOutputHelper testOutputHelper)
     {
-        Console.WriteLine("Setup() called");
-        ClearSettings();
+        Out = testOutputHelper;
+        T.ClearSettings();
+        T.ShowDetail = true;
+        T.EchoRedirector = Out.WriteLine;
+        T.LogRedirector = Out.WriteLine;
+        T.Log("Setup() called");
     }
 
-    [Test]
+    [Fact]
     public void Test01()
     {
         Pass();
         ShowDetail = true;
         Global.EasyObject eo = Global.EasyObject.FromObject(new { a=1, b=2 });
         Echo(eo, "eo");
-        Assert.That(eo.ContainsKey("a"), Is.True);
-        Assert.That(eo.ContainsKey("c"), Is.False);
+        Assert.True(eo.ContainsKey("a"));
+        Assert.False(eo.ContainsKey("c"));
         Pass();
     }
 }

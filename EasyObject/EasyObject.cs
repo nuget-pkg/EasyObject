@@ -9,8 +9,10 @@ using System.Net;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
-using NUnit.Framework;
+//using NUnit.Framework;
 using Universal;
+using ObjectsComparator.Comparator.Helpers;
+
 #if USE_SPECTRE_CONSOLE
 using Spectre.Console;
 // ReSharper disable ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
@@ -1266,7 +1268,12 @@ public class
         Environment.Exit(exitCode);
     }
     public static void AssertTrue(bool condition, object? hint = null) {
-        Assert.IsTrue(condition, ToPrintable(hint));
+        //Assert.IsTrue(condition, ToPrintable(hint));
+        if (!condition)
+        {
+            hint ??= "Assertion failed: condition is false.";
+            throw new Exception(ToPrintable(hint));
+        }
     }
     public static void ExpectTrue(bool condition, object? hint = null, int exitCode = 1) {
         var _StackTrace_ = new System.Diagnostics.StackTrace(true);
@@ -1288,17 +1295,19 @@ public class
             return $"{location}";
         }
         try {
-            Assert.IsTrue(condition);
+            AssertTrue(condition, hint);
         }
         catch (Exception ex) {
             TerminateOnFailure(ex, hint, exitCode);
         }
     }
     public static void AssertFalse(bool condition, object? hint = null) {
-        if (hint != null)
-            Assert.IsFalse(condition, ToPrintable(hint));
-        else
-            Assert.IsFalse(condition);
+        //Assert.IsFalse(condition, ToPrintable(hint));
+        if (!condition)
+        {
+            hint ??= "Assertion failed: condition is true.";
+            throw new Exception(ToPrintable(hint));
+        }
     }
     public static void ExpectFalse(bool condition, object? hint = null, int exitCode = 1) {
         var _StackTrace_ = new System.Diagnostics.StackTrace(true);
@@ -1320,17 +1329,19 @@ public class
             return $"{location}";
         }
         try {
-            Assert.IsFalse(condition);
+            AssertFalse(condition, hint);
         }
         catch (Exception ex) {
             TerminateOnFailure(ex, hint, exitCode);
         }
     }
     public static void AssertIdentical(object? expected, object? actual, object? hint = null) {
-        if (hint != null)
-            Assert.AreEqual(expected, actual, ToPrintable(hint));
-        else
-            Assert.AreEqual(expected, actual);
+        bool condition = expected.DeeplyEquals(actual);
+        if (!condition)
+        {
+            hint ??= "Assertion failed: not identical.";
+            throw new Exception(ToPrintable(hint));
+        }
     }
     public static void ExpectIdentical(object? expected, object? actual, object? hint = null, int exitCode = 1) {
         var _StackTrace_ = new System.Diagnostics.StackTrace(true);
@@ -1352,7 +1363,7 @@ public class
             return $"{location}";
         }
         try {
-            Assert.AreEqual(expected, actual);
+            AssertIdentical(expected, actual, hint);
         }
         catch (Exception ex) {
             TerminateOnFailure(ex, hint, exitCode);
@@ -1388,10 +1399,12 @@ public class
         }
     }
     public static void AssertNotIdentical(object? expected, object? actual, object? hint = null) {
-        if (hint != null)
-            Assert.AreNotEqual(expected, actual, ToPrintable(hint));
-        else
-            Assert.AreNotEqual(expected, actual);
+        bool condition = expected.DeeplyEquals(actual);
+        if (condition)
+        {
+            hint ??= "Assertion failed: identical.";
+            throw new Exception(ToPrintable(hint));
+        }
     }
     public static void ExpectNotIdentical(object? expected, object? actual, object? hint = null, int exitCode = 1) {
         var _StackTrace_ = new System.Diagnostics.StackTrace(true);
@@ -1413,7 +1426,7 @@ public class
             return $"{location}";
         }
         try {
-            Assert.AreNotEqual(expected, actual);
+            AssertNotIdentical(expected, actual, hint);
         }
         catch (Exception ex) {
             TerminateOnFailure(ex, hint, exitCode);
@@ -1449,7 +1462,13 @@ public class
         }
     }
     public static void AssertBound(object? x, object? hint = null) {
-        Assert.IsNotNull(x, ToPrintable(hint));
+        //Assert.IsNotNull(x, ToPrintable(hint));
+        bool condition = x != null;
+        if (!condition)
+        {
+            hint ??= "Assertion failed: value is null.";
+            throw new Exception(ToPrintable(hint));
+        }
     }
     public static void ExpectBound(object? x, object? hint = null, int exitCode = 1) {
         var _StackTrace_ = new System.Diagnostics.StackTrace(true);
@@ -1478,7 +1497,12 @@ public class
         }
     }
     public static void AssertNotBound(object? x, object? hint = null) {
-        Assert.IsNull(x, ToPrintable(hint));
+        bool condition = x == null;
+        if (!condition)
+        {
+            hint ??= "Assertion failed: value is not null.";
+            throw new Exception(ToPrintable(hint));
+        }
     }
     public static void ExpectNotBound(object? x, object? hint = null, int exitCode = 1) {
         var _StackTrace_ = new System.Diagnostics.StackTrace(true);
@@ -1506,7 +1530,7 @@ public class
             TerminateOnFailure(ex, hint, exitCode);
         }
     }
-    public static void Pass(/*object? message = null*/) {
+    public static void Pass(string? testName = null) {
         var _StackTrace_ = new System.Diagnostics.StackTrace(true);
         StackFrame? CuurentStackFrame() {
             // Author: ❝Gemini (Google Large Language Model)❞さん
@@ -1525,17 +1549,27 @@ public class
             string location = (file != null) ? $"at {ToClickableUri(file)} : {line}" : "";
             return $"{location}";
         }
-        string testName = TestContext.CurrentContext.Test.Name;
         // Serif Bold Italic: ⁅𝑶𝑹𝑰𝑮𝑰𝑵𝑨𝑳 𝑨𝑺𝑪𝑰𝑰 𝑪𝑶𝑫𝑬⁆ 𝑨𝑩𝑪𝑫𝑬𝑭𝑮𝑯𝑰𝑱𝑲𝑳𝑴𝑵𝑶𝑷𝑸𝑹𝑺𝑻𝑼𝑽𝑾𝑿𝒀𝒁 𝒂𝒃𝒄𝒅𝒆𝒇𝒈𝒉𝒊𝒋𝒌𝒍𝒎𝒏𝒐𝒑𝒒𝒓𝒔𝒕𝒖𝒗𝒘𝒙𝒚𝒛 0123456789
         var filePath = CuurentStackFrame()?.GetFileName();
         if (filePath == null) filePath = "UNKNOWN FILE"; else filePath = HyperOperatingSystem.GetBaseName(filePath, strongAlgorithm: true);
         var lineNum = CuurentStackFrame()?.GetFileLineNumber();
         if (lineNum == null) lineNum = 0;
 
-        if (testName == "AdhocTestMethod")
+        //string testName = TestContext.CurrentContext.Test.Name;
+        //if (testName == "AdhocTestMethod")
+        //{
+        //    //if (message == null) message = "";
+        //    Echo(CurrentSourceCodeLine(), title: $"⁅markup⁆[cyan]✅❝▶▶▶ REACHED ﴾{filePath}:{lineNum}﴿ ▶▶▶❞✅[/]");
+        //}
+        //else
+        //{
+        //    //if (message == null) message = "";
+        //    Echo(CurrentSourceCodeLine(), title: $"✅❝▶▶▶ REACHED {testName}﴾{filePath}:{lineNum}﴿ ▶▶▶❞✅");
+        //}
+        if (testName == null)
         {
             //if (message == null) message = "";
-            Echo(CurrentSourceCodeLine(), title: $"⁅markup⁆[cyan]✅❝▶▶▶ REACHED ﴾{filePath}:{lineNum}﴿ ▶▶▶❞✅[/]");
+            Echo(CurrentSourceCodeLine(), title: $"✅❝▶▶▶ REACHED ﴾{filePath}:{lineNum}﴿ ▶▶▶❞✅");
         }
         else
         {

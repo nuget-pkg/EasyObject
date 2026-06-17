@@ -1,20 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using Global;
+using Xunit;
+using T = Global.EasyObject;
 using static Global.EasyObject;
-using NUnit.Framework;
 
 public class OperationTest
 {
-    [SetUp]
-    public void Setup()
+    private readonly ITestOutputHelper Out;
+    public OperationTest(ITestOutputHelper testOutputHelper)
     {
-        Console.WriteLine("Setup() called");
-        ClearSettings();
+        Out = testOutputHelper;
+        T.ClearSettings();
+        T.ShowDetail = true;
+        T.EchoRedirector = Out.WriteLine;
+        T.LogRedirector = Out.WriteLine;
+        T.Log("Setup() called");
     }
 
-    [Test]
+    [Fact]
     public void Test01()
     {
         ShowDetail = true;
@@ -22,14 +25,14 @@ public class OperationTest
         var list = eo.AsList;
         var even = list.Where(x => x.Cast<int>() % 2 == 0).ToList();
         Echo(even, "even");
-        Assert.That(even.Count, Is.EqualTo(2));
-        Assert.That(even[0].ToJson(), Is.EqualTo("2"));
-        Assert.That(even[1].ToJson(), Is.EqualTo("4"));
+        Assert.True(even.Count == 2);
+        Assert.Equal("2", even[0].ToJson());
+        Assert.Equal("4", even[1].ToJson());
         List<int> intList = eo.AsList.Select(x => (int)x.Dynamic).ToList();
         Echo(intList, "intList");
         var odd = intList.Where(x => x % 2 == 1).ToList();
-        Assert.That(odd.Count, Is.EqualTo(2));
-        Assert.That(odd[0], Is.EqualTo(1));
-        Assert.That(odd[1], Is.EqualTo(3));
+        Assert.True(odd.Count == 2);
+        Assert.Equal(1, odd[0]);
+        Assert.Equal(3, odd[1]);
     }
 }

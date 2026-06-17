@@ -1,20 +1,28 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Global;
+using Xunit;
+using T = Global.EasyObject;
 using static Global.EasyObject;
-//using NUnit.Framework;
 
 public class DynamicTest
 {
-    [NUnit.Framework.SetUp]
+    private readonly ITestOutputHelper Out;
+    public DynamicTest(ITestOutputHelper testOutputHelper)
+    {
+        Out = testOutputHelper;
+        T.ClearSettings();
+        T.ShowDetail = true;
+        T.EchoRedirector = Out.WriteLine;
+        T.LogRedirector = Out.WriteLine;
+        T.Log("Setup() called");
+    }
+    [Fact]
     public void Setup()
     {
         Console.WriteLine("Setup() called");
         ClearSettings();
     }
 
-    [NUnit.Framework.Test]
+    [Fact]
     public void Test01()
     {
         Pass();

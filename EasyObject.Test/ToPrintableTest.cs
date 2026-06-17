@@ -1,26 +1,30 @@
 ﻿namespace Global;
 
-using System;
-using NUnit.Framework;
-using static EasyObject;
+using Xunit;
+using T = Global.EasyObject;
+using static Global.EasyObject;
 
 public class ToPrintableTest {
-    [SetUp]
-    public void Setup() {
-        Console.WriteLine("Setup() called");
-        ClearSettings();
+    private readonly ITestOutputHelper Out;
+    public ToPrintableTest(ITestOutputHelper testOutputHelper) {
+        Out = testOutputHelper;
+        T.ClearSettings();
+        T.ShowDetail = true;
+        T.EchoRedirector = Out.WriteLine;
+        T.LogRedirector = Out.WriteLine;
+        T.Log("Setup() called");
     }
 
-    [Test]
+    [Fact]
     public void Test01() {
         Pass();
         ShowDetail = true;
         var @do = FromObject(new { a = 123, b = "abc" }).ExportToDynamicObject();
         Echo(@do, compact: true);
         var @printable = ToPrintable(@do);
-        Assert.That(@printable, Is.EqualTo("<System.Dynamic.ExpandoObject> {\n  a: 123,\n  b: \"abc\"\n}"));
+        Assert.True(@printable == "<System.Dynamic.ExpandoObject> {\n  a: 123,\n  b: \"abc\"\n}");
         @printable = ToPrintable(@do, compact: true);
-        Assert.That(@printable, Is.EqualTo("<System.Dynamic.ExpandoObject> {a:123,b:\"abc\"}"));
+        Assert.Equal("<System.Dynamic.ExpandoObject> {a:123,b:\"abc\"}", @printable);
         Pass();
     }
 }

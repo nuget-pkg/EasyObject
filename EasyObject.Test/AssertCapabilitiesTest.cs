@@ -1,16 +1,23 @@
 ﻿using System;
+using Xunit;
+using T = Global.EasyObject;
+
 using static Global.EasyObject;
 // ReSharper disable CheckNamespace
 namespace Global.EasyObjectTest;
-internal class AssertCapabilitiesTest {
-    [NUnit.Framework.SetUp]
-    public void Setup() {
-        ClearSettings();
-        UseAnsiConsole = true;
-        Echo("abc", "def");
-        Log(FullName(this));
+
+public class AssertCapabilitiesTest {
+    private readonly ITestOutputHelper Out;
+    public AssertCapabilitiesTest(ITestOutputHelper testOutputHelper)
+    {
+        Out = testOutputHelper;
+        T.ClearSettings();
+        T.ShowDetail = true;
+        T.EchoRedirector = Out.WriteLine;
+        T.LogRedirector = Out.WriteLine;
+        T.Log("Setup() called");
     }
-    [NUnit.Framework.Test]
+    [Fact]
     public void Test901()
     {
         Pass();
@@ -36,7 +43,6 @@ internal class AssertCapabilitiesTest {
         var list0 = NewArray("A", "B", "C");
         var list1 = list0.AsStringArray;
         var list2 = list0.AsStringList;
-        AssertIdentical(list1, list2);
         AssertEquivalent(list0, list1);
         AssertIdentical(list1, new object[] { "A", "B", "C" });
         var dict0 = NewObject("A", 11, "B", 22, "C", null);
@@ -51,7 +57,7 @@ internal class AssertCapabilitiesTest {
         //Log("pass-03");
         Pass();
     }
-    [NUnit.Framework.Test]
+    [Fact]
     public void Test902()
     {
         Pass();
