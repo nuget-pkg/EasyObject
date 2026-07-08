@@ -39,6 +39,12 @@ public class Program {
             //ExpectBound(notBound, new { notBound });
             //Break("after ⭕️ハロー©⭕️");
             //TerminateOnFailure(new Exception("I FOUND A PROBLEM"), hint: new { TOM = "FOOLISH !!" }, 777);
+            // !! JSON ⇔ XML CONVERSION !!
+            var xml01 = NewtonsoftJsonUtil.SerializeToToXml(new { doc = new { x = 1, y = "xyz" } });
+            Log(xml01);
+            var xml01Eo = NewtonsoftJsonUtil.DeserializeFromXml(xml01);
+            Log(xml01Eo);
+            Environment.Exit(0);
             WriteLine("(1)");
             var eoNull = Null;
             Log(eoNull.ToJson());
@@ -457,11 +463,6 @@ public class Program {
             WriteLine();
             Echo(
                 "⁅markup⁆[red]!! PLEASE SET[/] [green]⁅ORERA BROWSER⁆[/] [red]ON PC AS DEFAULT[/]...[purple]IT AUTOMATICALLY STARTS PLAYING VIDEOS EVEN WHEN OPENED FROM LINK ON[/] [green]WINDOWS-TERMINAL ETC[/] [red]!![/]");
-            // !! JSON ⇔ XML CONVERSION !!
-            var xml01 = NewtonsoftJsonUtil.SerializeToToXml(new { doc = new { x = 1, y = "xyz" } });
-            Log(xml01);
-            var xml01Eo = NewtonsoftJsonUtil.DeserializeFromXml(xml01);
-            Log(xml01Eo);
             //
             string? exe = FindExeRecursive(@"C:\Program Files\Vim", "gvim.exe");
             if (exe != null) {
