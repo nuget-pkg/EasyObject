@@ -10,6 +10,10 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using Universal;
+using Zx;
+using static Zx.Env;
+using System.Threading.Tasks;
+
 
 #if USE_SPECTRE_CONSOLE
 using Spectre.Console;
@@ -408,6 +412,34 @@ public class
     {
         return FromJson(File.ReadAllText(path), ignoreErrors);
     }
+    public static EasyObject FromCommand(string cmd, bool ignoreErrors = false)
+    {
+        var json = fetch(cmd, ignoreErrors);
+        return FromJson(json, ignoreErrors);
+    }
+    private static async Task<string> fetchAsync(string s, bool ignoreErrors = false)
+    {
+        if (!ignoreErrors)
+        {
+            return await s;
+        }
+        try
+        {
+            return await s;
+        }
+        catch (Exception)
+        {
+            return "";
+        }
+    }
+
+    private static string fetch(string s, bool ignoreErrors = false)
+    {
+        var task = fetchAsync(s, ignoreErrors: ignoreErrors);
+        task.Wait();
+        return task.Result;
+    }
+
     public static string? Utf8StringFromUrl(string url)
     {
 #pragma warning disable SYSLIB0014

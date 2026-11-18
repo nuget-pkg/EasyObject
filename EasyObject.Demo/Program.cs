@@ -33,6 +33,8 @@ public class Program {
             UseAnsiConsole = true;
             DebugOutput = true;
             Pass();
+            //var fromCmd = FromCommand("bash -c 'flat3.sh'");
+            //fromCmd["entries"].Dump();
             //return; // !! EARLY RETURN TO TEST Pass() !!
             Log("⭕️ハロー©⭕️");
             string? notBound = null;

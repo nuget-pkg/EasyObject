@@ -102,7 +102,7 @@
 		<None Include="Resources\config.png" />
 	</ItemGroup>
 	<ItemGroup>
-	  <PackageReference Include="LibMPlayerWinform" Version="1.9.0" />
+	  <PackageReference Include="LibMPlayerWinform" Version="26.0.0" />
 	</ItemGroup>
 	<ItemGroup>
 	  <ProjectReference Include="..\EasyObject\EasyObject.csproj" />
