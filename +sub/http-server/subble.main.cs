@@ -2,18 +2,50 @@
 //css_nuget YoutubeExplode
 //css_nuget Grapevine
 //css_nuget Stubble.Core
+//css_nuget System.Data.SQLite
+//css_nuget SQLitePCLRaw.bundle_green
+//css_nuget Dapper
 using YoutubeExplode;
 using YoutubeExplode.Common;
 using Grapevine;
 using Stubble.Core.Builders;
 using Stubble.Core.Exceptions;
 using Stubble.Core.Loaders;
+using Dapper;
+using System.Data.SQLite;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using static Global.EasyObject;
+using Global;
+
+var config = new SQLiteConnectionStringBuilder()
+{
+    DataSource = HyperOperatingSystem.FindGitRoot(HyperOperatingSystem.GetCwd())! + "/+sub/http-server/subble.db3"
+    //DataSource = @"c:/home17/+sub/nuget.org/EasyObject/+sub/http-server/subble.db3"
+};
+using (var connection = new SQLiteConnection(config.ToString()))
+{
+    connection.Open();
+    connection.Execute(
+ @"CREATE TABLE if not exists user(
+   id integer primary key,
+   name text,
+   age integer
+   );");
+    //var newUser = new User { Name = "new", Age = 12 };
+    connection.Execute(@"insert into user (name, age) values (:Name, :Age);",
+        new { Name = "new", Age = 25 });
+    var users = connection.Query<User>(@"select * from user");
+    foreach(var user in users)
+    {
+        Echo(user);
+    }
+}
+
+//Environment.Exit(0);
 
 using (var server = RestServerBuilder.UseDefaults().Build())
 {
@@ -24,6 +56,18 @@ using (var server = RestServerBuilder.UseDefaults().Build())
     Console.WriteLine("Press enter to stop the server");
     Console.ReadLine();
 }
+
+public class User
+{
+    public long? ID { get; set; }
+    public string Name { get; set; }
+    public int Age { get; set; }
+}
+
+
+
+
+
 
 [RestResource]
 public class MyResource
