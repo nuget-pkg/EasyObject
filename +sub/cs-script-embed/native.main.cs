@@ -41,8 +41,11 @@ public class Script
                     progressHandler // ここに進捗オブジェクトを渡す
                 );
             }
-            var downloadAsync = Downloader(videoUrl, filePath);
-            downloadAsync.Wait();
+            try {
+                var downloadAsync = Downloader(videoUrl, filePath);
+                downloadAsync.Wait();
+            } catch {
+            }
             Console.WriteLine("\n完了！");
         }
         catch (Exception ex)
