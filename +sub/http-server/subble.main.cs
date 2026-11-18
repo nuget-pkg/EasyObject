@@ -122,8 +122,10 @@ $"""
     [RestRoute("Get", "/api/test")]
     public async Task Test(IHttpContext context)
     {
-        string playlistPath = @"G:\マイドライブ\.gas-youtube\.flat\_flat_playlist.json";
+        //string playlistPath = @"G:\マイドライブ\.gas-youtube\.flat\_flat_playlist.json"
+        string playlistPath = @"c:/home17/youtube-db/flat3.json";
         var playlist = FromFile(playlistPath);
+        playlist = playlist["entries"];
         playlist = playlist.Shuffle();
         //playlist.Dump();
         var stubble = new StubbleBuilder()
@@ -152,8 +154,6 @@ $"""
         <br>
             title: {{title}}
         <br>
-        thumb: {{thumbnail}}
-        <br>
         </a>
       <td>
         <a href="/users/{{id}}" target="_blank">{{title}}</a>
@@ -162,10 +162,11 @@ $"""
     """;
         foreach (var item in playlist.Dynamic)
         {
-            int i = item.i;
+            //int i = item.i;
+            int i = -1;
             string id = item.id;
             string title = item.title;
-            string thumbnail = item.thumbnail;
+            string thumbnail = item.thumbnails[0].url;
             var rendered = stubble.Render(template, new { i, id, title, thumbnail });
             text += rendered;
         }
