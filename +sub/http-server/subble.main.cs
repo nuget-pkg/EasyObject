@@ -97,8 +97,11 @@ public class MyResource
             {
                 var title = video.Title;
                 var author = video.Author;
+                var videoId = video.Id;
                 text += stubble.Render("<tr><td>title: {{title}}</td><td>author: {{author}}</td></tr>",
                     new { title, author });
+                text += stubble.Render("<tr><td><iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/{{videoId}}\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe></td></tr>",
+                    new { title, author, videoId });
             }
         }
         await context.Response.SendResponseAsync(
