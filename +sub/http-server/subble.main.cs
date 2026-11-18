@@ -28,13 +28,21 @@ using (var server = RestServerBuilder.UseDefaults().Build())
 [RestResource]
 public class MyResource
 {
-
     [RestRoute("Get", "/users/{id:string}")]
     public async Task User(IHttpContext context)
     {
         Pass();
         var id = context.Request.PathParameters["id"];
         var text = $"<tr><td>id: {id}</td></tr>";
+        var stubble = new StubbleBuilder()
+            .Configure(builder =>
+            {
+                builder.AddToTemplateLoader(new DictionaryLoader(new Dictionary<string, string>
+                {
+                    //{ "Foo", "I'm Foo" },
+                    //{ "Bar", "I'm Bar" }
+                }));
+            }).Build();
         using var youtube = new YoutubeClient();
         var playlistUrl = id; // "https://youtube.com/playlist?list=PLa1F2ddGya_-UvuAqHAksYnB0qL9yWDO6";
 
@@ -45,7 +53,8 @@ public class MyResource
             {
                 var title = video.Title;
                 var author = video.Author;
-                text += $"<tr><td>title: {title}</td><td>author: {author}</td></tr>";
+                text += stubble.Render("<tr><td>title: {{title}}</td><td>author: {{author}}</td></tr>",
+                    new { title, author });
             }
         }
         await context.Response.SendResponseAsync(
