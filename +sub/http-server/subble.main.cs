@@ -1,6 +1,9 @@
 //css_nuget EasyObject
+//css_nuget YoutubeExplode
 //css_nuget Grapevine
 //css_nuget Stubble.Core
+using YoutubeExplode;
+using YoutubeExplode.Common;
 using Grapevine;
 using Stubble.Core.Builders;
 using Stubble.Core.Exceptions;
@@ -30,7 +33,21 @@ public class MyResource
     public async Task User(IHttpContext context)
     {
         Pass();
-        var text = $"<tr><td>id: {context.Request.PathParameters["id"]}</td></tr>";
+        var id = context.Request.PathParameters["id"];
+        var text = $"<tr><td>id: {id}</td></tr>";
+        using var youtube = new YoutubeClient();
+        var playlistUrl = id; // "https://youtube.com/playlist?list=PLa1F2ddGya_-UvuAqHAksYnB0qL9yWDO6";
+
+        // Each batch corresponds to one request
+        await foreach (var batch in youtube.Playlists.GetVideoBatchesAsync(playlistUrl))
+        {
+            foreach (var video in batch.Items)
+            {
+                var title = video.Title;
+                var author = video.Author;
+                text += $"<tr><td>title: {title}</td><td>author: {author}</td></tr>";
+            }
+        }
         await context.Response.SendResponseAsync(
 $"""
  <!DOCTYPE html>
