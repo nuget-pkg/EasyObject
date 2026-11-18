@@ -36,8 +36,8 @@ using (var connection = new SQLiteConnection(config.ToString()))
    age integer
    );");
     //var newUser = new User { Name = "new", Age = 12 };
-    connection.Execute(@"insert into user (name, age) values (:Name, :Age);",
-        new { Name = "new", Age = 25 });
+    connection.Execute(@"insert into user (name, age) values (:name, :age);",
+        new { name = "new", age = 27 });
     var users = connection.Query<User>(@"select * from user");
     foreach(var user in users)
     {
