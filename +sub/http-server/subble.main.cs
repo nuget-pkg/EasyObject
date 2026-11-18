@@ -25,19 +25,41 @@ using (var server = RestServerBuilder.UseDefaults().Build())
 [RestResource]
 public class MyResource
 {
+
+    [RestRoute("Get", "/users/{id:string}")]
+    public async Task User(IHttpContext context)
+    {
+        Pass();
+        var text = $"<tr><td>id: {context.Request.PathParameters["id"]}</td></tr>";
+        await context.Response.SendResponseAsync(
+$"""
+ <!DOCTYPE html>
+ <html lang="en">
+ <head>
+ <meta charset="utf-8">
+ </head>
+ <body>
+ <table>
+ {text}
+ </table>
+ </body>
+ </html>
+ """);
+    }
     [RestRoute("Get", "/api/test")]
     public async Task Test(IHttpContext context)
     {
         string playlistPath = @"G:\マイドライブ\.gas-youtube\.flat\_flat_playlist.json";
         var playlist = FromFile(playlistPath);
+        playlist = playlist.Shuffle();
         //playlist.Dump();
         var stubble = new StubbleBuilder()
             .Configure(builder =>
             {
                 builder.AddToTemplateLoader(new DictionaryLoader(new Dictionary<string, string>
                 {
-                        //{ "Foo", "I'm Foo" },
-                        //{ "Bar", "I'm Bar" }
+                    //{ "Foo", "I'm Foo" },
+                    //{ "Bar", "I'm Bar" }
                 }));
             }).Build();
         //Assert.Equal("I'm Foo", stubble.Render("Foo", new { foo = "bar" }));
@@ -53,14 +75,19 @@ public class MyResource
         <a href="https://www.youtube.com/playlist?list={{id}}" target="_blank">
         i: {{i}}
         <br>
-        title: {{title}}
+        id: {{id}}
+        <br>
+            title: {{title}}
         <br>
         thumb: {{thumbnail}}
         <br>
         </a>
+      <td>
+        <a href="/users/{{id}}" target="_blank">{{title}}</a>
+      </td>
     </tr>
     """;
-        foreach(var item in playlist.Dynamic)
+        foreach (var item in playlist.Dynamic)
         {
             int i = item.i;
             string id = item.id;
