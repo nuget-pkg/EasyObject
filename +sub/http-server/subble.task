@@ -9,14 +9,14 @@ if [[ "${str:0:1}" == "@" ]]; then
     bash.exe "$script_dir/.r.subble.sh" "$@"
   elif [[ "$str" == "@exe" ]]; then
     if [ ! -f "$script_dir/subble.exe" ]; then
-      wingen.exe "$script_dir/subble.main.cs"
+      unigen.exe "$script_dir/subble.main.cs"
       bash.exe "$script_dir/.r.subble.sh" "@merge" -f 1>&2
     fi
     shift
     $script_dir/subble.exe "$@"
   elif [[ "$str" == "@bin" ]]; then
     if [ ! -f "$script_dir/subble.exe" ]; then
-      wingen.exe "$script_dir/subble.main.cs"
+      unigen.exe "$script_dir/subble.main.cs"
       bash.exe "$script_dir/.r.subble.sh" "@pack" -f 1>&2
     fi
     shift

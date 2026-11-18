@@ -1,18 +1,22 @@
 //css_nuget EasyObject
 //css_nuget Grapevine
 //css_nuget Stubble.Core
-using System;
-using System.Threading.Tasks;
-using System.Collections.Generic;
 using Grapevine;
 using Stubble.Core.Builders;
 using Stubble.Core.Exceptions;
 using Stubble.Core.Loaders;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Threading;
+using System.Threading.Tasks;
 using static Global.EasyObject;
 
 using (var server = RestServerBuilder.UseDefaults().Build())
 {
     server.Start();
+    Thread.Sleep(1000);
+    Process.Start("http://localhost:1234/api/test");
 
     Console.WriteLine("Press enter to stop the server");
     Console.ReadLine();
