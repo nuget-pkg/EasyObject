@@ -1,7 +1,7 @@
 //css_nuget EasyObject
 //css_nuget EmbedIO
 //css_nuget Stubble.Core
-//using Grapevine;
+//css_nuget YoutubeExplode
 using EmbedIO;
 using EmbedIO.Routing;
 using EmbedIO.WebApi;
@@ -9,6 +9,8 @@ using Swan.Logging;
 using Stubble.Core.Builders;
 using Stubble.Core.Exceptions;
 using Stubble.Core.Loaders;
+using YoutubeExplode;
+using YoutubeExplode.Common;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -72,6 +74,53 @@ class TestServer
 }
 class TestController : WebApiController
 {
+    [Route(HttpVerbs.Get, "/users/{id}")]
+    public async Task GetUser(string id)
+    {
+        Pass();
+        var text = $"<tr><td>id: {id}</td></tr>";
+        var stubble = new StubbleBuilder()
+            .Configure(builder =>
+            {
+                builder.AddToTemplateLoader(new DictionaryLoader(new Dictionary<string, string>
+                {
+                    //{ "Foo", "I'm Foo" },
+                    //{ "Bar", "I'm Bar" }
+                }));
+            }).Build();
+        using var youtube = new YoutubeClient();
+        var playlistUrl = id; // "https://youtube.com/playlist?list=PLa1F2ddGya_-UvuAqHAksYnB0qL9yWDO6";
+
+        // Each batch corresponds to one request
+        await foreach (var batch in youtube.Playlists.GetVideoBatchesAsync(playlistUrl))
+        {
+            foreach (var video in batch.Items)
+            {
+                var title = video.Title;
+                var author = video.Author;
+                var videoId = video.Id;
+                text += stubble.Render("<tr><td>title: {{title}}</td><td>author: {{author}}</td></tr>",
+                    new { title, author });
+                text += stubble.Render("<tr><td><iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/{{videoId}}\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe></td></tr>",
+                    new { title, author, videoId });
+            }
+        }
+        await HttpContext.SendStringAsync(
+$"""
+ <!DOCTYPE html>
+ <html lang="en">
+ <head>
+ <meta charset="utf-8">
+ </head>
+ <body>
+ <table>
+ {text}
+ </table>
+ </body>
+ </html>
+ """
+, "text/html", System.Text.Encoding.UTF8);
+    }
     [Route(HttpVerbs.Get, "/api/test")]
     public async Task ApiTest(/*string id*/)
     {
