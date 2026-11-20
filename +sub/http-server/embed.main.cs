@@ -63,28 +63,38 @@ class TestServer
         var server = new WebServer(o => o
                 .WithUrlPrefix(url)
                 .WithMode(HttpListenerMode.EmbedIO))
-            .WithAction("/api/test", HttpVerbs.Get, ctx =>
+            .WithWebApi("/", m => m.WithController<TestController>())
+            ;
+
+        server.StateChanged += (s, e) => $"WebServer New State - {e.NewState}".Info();
+        return server;
+    }
+}
+class TestController : WebApiController
+{
+    [Route(HttpVerbs.Get, "/api/test")]
+    public async Task ApiTest(/*string id*/)
+    {
+        //string playlistPath = @"G:\マイドライブ\.gas-youtube\.flat\_flat_playlist.json"
+        string playlistPath = @"c:/home17/youtube-db/flat3.json";
+        var playlist = FromFile(playlistPath);
+        playlist = playlist["entries"];
+        playlist = playlist.Shuffle();
+        //playlist.Dump();
+        var stubble = new StubbleBuilder()
+            .Configure(builder =>
             {
-                //string playlistPath = @"G:\マイドライブ\.gas-youtube\.flat\_flat_playlist.json"
-                string playlistPath = @"c:/home17/youtube-db/flat3.json";
-                var playlist = FromFile(playlistPath);
-                playlist = playlist["entries"];
-                playlist = playlist.Shuffle();
-                //playlist.Dump();
-                var stubble = new StubbleBuilder()
-                    .Configure(builder =>
-                    {
-                        builder.AddToTemplateLoader(new DictionaryLoader(new Dictionary<string, string>
-                        {
-                            //{ "Foo", "I'm Foo" },
-                            //{ "Bar", "I'm Bar" }
-                        }));
-                    }).Build();
-                //Assert.Equal("I'm Foo", stubble.Render("Foo", new { foo = "bar" }));
-                //Assert.Equal("bar", stubble.Render("{{foo}}", new { foo = "bar" }));
-                var text = "";
-                const string template =
-            """
+                builder.AddToTemplateLoader(new DictionaryLoader(new Dictionary<string, string>
+                {
+                    //{ "Foo", "I'm Foo" },
+                    //{ "Bar", "I'm Bar" }
+                }));
+            }).Build();
+        //Assert.Equal("I'm Foo", stubble.Render("Foo", new { foo = "bar" }));
+        //Assert.Equal("bar", stubble.Render("{{foo}}", new { foo = "bar" }));
+        var text = "";
+        const string template =
+    """
     <tr>
       <td>
         <a href="https://www.youtube.com/playlist?list={{id}}" target="_blank"><img src="{{thumbnail}}" /></a>
@@ -103,18 +113,18 @@ class TestServer
       </td>
     </tr>
     """;
-                foreach (var item in playlist.Dynamic)
-                {
-                    //int i = item.i;
-                    int i = -1;
-                    string id = item.id;
-                    string title = item.title;
-                    string thumbnail = item.thumbnails[0].url;
-                    var rendered = stubble.Render(template, new { i, id, title, thumbnail });
-                    text += rendered;
-                }
-                return ctx.SendStringAsync(
-        $"""
+        foreach (var item in playlist.Dynamic)
+        {
+            //int i = item.i;
+            int i = -1;
+            string id = item.id;
+            string title = item.title;
+            string thumbnail = item.thumbnails[0].url;
+            var rendered = stubble.Render(template, new { i, id, title, thumbnail });
+            text += rendered;
+        }
+        await HttpContext.SendStringAsync(
+$"""
  <!DOCTYPE html>
  <html lang="en">
  <head>
@@ -128,132 +138,6 @@ class TestServer
  </html>
  """
 , "text/html", System.Text.Encoding.UTF8);
-        //return ctx.SendStringAsync("Hello World", "text/plain", System.Text.Encoding.UTF8);
-            });
-
-
-        server.StateChanged += (s, e) => $"WebServer New State - {e.NewState}".Info();
-        return server;
     }
-#if false
-    private static WebServer CreateWebServer(string url)
-    {
-        var server = new WebServer(o => o
-                    .WithUrlPrefix(url)
-                    .WithMode(HttpListenerMode.EmbedIO))
-                    .WithWebApi("/", /*Html,*/ m => m.WithController<TestController>())
-                    //.WithWebApi("/api", /*Html,*/ m => m.WithController<BasicController>())
-            ;
-        //server.StateChanged += (s, e) => $"WebServer New State - {e.NewState}".Info();
-        return server;
-    }
-#endif
 
-#if false
-    private static async Task Html(IHttpContext context, dynamic data)
-    {
-        Log("Html(1)");
-        if (data is null)
-        {
-            Log("(data is null)");
-            context.Response.ContentType = MimeType.Json;
-            using var json = context.OpenResponseText(new UTF8Encoding(false));
-            await json.WriteAsync("null").ConfigureAwait(false);
-            return;
-        }
-        Log("Html(2)");
-        string templateName = data.Template;
-        //var template = Scriban.Template.Parse(Util.ResourceAsText(typeof(MainWindow).Assembly, $@"cef2.{templateName}"));
-        var template = Scriban.Template.Parse(Util.ResourceAsText(typeof(MainWindow).Assembly, templateName));
-        string html = template.Render(data.Params);
-        context.Response.ContentType = MimeType.Html;
-        using var text = context.OpenResponseText(new UTF8Encoding(false));
-        await text.WriteAsync(html).ConfigureAwait(false);
-        Log("Html(3)");
-        //Util.Print(html, "html");
-    }
-#endif
 }
-class TestController : WebApiController
-{
-    //[Route(HttpVerbs.Any, "/")]
-    //public void Root()
-    //{
-    //    HttpContext.Redirect("/index?a=b&c=777");
-    //}
-    [Route(HttpVerbs.Get, "/api/test")]
-    public async Task ApiTest(IHttpContext context/*, CancellationToken ct*/)
-    {
-        //using (var stream = context.OpenResponseStream())
-        //{
-        //    stream.WriteAsync(Encoding.UTF8.GetBytes("hello world"));
-        //}
-        await context.SendStringAsync("hello world", "text/plain", WebServer.Utf8NoBomEncoding);
-    }
-}
-
-#if false
-//[RestResource]
-public class MyResource
-{
-    //[RestRoute("Get", "/api/test")]
-    public async Task Test(IHttpContext context)
-    {
-        string playlistPath = @"G:\マイドライブ\.gas-youtube\.flat\_flat_playlist.json";
-        var playlist = FromFile(playlistPath);
-        //playlist.Dump();
-        var stubble = new StubbleBuilder()
-            .Configure(builder =>
-            {
-                builder.AddToTemplateLoader(new DictionaryLoader(new Dictionary<string, string>
-                {
-                        //{ "Foo", "I'm Foo" },
-                        //{ "Bar", "I'm Bar" }
-                }));
-            }).Build();
-        //Assert.Equal("I'm Foo", stubble.Render("Foo", new { foo = "bar" }));
-        //Assert.Equal("bar", stubble.Render("{{foo}}", new { foo = "bar" }));
-        var text = "";
-        const string template =
-    """
-    <tr>
-      <td>
-        <a href="https://www.youtube.com/playlist?list={{id}}" target="_blank"><img src="{{thumbnail}}" /></a>
-      </td>
-      <td>
-        <a href="https://www.youtube.com/playlist?list={{id}}" target="_blank">
-        i: {{i}}
-        <br>
-        title: {{title}}
-        <br>
-        thumb: {{thumbnail}}
-        <br>
-        </a>
-    </tr>
-    """;
-        foreach(var item in playlist.Dynamic)
-        {
-            int i = item.i;
-            string id = item.id;
-            string title = item.title;
-            string thumbnail = item.thumbnail;
-            var rendered = stubble.Render(template, new { i, id, title, thumbnail });
-            text += rendered;
-        }
-        await context.Response.SendResponseAsync(
-$"""
- <!DOCTYPE html>
- <html lang="en">
- <head>
- <meta charset="utf-8">
- </head>
- <body>
- <table>
- {text}
- </table>
- </body>
- </html>
- """);
-    }
-}
-#endif
